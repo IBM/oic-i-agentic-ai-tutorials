@@ -1,0 +1,169 @@
+/* ========== Global ========== */
+:root {
+  --font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+  --text: #161616;
+  --bg-page: #f8f8f8;
+  --bg-card: #ffffff;
+  --blue: #0f62fe;
+  --blue-900: #0043ce;
+  --grey-200: #dde1e6;
+  --grey-100: #f2f4f8;
+  --radius: 10px;
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+}
+
+* { box-sizing: border-box; }
+
+.qna-chat-container,
+.qna-chat-container * {
+  font-family: var(--font-family);
+  font-size: 14px;               /* uniform size */
+  color: var(--text);
+}
+
+/* ========== Layout ========== */
+.qna-chat-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 920px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 20px;
+  background: var(--bg-page);
+}
+
+/* Header / helper text */
+.greeting, .get-started, .see-examples {
+  margin: var(--space-1) 0;
+}
+
+/* Settings toggle */
+.config-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  cursor: pointer;
+  margin-bottom: var(--space-1);
+}
+.config-toggle:hover { text-decoration: underline; }
+
+/* Agent/Thread inputs row */
+.id-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+@media (max-width: 720px) { .id-inputs { grid-template-columns: 1fr; } }
+
+/* ========== Example cards (modern) ========== */
+.example-questions-container {
+  display: flex;
+  flex-direction: column;     /* stacked */
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.example-question {
+  background: linear-gradient(135deg, #eef5ff, #f7fbff);
+  border-radius: var(--radius);
+  padding: 12px var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  cursor: pointer;
+}
+.example-question:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  background: linear-gradient(135deg, #e0ecff, #f1f7ff);
+}
+.example-question-text {
+  font-weight: 500;
+  color: #0f2d4a;
+}
+.example-question-arrow {
+  width: 16px; height: 16px;
+  color: var(--blue);
+  opacity: .8;
+}
+
+/* ========== Chat area ========== */
+.chat-box {
+  flex-grow: 1;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--grey-200);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.message {
+  padding: 8px 10px;
+  margin-bottom: var(--space-2);
+  border-radius: 8px;
+}
+.user-message {
+  background: #e8f3ff;            /* light blue */
+  text-align: right;
+}
+.assistant-message {
+  background: var(--grey-100);    /* light grey */
+  text-align: left;
+}
+.message-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Loader */
+.loading-spinner {
+  border: 3px solid #edf1f7;
+  border-top: 3px solid var(--blue);
+  border-radius: 50%;
+  width: 20px; height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== Input row ========== */
+.chat-input-container {
+  display: grid;
+  grid-template-columns: 1fr auto; /* keep proportions clean */
+  gap: var(--space-2);
+  align-items: center;
+  padding-bottom: 24px;
+}
+
+.chat-input-container .cds--text-input {
+  width: 100%; /* ✅ Force Carbon input wrapper to fill space */
+}
+
+.chat-input-container .cds--text-input input {
+  width: 100%; /* ✅ Make the actual input stretch */
+}
+
+/* Send button */
+.chat-input-container .cds--btn {
+  background: var(--blue);
+  color: #fff;
+  border-radius: 8px;
+  min-width: 98px;
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: 14px;
+}
+.chat-input-container .cds--btn:hover {
+  background: var(--blue-900);
+}
+
+/* Placeholder color */
+.cds--text-input input::placeholder { color: #8d8d8d; }

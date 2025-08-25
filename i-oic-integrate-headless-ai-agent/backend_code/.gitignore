@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VSCode settings
+.vscode/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# Test and temp data
+*.log
+*.tmp
+*.bak
+*.swp
+*.sqlite3
+.DS_Store
+
+# OS-specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Ignore build/output folders
+build/
+dist/
+*.egg-info/
+
+# Python packaging
+pip-wheel-metadata/
+__pypackages__/
+
+# dotenv / secrets
+*.env
+.env.*
+
+# Ignore local test data
+notebooks/data.json
+
+# IBM Code Engine build artifacts
+codeengine-output/
