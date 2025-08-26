@@ -16,7 +16,7 @@ git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
 cd oic-i-agentic-ai-tutorials/i-oic-integrate-headless-ai-agent/backend_code
 ```
 
-3.  Create an **.env** file in CWD with the variables defined in "env.sample" with actual values.
+3.  Create an **.env** file in CWD with the variables defined in "env.sample" with actual values. Replace YOUR_INSTANCE_URL with the watsonx Orchestrate service instance URL , API_KEY with watsonx Orchestrate API Key and CLOUD_API_KEY with IBM Cloud API Key
 
 4.  Install the required dependencies
 
