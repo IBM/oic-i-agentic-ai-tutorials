@@ -5,7 +5,7 @@
 
 1.  Clone the github repo in desired local folder.
 ```
-git clone* https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
 ```
 
 2.  Set the Current working directory (CWD) to
@@ -106,24 +106,16 @@ ibmcloud cr info
 >
 > NOTE: By default, region is set to global, i.e. "icr.io". We need to
 > set the region in which ICR is reserved. E.g: if the region is
-> "London", then the region will be eu-gb. You can check the ICR region
-> in Resource list as follows:
-
-i.  Go to IBM Cloud (http://cloud.ibm.com)
-
-ii. Resource list -> Containers
-
-iii. Check the ICR region in "Region" column
-
+> "London", then the region will be eu-gb. 
 
 5.  Set the correct region where the ICR is reserved
 ```
  ibmcloud cr region-set <region code>
  ```
 
-Following are the regions:
+Following are the regions, for this tutorial, you will use **us.icr.io**
 
-> ![ce_regions]([./images/c]e_regions.png)
+> ![ce_regions](./images/ce_regions.png)
 
 6.  Validate the namespace for ICR in the set region
 
@@ -131,7 +123,7 @@ Following are the regions:
 ibmcloud cr namespace-list
 ```
 
-![ce_ns]([./images/c]e_ns.png)
+![ce_ns](./images/ce_ns.png)
 
 
 7.  Login to the region using Podman
@@ -145,8 +137,7 @@ ibmcloud cr login --client podman
 8.  Tag the image
 
 ```
-podman tag <source_image>:<tag>
-<region>.icr.io/<my_namespace>/<new_image_repo>:<new_tag>
+podman tag <source_image>:<tag> <region>.icr.io/<my_namespace>/<new_image_repo>:<new_tag>
 
 E.g: 
 podman tag backend_code:latest us.icr.io/cr-itz-ce/backendcode_image:latest
@@ -156,8 +147,7 @@ podman tag backend_code:latest us.icr.io/cr-itz-ce/backendcode_image:latest
 ```
 podman push <region>.icr.io/<my_namespace>/<new_image_repo>:<new_tag>
 
-E.g: podman push backend_code:latest
-us.icr.io/cr-itz-ce/backendcode_image:latest
+E.g: podman push backend_code:latest us.icr.io/cr-itz-ce/backendcode_image:latest
 ```
 
 ![ce_podman_push](./images/ce_podman_push.png)
@@ -173,23 +163,21 @@ ibmcloud cr image-list
 ## Deploy the application in Code Engine
 
 1.  Login to [IBM Cloud](https://cloud.ibm.com/login) user interface.
-2.  Navigate to Containers -> Images . You can see the image that was
+2.  Navigate to Hamburger Menu -> Containers -> Images . You can see the image that was
     pushed through commands .
 
 ![ce_ui](./images/ce_ui.png)
 
-3.  Navigate to Resource List -> Containers -> Code Engine . Click on
-    code engine .
+3.  Navigate to Resource List -> Containers -> Code Engine . Click on code engine .
 
 ![ce_ui_login](./images/ce_ui_login.png)
 
-4.  In this next step , Create an Application . Navigate to  **Code Engine -> Applications -> Create**
+4.  In this next step , you will create an **Application** . Navigate to  **Code Engine -> Applications -> Create**
 
-5.  Select "Use an existing image"
+5.  Select **Use an existing image**
 
 -   In Image Reference, provide the ICR image description for the image.
     **us.icr.io/cr-itz-ce/backendcode_image:latest**
-
 -   Click on **Configure the image**: Using **us.icr.io/cr-itz-ce/test_image:latest** as reference enter following values:
 
     1. Registry server : us.icr.io
@@ -206,15 +194,11 @@ ibmcloud cr image-list
 
 6.  Resource and Scaling
 
-    i.  CPU and Memory: 1 vCPU/ 4GB
-
-    ii. Ephemeral storage: 4 GB
-
-    iii. Min no. of instances: 1
-
-    iv. Max no. of instances: 1
-
-    v.  Rest of the settings in this section can be left as is.
+    1. CPU and Memory: 1 vCPU/ 4GB
+    2. Ephemeral storage: 4 GB
+    3. Min no. of instances: 1
+    4. Max no. of instances: 1
+    5. Rest of the settings in this section can be left as is.
 
 ![ce_ui_configure_scaling](./images/ce_ui_configure_scaling.png)
 
@@ -227,10 +211,10 @@ ibmcloud cr image-list
 
 ![ce_ui_app](./images/ce_ui_app.png)
 
-9.  Test the deployed application . Click on Open URL . Add /docs to
-    view the deployed FastAPI .
+9.  Test the deployed application . Click on **Open URL** . Append **/docs** to the URL to view the deployed FastAPI .
 
 https://application-d4.1ucys990xy44.us-south.codeengine.appdomain.cloud/docs
 
-
 ![ce_ui_deployed](./images/ce_ui_deployed.png)
+
+You've successfully completed the steps to deploy an application to code engine. 
