@@ -15,5 +15,6 @@ COPY ./api ./api
 # Comment this out if using Code Engine env vars
  COPY .env .env
 
+ EXPOSE 8080
 # Set startup command
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8080"]
