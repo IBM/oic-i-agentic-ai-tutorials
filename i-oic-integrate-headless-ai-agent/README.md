@@ -15,3 +15,6 @@ Follow the detailed steps provided in `api/deployment-guide.md` to deploy the **
 
 ### Frontend Execution
 Run the **frontend_code** React application locally by following the instructions in its `README.md` file.
+
+### Create Spend Analysis Agent
+Use the dataset referenced in the tutorial as the basis for creating the Spend Analysis Agent.Instructions are provided in `README.md` under **knowledge-base** folder
