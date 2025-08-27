@@ -1,12 +1,13 @@
-# oic-i-agentic-ai-tutorials
+# i-oic-integrate-headless-ai-agent
 
 ## Integrate AI Agents with a Custom UI
 
 This tutorial demonstrates how to integrate a custom React-based user interface with AI agents built and deployed on IBM watsonx Orchestrate.
 
-The reference project is organized into two main sections:
+The reference project is organized into two main sections , one is optional
 - **frontend_code**
 - **backend_code**
+- **spendanalysis_nocode_agent**
 
 Each section includes its own `README.md` file with instructions for installing prerequisites and deploying the application.
 
@@ -16,5 +17,5 @@ Follow the detailed steps provided in `api/deployment-guide.md` to deploy the **
 ### Frontend Execution
 Run the **frontend_code** React application locally by following the instructions in its `README.md` file.
 
-### Create Spend Analysis Agent
-Use the dataset referenced in the tutorial as the basis for creating the Spend Analysis Agent.Instructions are provided in `README.md` under **knowledge-base** folder
+### Create Spend Analysis Agent (Optional)
+Use the dataset referenced in the tutorial as the basis for creating the Spend Analysis Agent.Instructions are provided in `README.md` under **spendanalysis_nocode_agent** folder

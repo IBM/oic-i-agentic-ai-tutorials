@@ -1,4 +1,4 @@
-# oic-i-agentic-ai-tutorials
+# i-oic-integrate-headless-ai-agent
 
 ## Create no-code Spend Analysis Agent
 
@@ -8,7 +8,7 @@ Use the dataset below to create the agent referenced in the tutorial to integrat
 ### Pre-requisites
 
 1. Access to watsonx Orchestrate instance.
-2. Download [knowledge-base]() from here. 
+2. Download [knowledge-base](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-integrate-headless-ai-agent/spendanalysis_nocode_agent/knowledge-base/invoice_dataset.csv) from here. 
 
 ```bash
 
@@ -44,4 +44,5 @@ Step-by-step behaviour:
 
 ```
 You have successfully created **Spend Analysis Agent**.
+
 ![test-agent](./images/wxo_spendanalysis_agent.png)
