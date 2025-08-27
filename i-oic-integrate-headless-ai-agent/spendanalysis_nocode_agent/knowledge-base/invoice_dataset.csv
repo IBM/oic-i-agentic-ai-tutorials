@@ -1,0 +1,16 @@
+Invoice ID,Vendor,Invoice Date,Amount (USD),Description
+INVA01,IBM,2025-07-01,9800,Watsonx Orchestrate SaaS
+INVA02,Microsoft,2025-07-02,10500,Outlook subscription
+INVA03,Amazon,2025-07-03,7600,AWS EC2 usage
+INVA04,Google,2025-07-04,11000,Google Workspace licenses
+INVA05,IBM,2025-07-05,9800,Watsonx Orchestrate SaaS (copy)
+INVA06,Salesforce,2025-07-06,8700,CRM subscription
+INVA07,IBM,2025-07-01,9800,Watsonx Orchestrate SaaS (copy 2)
+INVA08,Oracle,2025-07-07,10200,Database license
+INVA09,Microsoft,2025-07-08,5200,Teams add-ons
+INVK10,Adobe,2025-07-09,7800,Creative Cloud licenses
+INVK11,Amazon,2025-07-10,12500,S3
+INVK12,Cisco,2025-07-11,4500,Network hardware
+INVK13,Google,2025-07-12,9700,Cloud SQL usage
+INVK14,Adobe,2025-07-13,11300,Enterprise license
+INVK15,Salesforce,2025-07-14,6000,Monthly CRM support
