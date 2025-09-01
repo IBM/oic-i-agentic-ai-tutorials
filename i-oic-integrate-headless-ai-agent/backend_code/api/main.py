@@ -73,7 +73,22 @@ async def get_token() -> str:
     now = monotonic()
     if app.state.token and now < app.state.token_exp:
         return app.state.token
-    r = await app.state.client.post(TOKEN_ENDPOINT, json={"apikey": API_KEY})
+    # Choose headers based on endpoint
+    if "iam.cloud.ibm.com" in TOKEN_ENDPOINT:
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
+        }
+        data = {
+            "grant_type": "urn:ibm:params:oauth:grant-type:apikey",
+            "apikey": API_KEY,
+        }
+        r = await app.state.client.post(TOKEN_ENDPOINT, data=data, headers=headers)
+    else:
+        headers = {"Accept": "application/json"}
+        r = await app.state.client.post(TOKEN_ENDPOINT, json={"apikey": API_KEY}, headers=headers)
+
+    #r = await app.state.client.post(TOKEN_ENDPOINT, json={"apikey": API_KEY}, headers=headers)
     r.raise_for_status()
     data = r.json()
     tok = data.get("token") or data.get("access_token")
@@ -106,197 +121,6 @@ async def get_or_create_thread(
 
 
 # ---------------- Endpoints ----------------
-
-
-@app.get("/chat", response_class=StreamingResponse)
-async def chat_stream(query: str, agent_id: str, thread_id: Optional[str] = None):
-    """
-    Streaming SSE proxy. Emits token deltas when available.
-    If no deltas or final text arrive, falls back to a non-streaming call so the UI still gets an answer.
-    """
-    try:
-        token = await get_token()
-        thread_id = await get_or_create_thread(query, token, thread_id)
-
-        headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-            "Accept": "text/event-stream",
-        }
-        body = {
-            "message": {"role": "user", "content": query},
-            "agent_id": agent_id,
-            "thread_id": thread_id,
-        }
-        params = {
-            "stream": "true",
-            "stream_timeout": "120000",
-            "multiple_content": "true",
-        }
-
-        async def generator():
-            text_buf = ""
-            saw_text = False
-
-            async with app.state.client.stream(
-                "POST",
-                THREAD_ENDPOINT,
-                headers=headers,
-                params=params,
-                json=body,
-                timeout=None,
-            ) as resp:
-                if resp.status_code != 200:
-                    error_text = await resp.aread()
-                    raise HTTPException(
-                        status_code=resp.status_code, detail=error_text.decode()
-                    )
-
-                async for raw in resp.aiter_text():
-                    # A chunk may contain multiple SSE frames separated by blank lines
-                    for block in raw.split("\n\n"):
-                        line = block.strip()
-                        if not line.startswith("data:"):
-                            continue
-                        try:
-                            event = json.loads(line[5:].strip())
-                        except json.JSONDecodeError:
-                            continue
-
-                        etype = (event.get("event") or "").lower()
-
-                        # Token deltas (cover common names)
-                        if etype in (
-                            "message.delta",
-                            "response.delta",
-                            "token.delta",
-                            "message.token",
-                        ):
-                            contents = event.get("data", {}).get("delta", {}).get(
-                                "content", []
-                            ) or event.get("data", {}).get("content", [])
-                            for part in contents:
-                                if (
-                                    isinstance(part, dict)
-                                    and part.get("response_type") == "text"
-                                ):
-                                    token_txt = part.get("text") or ""
-                                    if token_txt:
-                                        saw_text = True
-                                        text_buf += token_txt
-                                        yield (
-                                            "data: "
-                                            + json.dumps(
-                                                {
-                                                    "error_message": False,
-                                                    "response": token_txt,
-                                                    "thread_id": thread_id,
-                                                }
-                                            )
-                                            + "\n\n"
-                                        )
-
-                        # Completed event with full text (in case no deltas)
-                        elif etype in (
-                            "message.completed",
-                            "response.completed",
-                            "message.completed.default",
-                        ):
-                            msg = event.get("data", {}).get("message", {}) or {}
-                            contents = msg.get("content", [])
-                            final_chunks = [
-                                c.get("text")
-                                for c in contents
-                                if isinstance(c, dict)
-                                and c.get("response_type") == "text"
-                                and isinstance(c.get("text"), str)
-                            ]
-                            if final_chunks and not saw_text:
-                                final_text = "".join(final_chunks)
-                                if final_text:
-                                    text_buf = final_text
-                                    saw_text = True
-                                    yield (
-                                        "data: "
-                                        + json.dumps(
-                                            {
-                                                "error_message": False,
-                                                "response": final_text,
-                                                "thread_id": thread_id,
-                                            }
-                                        )
-                                        + "\n\n"
-                                    )
-
-                        # Upstream error signal
-                        elif etype in ("error", "run.failed"):
-                            err = event.get("data") or {}
-                            msg = err.get("message") or "Upstream error"
-                            yield (
-                                "data: "
-                                + json.dumps(
-                                    {
-                                        "error_message": True,
-                                        "response": msg,
-                                        "thread_id": thread_id,
-                                    }
-                                )
-                                + "\n\n"
-                            )
-
-            # Fallback: if nothing streamed, ask for a non-streaming final
-            if not saw_text:
-                try:
-                    headers_f = {
-                        "Authorization": f"Bearer {token}",
-                        "Content-Type": "application/json",
-                    }
-                    params_f = {"stream": "false", "multiple_content": "true"}
-                    trig = await app.state.client.post(
-                        THREAD_ENDPOINT, headers=headers_f, params=params_f, json=body
-                    )
-                    trig.raise_for_status()
-                    data = trig.json()
-                    final_text = _extract_final_text(data) or ""
-                    yield (
-                        "data: "
-                        + json.dumps(
-                            {
-                                "error_message": False,
-                                "response": final_text,
-                                "thread_id": data.get("thread_id") or thread_id,
-                            }
-                        )
-                        + "\n\n"
-                    )
-                except Exception as fb_err:
-                    yield (
-                        "data: "
-                        + json.dumps(
-                            {
-                                "error_message": True,
-                                "response": f"Fallback failed: {fb_err}",
-                                "thread_id": thread_id,
-                            }
-                        )
-                        + "\n\n"
-                    )
-
-        headers_sse = {
-            "Cache-Control": "no-cache",
-            "X-Accel-Buffering": "no",
-        }
-        return StreamingResponse(
-            generator(), media_type="text/event-stream", headers=headers_sse
-        )
-
-    except httpx.HTTPStatusError as http_err:
-        raise HTTPException(
-            status_code=http_err.response.status_code, detail=f"HTTP error: {http_err}"
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
-
 
 @app.get("/chat/v2")
 async def chat_non_stream(
