@@ -87,8 +87,6 @@ async def get_token() -> str:
     else:
         headers = {"Accept": "application/json"}
         r = await app.state.client.post(TOKEN_ENDPOINT, json={"apikey": API_KEY}, headers=headers)
-
-    #r = await app.state.client.post(TOKEN_ENDPOINT, json={"apikey": API_KEY}, headers=headers)
     r.raise_for_status()
     data = r.json()
     tok = data.get("token") or data.get("access_token")
