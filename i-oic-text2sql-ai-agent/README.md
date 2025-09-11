@@ -36,7 +36,7 @@ orchestrate models import --file openai-gpt-4o-mini.yaml --app-id openai_creds
 
 orchestrate models list
 ```
-[external-model] (./images/external_model.png)
+![external-model](./images/external_model.png)
 
 ## Step 3: Import Tools
 
@@ -75,7 +75,7 @@ In this step, you'll import the agent that:
 orchestrate agents import -f "agents/agent.yaml"
 
 ```
-[agent](./images/agent.png)
+![agent](./images/agent.png)
 
 ## Conclusion 
 In this tutorial, you:
