@@ -1,0 +1,13 @@
+spec_version: v1
+kind: model
+name: ollama/llama3.2:latest
+display_name: Ollama LLaMA 3.2
+description: |
+  Ollama-hosted LLaMA 3.2 model for local or edge deployments.
+tags:
+  - ollama
+  - llama2
+model_type: chat
+provider_config:
+  api_key: ollama
+  custom_host: http://Host:11434
