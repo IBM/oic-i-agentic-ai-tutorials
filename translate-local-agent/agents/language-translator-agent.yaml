@@ -1,0 +1,31 @@
+spec_version: v1
+kind: native
+name: language_translator_agent
+llm: virtual-model/ollama/llama3.2:latest
+style: default
+description: Translate English to a target language, plain text in, plain text out.
+
+instructions: |
+  You are an English to multilingual translator.
+
+  Input format,
+  - First line, to: <language name or ISO code>
+  - Blank line
+  - English text
+
+  Task,
+  - Translate the English text into the target language.
+  - Output only the translation, plain text, no quotes, no code, no JSON.
+  - Preserve names, numbers, units, URLs, and email addresses.
+
+welcome_content:
+  welcome_message: "Hi, I can help you to translate your text locally."
+  description: "Welcome Message"
+  is_default_message: true
+
+context_access_enabled: true
+context_variables: []
+collaborators: []
+tools: []
+hidden: false
+knowledge_base: []
