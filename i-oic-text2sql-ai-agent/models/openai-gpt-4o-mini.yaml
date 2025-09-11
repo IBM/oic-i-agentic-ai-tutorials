@@ -1,0 +1,11 @@
+spec_version: v1
+kind: model
+name: openai/gpt-4o-mini
+display_name: gpt-4o-mini
+description: OpenAI's open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases.
+tags:
+  - openai
+  - gpt
+model_type: chat
+provider_config:
+  transform_to_form_data: false
