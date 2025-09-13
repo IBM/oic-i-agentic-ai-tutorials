@@ -10,4 +10,4 @@ tags:
 model_type: chat
 provider_config:
   api_key: ollama
-  custom_host: http://Host:11434
+  custom_host: http://YOUR_LOCAL_HOST_IP:11434
