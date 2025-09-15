@@ -6,3 +6,7 @@ This repository hosts **Agentic AI tutorials** developed as part of the Open Inn
 
 ## Contact
 For questions or support, please contact [the contributors](https://github.com/IBM/oic-i-agentic-ai-tutorials/graphs/contributors).
+
+
+---
+*Documentation formatting improved for better readability.*
