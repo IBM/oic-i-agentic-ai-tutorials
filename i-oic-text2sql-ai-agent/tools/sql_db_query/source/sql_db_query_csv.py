@@ -13,7 +13,7 @@ import os
 
     permission=ToolPermission.READ_ONLY
 )
-def sql_db_query(query: str) -> str:
+def sql_db_query_csv(query: str) -> str:
     """
     Executes a SQL SELECT query on a CSV file using pandas.
     """
@@ -49,6 +49,6 @@ def sql_db_query(query: str) -> str:
 # Example usage
 if __name__ == "__main__":
     query = "SELECT * FROM df ORDER BY ID DESC LIMIT 5"
-    result = sql_db_query(query)
+    result = sql_db_query_csv(query)
     #print("Query executed successfully!")
     print(result)
