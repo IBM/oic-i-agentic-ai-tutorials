@@ -82,7 +82,9 @@ _Additional information:_
 
 #### 5. [Connect to MCP Gateway and MCP server](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/end-to-end-agent-use-case-implementation-with-galaxium-travels-full-local-setup-guide-and-mcp/4-connect-to-the-mcp-server.md) 
 
-#### 6. Additional resources
+#### 6. [Create a new Agent and test the MCP Tool](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/end-to-end-agent-use-case-implementation-with-galaxium-travels-full-local-setup-guide-and-mcp/5-create-an-agent-and-test-the-mcp-tool.md) 
+
+#### 7. Additional resources
 
 * **The Galaxium Travels Example**   
     * [Galaxium Travels Infrastructure](https://github.com/thomassuedbroecker/galaxium-travels-infrastructure)
