@@ -4,7 +4,7 @@ _Galaxium Travels local MCP Server, `watsonx Orchestrate Development Edition`, a
 
 This repository demonstrates how to set up a `MCP server` locally and integrate it into the `watsonx Orchestrate Development Edition` using `Docker-Compose`.
 
-* **MCP Server:** The image below shows simplified dependencies os the entire setup, including:
+* **MCP Server:** The image below shows simplified dependencies of the entire setup, including:
     * Docker Compose
     * `watsonx Orchestrate Development Edition Server`
          * Agent
