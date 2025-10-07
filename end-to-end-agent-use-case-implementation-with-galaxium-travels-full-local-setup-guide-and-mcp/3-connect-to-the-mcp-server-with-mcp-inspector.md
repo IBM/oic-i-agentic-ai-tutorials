@@ -21,11 +21,11 @@
   * Transport Type: Streamable HTTP
   * Url: `http://localhost:8084/mcp`
 
-  ![](/images/connect-to-mcp-locally-01.jpg)
+  ![](images/connect-to-mcp-locally-01.jpg)
 
 * List the available tools
 
-  ![](/images/connect-to-mcp-locally-02.jpg)
+  ![](images/connect-to-mcp-locally-02.jpg)
 
 
 ### Step 2: Start the "lite chat"
@@ -36,4 +36,4 @@ orchestrate chat start
 orchestrate server logs
 ```
 
-### [Home](https://github.com/thomassuedbroecker/galaxium-travels-mcp-compose-watsonx-orchestrate/blob/main/README.md)
+### [Home](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/end-to-end-agent-use-case-implementation-with-galaxium-travels-full-local-setup-guide-and-mcp/README.md)
