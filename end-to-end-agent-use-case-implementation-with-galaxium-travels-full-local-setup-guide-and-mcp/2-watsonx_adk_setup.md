@@ -77,21 +77,20 @@ orchestrate server stop
 
 ### Step 7: Add the "Galaxium Travels Infrastructure" to the Docker Compose file
 
-Add the following code to the services in the `docker-compose.yml`.
+Search for the `volumes:` section and add the following code to the services in the `docker-compose.yml`.
 
-```sh
-  langflow:
-    image: ${OPENSOURCE_REGISTRY_PROXY:-docker.io}/langflowai/${LANGFLOW_IMAGE:-langflow}:${LANGFLOW_TAG:-latest}
-    profiles: [langflow]
-    ports:
-      - 7861:7861
-    environment:
-      LANGFLOW_PORT: 7861
-      LANGFLOW_DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@wxo-server-db:5432/langflow
-      LANGFLOW_CONFIG_DIR: /app/app/langflow
-    volumes:
-      - langflow-data:/app/langflow
-  
+* Starting point of the volumes section
+
+```yaml
+volumes:
+  tools:
+    driver: local
+  wxo-server-redis-data:
+```
+
+* Code to insert
+
+```yaml 
   ########################
   # Galaxium Travel Infrastructure 
   # ------- begin -------
