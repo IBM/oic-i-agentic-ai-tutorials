@@ -38,7 +38,7 @@ def send_email_mailersend(to_email: str, subject: str, body: str) -> EmailRespon
 
         payload = {
             "from": {"email": from_email, "name": "Watson Orchestrate Agent"},
-            "to": [{"email": "sgar3484@gmail.com"}],
+            "to": [{"email": "<receiver email>"}],
             "subject": subject,
             "text": body
         }
