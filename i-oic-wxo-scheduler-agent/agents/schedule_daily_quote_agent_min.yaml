@@ -1,0 +1,15 @@
+spec_version: v1
+kind: native
+name: schedule_daily_quote_agent_min
+description: >
+  An agent that schedules or runs a simple daily quote flow.
+instructions: >
+  1. Use the daily_quote_flow tool to run immediately or schedule recurring runs.
+  2. If scheduling, ask the user when and how often they want to receive quotes.
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: react
+tools:
+  - daily_quote_flow_min
+  - i__get_flow_status_intrinsic_tool__
+  - i__get_schedule_intrinsic_tool__
+  - i__delete_schedule_intrinsic_tool__
