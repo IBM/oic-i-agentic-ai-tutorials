@@ -1,11 +1,11 @@
 spec_version: v1
 kind: external
-name: hr_agent
+name: hr_agent_a2a
 title: HR Agent (Streaming)
 provider: external_chat
 description: HR validation + cascade provisioning via OpenAI Chat Completions (streaming).
 tags: [hr, onboarding, streaming]
-api_url: https://hr-agent.20xtogjmfdje.us-south.codeengine.appdomain.cloud/v1/chat/completions
+api_url: https://{HR_AGENT_ENDPOINT}/v1/chat/completions
 auth_scheme: NONE
 chat_params:
   model: hr-agent
