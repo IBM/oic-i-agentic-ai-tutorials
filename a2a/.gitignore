@@ -1,0 +1,69 @@
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- Python bytecode and caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Builds and packaging ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Local env and secrets (keep these out of git) ---
+.env
+.env.*
+*.env
+*.secret
+*.secrets
+*.key
+*.pem
+*.p12
+*.keystore
+*.jks
+*credentials*.json
+*service-account*.json
+
+# --- Logs and runtime junk ---
+*.log
+logs/
+*.pid
+*.pid.lock
+coverage/
+.coverage
+.coverage.*
+*.md
+*.txt
+*.sh
+
+# --- Editor and IDE folders ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Docker artifacts you might generate locally ---
+docker-compose.override.yml
+*.tar
+
+# --- Temporary files ---
+*.tmp
+*.bak
+*.orig
+
+# --- Local notes or dumps ---
+*.local.*
+notes/
+scratch/

@@ -1,0 +1,30 @@
+{
+  "name": "HRAgent",
+  "version": "1.0.0",
+  "description": "Validates new hire data and returns a normalized employee record",
+  "endpoints": {
+    "validate_new_hire": {
+      "input": {
+        "firstName": "string",
+        "lastName": "string",
+        "email": "string",
+        "role": "string",
+        "department": "string",
+        "location": "string",
+        "startDate": "string"
+      },
+      "output": {
+        "employeeId": "string",
+        "fullName": "string",
+        "email": "string",
+        "jobTitle": "string",
+        "department": "string",
+        "location": "string",
+        "startDate": "string",
+        "manager": "string",
+        "groups": ["string"],
+        "hardwareProfile": "string"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "ITProvisioningAgent",
+  "version": "1.0.0",
+  "description": "Creates accounts, assigns groups, and requests hardware",
+  "endpoints": {
+    "provision_account": {
+      "input": {
+        "employeeId": "string",
+        "fullName": "string",
+        "email": "string",
+        "jobTitle": "string",
+        "department": "string",
+        "location": "string",
+        "startDate": "string",
+        "groups": ["string"],
+        "hardwareProfile": "string"
+      },
+      "output": {
+        "directoryUserId": "string",
+        "provisioningTicketId": "string",
+        "hardwareRequestId": "string",
+        "status": "string"
+      }
+    }
+  }
+}
