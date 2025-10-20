@@ -1,241 +1,156 @@
-"""
-HR Agent - Minimal Streaming Version
-Accepts: firstName, lastName, role
-Returns: HR data + IT provisioning result
-"""
+# Lightweight HR agent (FastAPI).
+# Accepts natural language like "Onboard <Full Name> as <Role>" and responds
+# via SSE with a human-readable summary. A compact JSON handoff is embedded
+# between BEGIN_IT_JSON / END_IT_JSON markers for downstream IT use.
 
-import asyncio
 import json
 import os
 import re
 import time
-import uuid
+from typing import Any, Dict, List, Optional
 
-import httpx
-from fastapi import Body, FastAPI, Response
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse, StreamingResponse
 
-app = FastAPI(title="HR Agent")
+app = FastAPI()
 
-# ==================== Models ====================
-class NewHireIn(BaseModel):
-    firstName: str = Field(min_length=1)
-    lastName: str = Field(min_length=1)
-    role: str = Field(min_length=1)
+# Same env-driven configuration pattern as IT.
+MODEL_ID = os.getenv("MODEL_ID", "hr-agent")
+AGENT_NAME = os.getenv("AGENT_NAME", "hr_agent_v11")
+PUBLIC_TITLE = os.getenv("PUBLIC_TITLE", "HR Agent")
+PUBLIC_DESC = os.getenv(
+    "PUBLIC_DESC",
+    "HR agent that creates employee records from natural language."
+)
+PUBLIC_BASE = os.getenv("PUBLIC_BASE", "").rstrip("/")
+API_URL = f"{PUBLIC_BASE}/v1/chat/completions" if PUBLIC_BASE else "/v1/chat/completions"
 
-
-class NewHireOut(BaseModel):
-    employeeId: str
-    fullName: str
-    email: str
-    jobTitle: str
-
-
-# ==================== Core Logic ====================
-def validate_new_hire(data: NewHireIn) -> NewHireOut:
-    """Validate and normalize new hire data"""
-    role_norm = re.sub(r"\s+", " ", data.role.strip()).title()
-    employee_id = "E-" + uuid.uuid4().hex[:8].upper()
-    email = f"{data.firstName.lower()}.{data.lastName.lower()}@company.com"
-
-    return NewHireOut(
-        employeeId=employee_id,
-        fullName=f"{data.firstName.strip()} {data.lastName.strip()}",
-        email=email,
-        jobTitle=role_norm,
-    )
-
-
-async def call_it_agent(hr_data: NewHireOut) -> dict:
-    """Call IT agent to provision account"""
-    it_url = os.getenv(
-        "IT_API_URL",
-        "https://it-agent.20xtogjmfdje.us-south.codeengine.appdomain.cloud/v1/chat/completions"
-    )
-
-    payload = {
-        "model": "it-agent",
-        "stream": False,
-        "messages": [{"role": "user", "content": json.dumps(hr_data.model_dump())}]
-    }
-
-    async with httpx.AsyncClient(timeout=30) as client:
-        resp = await client.post(it_url, json=payload)
-        resp.raise_for_status()
-        data = resp.json()
-        content = data["choices"][0]["message"]["content"]
-
-        # Extract JSON from content
-        start = content.find("{")
-        end = content.rfind("}") + 1
-        return json.loads(content[start:end])
-
-
-def parse_input(content: str | dict) -> dict:
-    """Parse input content to extract firstName, lastName, role"""
-    # If already a dict
-    if isinstance(content, dict):
-        if "action" in content and "input" in content:
-            data = content["input"]
-        else:
-            data = content
-    else:
-        # Try to parse JSON string
-        try:
-            data = json.loads(content)
-            if "action" in data and "input" in data:
-                data = data["input"]
-        except:
-            # If not valid JSON, try to extract from free text
-            data = extract_from_text(content)
-
-    # Extract required fields
-    return {
-        "firstName": data.get("firstName", ""),
-        "lastName": data.get("lastName", ""),
-        "role": data.get("role", "")
-    }
-
-
-def extract_from_text(text: str) -> dict:
-    """Extract firstName, lastName, and role from free text like 'Onboard Moi Dom as a Architect'"""
-    if not text or not isinstance(text, str):
-        return {}
-
-    result = {}
-
-    # Remove common prefixes
-    cleaned = re.sub(r'^(onboard|add|register|create|hire)\s+', '', text, flags=re.IGNORECASE).strip()
-
-    # Try to find name pattern (two capitalized words before "as")
-    name_match = re.search(r'\b([A-Z][a-z]+)\s+([A-Z][a-z]+)\b', cleaned)
-    if name_match:
-        result["firstName"] = name_match.group(1)
-        result["lastName"] = name_match.group(2)
-
-    # Try to find role after "as" (with optional article)
-    # Pattern: "as [a/an/the] <role>"
-    role_patterns = [
-        r'\bas\s+a\s+([A-Z][a-zA-Z\s]+)',      # "as a Architect"
-        r'\bas\s+an\s+([A-Z][a-zA-Z\s]+)',     # "as an Engineer"
-        r'\bas\s+the\s+([A-Z][a-zA-Z\s]+)',    # "as the Manager"
-        r'\bas\s+([A-Z][a-zA-Z\s]+)',          # "as Manager"
-    ]
-
-    for pattern in role_patterns:
-        role_match = re.search(pattern, cleaned, re.IGNORECASE)
-        if role_match:
-            result["role"] = role_match.group(1).strip()
-            break
-
-    return result
-
-
-# ==================== Health Check ====================
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.head("/health")
-def health_head():
-    return Response(status_code=200)
-
-
-# ==================== OpenAI Chat Completions (Streaming) ====================
-@app.post("/v1/chat/completions")
-async def chat_completions(payload: dict = Body(...)):
+def sse_chunk(delta_content: Optional[str], finish: bool = False) -> Dict[str, Any]:
     """
-    OpenAI-compatible endpoint with streaming support.
-    Always calls IT agent after validating HR data.
+    Minimal SSE chunk helper, mirroring OpenAI's incremental format so UIs
+    that already handle it don't need any changes.
     """
-    model = payload.get("model", "hr-agent")
-    wants_stream = bool(payload.get("stream", False))
-
-    # Extract user message
-    messages = payload.get("messages", [])
-    user_msgs = [m for m in messages if m.get("role") == "user"]
-    content = user_msgs[-1]["content"] if user_msgs else ""
-
-    # Parse input
-    input_data = parse_input(content)
-
-    async def do_work() -> str:
-        """Validate HR data and call IT agent"""
-        try:
-            # Validate required fields
-            if not all([input_data.get("firstName"), input_data.get("lastName"), input_data.get("role")]):
-                missing = [k for k in ["firstName", "lastName", "role"] if not input_data.get(k)]
-                return json.dumps({"error": f"Missing required fields: {missing}"})
-
-            # Validate new hire
-            hr_out = validate_new_hire(NewHireIn(**input_data))
-
-            # Call IT agent
-            it_out = await call_it_agent(hr_out)
-
-            # Return combined result
-            result = {
-                "hr": hr_out.model_dump(),
-                "it": it_out
-            }
-            return json.dumps(result)
-        except Exception as e:
-            return json.dumps({"error": str(e)})
-
-    # Streaming response
-    if wants_stream:
-        chunk_id = f"chatcmpl-{uuid.uuid4().hex[:12]}"
-        created = int(time.time())
-
-        async def stream():
-            # 1) Send role chunk
-            yield f"data: {json.dumps({'id': chunk_id, 'object': 'chat.completion.chunk', 'created': created, 'model': model, 'choices': [{'index': 0, 'delta': {'role': 'assistant'}, 'finish_reason': None}]})}\n\n"
-            await asyncio.sleep(0)
-
-            # 2) Do the work
-            result_text = await do_work()
-
-            # 3) Stream content in chunks
-            chunk_size = 80
-            for i in range(0, len(result_text), chunk_size):
-                chunk = result_text[i:i+chunk_size]
-                yield f"data: {json.dumps({'id': chunk_id, 'object': 'chat.completion.chunk', 'created': created, 'model': model, 'choices': [{'index': 0, 'delta': {'content': chunk}, 'finish_reason': None}]})}\n\n"
-                await asyncio.sleep(0)
-
-            # 4) Send stop chunk
-            yield f"data: {json.dumps({'id': chunk_id, 'object': 'chat.completion.chunk', 'created': created, 'model': model, 'choices': [{'index': 0, 'delta': {}, 'finish_reason': 'stop'}]})}\n\n"
-            yield "data: [DONE]\n\n"
-
-        return StreamingResponse(
-            stream(),
-            media_type="text/event-stream",
-            headers={
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "X-Accel-Buffering": "no"
-            }
-        )
-
-    # Non-streaming response
-    final_text = await do_work()
     return {
-        "id": f"chatcmpl-{uuid.uuid4().hex[:12]}",
-        "object": "chat.completion",
+        "id": f"cmpl-{int(time.time() * 1000)}",
+        "object": "chat.completion.chunk",
         "created": int(time.time()),
-        "model": model,
+        "model": MODEL_ID,
         "choices": [{
             "index": 0,
-            "message": {"role": "assistant", "content": final_text},
-            "finish_reason": "stop"
+            "delta": {} if finish else {"content": delta_content or ""},
+            "finish_reason": "stop" if finish else None
         }]
     }
 
+def stream_text(text: str):
+    """
+    Stream long responses in bite-sized pieces to keep the preview snappy.
+    """
+    chunk = 160
+    for i in range(0, len(text), chunk):
+        yield f"data: {json.dumps(sse_chunk(text[i:i+chunk]))}\n\n"
+    yield f"data: {json.dumps(sse_chunk(None, finish=True))}\n\n"
 
-# ==================== Entrypoint ====================
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.environ.get("PORT", "8080"))
-    print(f"Starting HR Agent on port {port}")
-    uvicorn.run("main:app", host="0.0.0.0", port=port, log_level="info")
+def parse_messages(body: Dict[str, Any]) -> List[Dict[str, str]]:
+    """
+    Guard against malformed requests: we strictly require a 'messages' array.
+    """
+    messages = body.get("messages")
+    if not isinstance(messages, list):
+        raise ValueError("Missing 'messages' array")
+    return messages
+
+@app.get("/health")
+def health():
+    # Basic liveness probe + identity.
+    return {"status": "ok", "model": MODEL_ID, "agent": AGENT_NAME}
+
+@app.get("/.well-known/agent-card.json")
+def agent_card():
+    """
+    A2A-style discovery card so the supervisor knows how to call this service.
+    """
+    return JSONResponse({
+        "spec_version": "v1",
+        "kind": "external",
+        "name": AGENT_NAME,
+        "title": PUBLIC_TITLE,
+        "description": PUBLIC_DESC,
+        "provider": "external_chat",
+        "api_url": API_URL,
+        "auth_scheme": "NONE",
+        "chat_params": {
+            "model": MODEL_ID,
+            "stream": True
+        },
+        "config": {"hidden": False}
+    })
+
+@app.post("/v1/chat/completions")
+async def chat_completions(req: Request):
+    """
+    Onboard handler:
+      - Parses user text for "Onboard <Full Name> as <Role>"
+      - Synthesizes email + ID
+      - Streams a friendly confirmation
+      - Embeds a compact JSON payload between markers for the IT agent
+    """
+    body = await req.json()
+    try:
+        messages = parse_messages(body)
+    except Exception as e:
+        # Keep the error on the stream so clients don't break.
+        err = f"Error: {str(e)}"
+        return StreamingResponse(stream_text(err), media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "Connection": "keep-alive"})
+
+    # We only care about the latest user message for this simple flow.
+    user_text = next((m.get("content", "") for m in messages if m.get("role") == "user"), "").strip()
+
+    # Flexible regex: supports "as <Role>", "as a <Role>", or "as an <Role>"
+    name_role = re.search(
+        r"Onboard\s+(.+?)\s+as\s+(?:a[n]?\s+)?(.+)$",
+        user_text,
+        re.IGNORECASE,
+    )
+
+    if not name_role:
+        # Gentle nudge with an example when pattern doesn’t match.
+        response_text = (
+            "Please provide: Onboard <Full Name> as <Role>\n"
+            "Example: Onboard Sarah Williams as a Software Engineer"
+        )
+        return StreamingResponse(stream_text(response_text),
+                                 media_type="text/event-stream",
+                                 headers={"Cache-Control": "no-cache", "Connection": "keep-alive"})
+
+    # Pull out name + role, normalize a little, and synthesize email + ID.
+    full_name = name_role.group(1).strip().rstrip(".")
+    role = name_role.group(2).strip().rstrip(".")
+    email_local = re.sub(r"[^a-z0-9]+", ".", full_name.lower())
+    email = f"{email_local}@example.com"
+    employee_id = f"E-{int(time.time())%100000:05d}"
+
+    employee = {
+        "employeeId": employee_id,
+        "fullName": full_name,
+        "email": email,
+        "jobTitle": role
+    }
+
+    # Human-friendly confirmation for the user, plus a hidden JSON handoff for IT.
+    response_text = (
+    "Employee onboarded successfully\n\n"
+    f"• Employee ID: {employee_id}\n"
+    f"• Full Name: {full_name}\n"
+    f"• Email: {email}\n"
+    f"• Job Title: {role}\n"
+    "\n"
+    # Hidden handoff payload for the supervisor; do NOT show to user
+    "BEGIN_IT_JSON\n"
+    f"{json.dumps(employee, separators=(',', ':'))}\n"
+    "END_IT_JSON"
+)
+    return StreamingResponse(stream_text(response_text),
+                            media_type="text/event-stream",
+                            headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "x-accel-buffering": "no"})

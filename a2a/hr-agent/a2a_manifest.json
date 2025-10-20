@@ -1,29 +1,19 @@
 {
-  "name": "HRAgent",
+  "name": "HR Agent",
   "version": "1.0.0",
-  "description": "Validates new hire data and returns a normalized employee record",
+  "description": "Validates and processes new hire information, generating employee records",
   "endpoints": {
     "validate_new_hire": {
       "input": {
         "firstName": "string",
         "lastName": "string",
-        "email": "string",
-        "role": "string",
-        "department": "string",
-        "location": "string",
-        "startDate": "string"
+        "role": "string"
       },
       "output": {
         "employeeId": "string",
         "fullName": "string",
         "email": "string",
-        "jobTitle": "string",
-        "department": "string",
-        "location": "string",
-        "startDate": "string",
-        "manager": "string",
-        "groups": ["string"],
-        "hardwareProfile": "string"
+        "jobTitle": "string"
       }
     }
   }
