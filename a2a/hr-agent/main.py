@@ -76,11 +76,12 @@ def agent_card():
         "name": AGENT_NAME,
         "title": PUBLIC_TITLE,
         "description": PUBLIC_DESC,
-        "provider": "external_chat",
+        "provider": "external_chat/A2A/0.2.1",
         "api_url": API_URL,
         "auth_scheme": "NONE",
         "chat_params": {
             "model": MODEL_ID,
+            "agentProtocol": "A2A",
             "stream": True
         },
         "config": {"hidden": False}
