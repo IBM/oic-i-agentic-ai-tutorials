@@ -47,6 +47,7 @@ coverage/
 *.md
 *.txt
 *.sh
+!requirements.txt
 
 # --- Editor and IDE folders ---
 .vscode/
