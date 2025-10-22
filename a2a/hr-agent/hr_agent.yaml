@@ -1,0 +1,40 @@
+# HR Agent - Watsonx Orchestrate Configuration
+#
+# This file tells Watsonx Orchestrate how to connect to and use the HR agent.
+# You import this file using: orchestrate agents import -f hr_agent.yaml
+
+spec_version: v1
+kind: external
+
+# Agent identification
+name: hr_agent
+title: HR Agent
+description: Creates employee records from natural language onboarding requests. Use this agent to onboard new employees.
+
+# Tags help with agent discovery and organization
+tags:
+  - hr
+  - onboarding
+  - employee
+
+# Provider Configuration
+# We use "external_chat" which tells Orchestrate this is a chat-based agent
+# that follows OpenAI's Chat Completions API format
+provider: external_chat
+
+# The URL where Orchestrate will send chat requests
+# This points to our deployed agent's chat completions endpoint
+api_url: https://hr-agent-a2a.20xtogjmfdje.us-south.codeengine.appdomain.cloud/v1/chat/completions
+
+# No authentication required for this demo agent
+# In production, you'd typically use API keys or OAuth
+auth_scheme: NONE
+
+# Parameters that Orchestrate will include in requests to the agent
+chat_params:
+  model: hr-agent
+  stream: true  # Enable streaming for better user experience
+
+# Agent visibility in Orchestrate
+config:
+  hidden: false  # Make the agent visible in the Orchestrate interface
