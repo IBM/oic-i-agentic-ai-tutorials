@@ -357,3 +357,23 @@ orchestrate agents import -f hr_manager_agent.yaml
 # Deploy HR Manager Agent
 orchestrate agents deploy -n hr_agent_pure_a2a
 ```
+
+### Test A2A Protocol
+
+```bash
+# Verify A2A implementation
+./verify_a2a.sh
+
+# Run automated tests
+./test_agent.sh
+```
+
+### Example Usage in Orchestrate Chat
+
+```
+HR Agent:
+"Onboard Sarah Williams as Software Engineer"
+
+HR Manager Agent:
+"I need to onboard a new employee named John Doe as Data Analyst"
+```
