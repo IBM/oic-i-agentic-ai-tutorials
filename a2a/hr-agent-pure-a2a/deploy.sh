@@ -8,14 +8,14 @@ RESOURCE_GROUP="itz-wxo-68dbad284f96931ccaa195"
 PROJECT_NAME="ce-itz-wxo-68dbad284f96931ccaa195"
 REGISTRY="us.icr.io"
 REGISTRY_NAMESPACE="cr-itz-s147ho60"
-HR_IMAGE="${REGISTRY}/${REGISTRY_NAMESPACE}/hr-agent-a2a:latest"
+HR_IMAGE="${REGISTRY}/${REGISTRY_NAMESPACE}/hr-agent-pure-a2a:latest"
 REGISTRY_SECRET="icr-secret"
 PORT=8080
 
-HR_APP="hr-agent-a2a"
+HR_APP="hr-agent-pure-a2a"
 
-# Public URL - will be set after deployment or use existing
-HR_URL="${HR_URL:-https://hr-agent-a2a.206hm5j0cjd0.us-south.codeengine.appdomain.cloud}"
+# Public URL - will be set after deployment
+HR_URL="${HR_URL:-}"
 
 ############################################
 # Helpers
@@ -29,10 +29,14 @@ exists_app () {
   fi
 }
 
+get_app_url () {
+  local name="$1"
+  ibmcloud ce application get --name "$name" --output json | jq -r '.status.url'
+}
+
 upsert_app () {
   local name="$1"
   local image="$2"
-  local public_url="$3"
 
   if exists_app "$name"; then
     echo "Updating app: ${name}"
@@ -40,8 +44,7 @@ upsert_app () {
       --name "$name" \
       --image "$image" \
       --registry-secret "$REGISTRY_SECRET" \
-      --port "$PORT" \
-      --env PUBLIC_URL="$public_url"
+      --port "$PORT"
   else
     echo "Creating app: ${name}"
     ibmcloud ce application create \
@@ -51,9 +54,8 @@ upsert_app () {
       --port "$PORT" \
       --cpu 0.5 \
       --memory 1G \
-      --min-scale 0 \
-      --max-scale 2 \
-      --env PUBLIC_URL="$public_url"
+      --min-scale 1 \
+      --max-scale 2
   fi
 }
 
@@ -62,7 +64,7 @@ upsert_app () {
 ############################################
 echo ">> Checking IBM Cloud login"
 if ! ibmcloud target >/dev/null 2>&1; then
-  echo "❌ Not logged in. Run: ibmcloud login --sso"
+  echo " Not logged in. Run: ibmcloud login --sso"
   exit 1
 fi
 
@@ -77,27 +79,33 @@ ibmcloud cr login
 # Build & Push Image
 ############################################
 echo "========================================"
-echo "Building & pushing HR Agent A2A image"
+echo "Building & pushing HR Agent Pure A2A image"
 echo "========================================"
-docker buildx build --platform linux/amd64 -t "$HR_IMAGE" --push .
+docker buildx build --platform linux/amd64 -f Dockerfile -t "$HR_IMAGE" --push .
 
 ############################################
 # Create/Update App
 ############################################
 echo "========================================"
-echo "Deploying HR Agent A2A"
+echo "Deploying HR Agent Pure A2A"
 echo "========================================"
-upsert_app "$HR_APP" "$HR_IMAGE" "$HR_URL"
+upsert_app "$HR_APP" "$HR_IMAGE"
 
 ############################################
-# Wait & Test
+# Get the deployed URL
 ############################################
 echo ">> Waiting for app to become ready (30s)"
 sleep 30
 
+HR_URL=$(get_app_url "$HR_APP")
+echo "App deployed at: $HR_URL"
+
+############################################
+# Test
+############################################
 set +e
 echo "========================================"
-echo "Testing HR Agent A2A"
+echo "Testing HR Agent Pure A2A"
 echo "========================================"
 
 echo ""
@@ -106,22 +114,31 @@ echo "   GET $HR_URL/.well-known/agent-card.json"
 curl -sS --max-time 15 "$HR_URL/.well-known/agent-card.json" | jq .
 
 echo ""
-echo "2. Sample Task - Onboard Employee"
+echo "2. Health Check"
+echo "   GET $HR_URL/health"
+curl -sS --max-time 15 "$HR_URL/health" | jq .
+
+echo ""
+echo "3. Sample Task - Onboard Employee (A2A Protocol)"
 echo "   Testing with: 'Onboard Sarah Williams as a Software Engineer'"
 curl -N -sS --max-time 30 "$HR_URL/tasks" \
   -H "content-type: application/json" \
   -d '{
-        "messages": [
-          {
+        "jsonrpc": "2.0",
+        "method": "message/send",
+        "params": {
+          "message": {
             "role": "user",
-            "content": [
+            "parts": [
               {
-                "type": "text",
-                "text": "Onboard Sarah Williams as a Software Engineer"
+                "root": {
+                  "text": "Onboard Sarah Williams as a Software Engineer"
+                }
               }
             ]
           }
-        ]
+        },
+        "id": 1
       }'
 echo ""
 echo ""
@@ -129,8 +146,9 @@ echo ""
 echo "========================================"
 echo "Deployment Complete!"
 echo "========================================"
-echo "HR Agent URL: $HR_URL"
+echo "HR Agent Pure A2A URL: $HR_URL"
 echo "Agent Card: $HR_URL/.well-known/agent-card.json"
+echo "Health Check: $HR_URL/health"
 echo ""
-echo "You can now add this agent to Watsonx Orchestrate using the hr_agent.yaml file."
+echo "You can now add this agent to Watsonx Orchestrate using the agent card URL."
 echo ""
