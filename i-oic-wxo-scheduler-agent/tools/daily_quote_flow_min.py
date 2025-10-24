@@ -11,10 +11,10 @@ from ibm_watsonx_orchestrate.flow_builder.flows import (
 )
 from get_quote_min import get_quote_min
 
+class NotifyUserInput(BaseModel):
+    quote: str = Field(description="The quote text.")
+    to_email: str = Field(description="Recipient email address.")
 
-class Quote(BaseModel):
-    text: str = Field(description="The quote text.")
-    author: str = Field(description="The author of the quote.")
 
 
 class Message(BaseModel):
@@ -23,15 +23,15 @@ class Message(BaseModel):
 
 def build_notify_agent_node(aflow: Flow) -> AgentNode:
     """
-    Builds an Agent Node that sends the quote to another agent (e.g., email_notifier_agent).
+    Builds an Agent Node that sends the quote to another agent.
     """
     notify_agent_node = aflow.agent(
         name="notify_user_via_agent",
         agent="email_test_agent",  # 👈 name of the other agent you’ll create
         title="Send quote via email",
         description="This agent will send the daily quote to the user via email.",
-        message="Please send this quote to sgar3484@gmail.com with subject and body being testing wxo agent scheduler.",
-        input_schema=Quote,
+        message="Please send this quote clearly formatted to the recipient email",
+        input_schema=NotifyUserInput,
         output_schema=Message
     )
     return notify_agent_node
@@ -48,7 +48,5 @@ def build_daily_quote_flow(aflow: Flow = None) -> Flow:
     """
     quote_node = aflow.tool(get_quote_min)
     notify_agent_node = build_notify_agent_node(aflow)
-
     aflow.sequence(START, quote_node, notify_agent_node, END)
-
     return aflow
