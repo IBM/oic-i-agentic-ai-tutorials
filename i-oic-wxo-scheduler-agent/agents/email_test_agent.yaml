@@ -1,0 +1,13 @@
+spec_version: v1
+kind: native
+name: email_test_agent
+description: >
+  Agent that sends motivational quotes via email using the send_email_notification tool.
+instructions: >
+  1. You are given `quote` (the full quote text) and `to_email` (the recipient email address).
+  2. Use the send_email_notification tool to send the quote email.
+  3. Always return a JSON object with a single field: {"message": "<status>"}.
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: react
+tools:
+  - send_email_notification
