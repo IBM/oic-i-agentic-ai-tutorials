@@ -1,0 +1,22 @@
+spec_version: v1
+kind: external
+name: hr_agent_pure_a2a
+title: HR Agent (Pure A2A)
+nickname: hr_agent
+provider: external_chat/A2A/0.2.1
+description: >
+  HR agent that creates employee records from natural language onboarding requests.
+  Processes requests like "Onboard John Doe as Software Engineer" and generates
+  employee IDs, email addresses, and structured employee records.
+tags:
+  - hr
+  - onboarding
+  - employee
+  - recruitment
+api_url: "https://hr-agent-pure-a2a.20xtogjmfdje.us-south.codeengine.appdomain.cloud"
+style: default
+auth_scheme: NONE
+chat_params:
+  stream: true  # Enable streaming for real-time status updates
+config:
+  hidden: false  # Make agent visible in UI
