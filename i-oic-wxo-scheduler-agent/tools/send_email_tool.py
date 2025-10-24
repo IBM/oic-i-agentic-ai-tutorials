@@ -1,58 +1,47 @@
-import os
-import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from pydantic import BaseModel, Field
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
-
-class EmailRequest(BaseModel):
-    to_email: str = Field(description="Recipient email address")
-    subject: str = Field(description="Subject of the email")
-    body: str = Field(description="Body text of the email")
-
+import os
 
 class EmailResponse(BaseModel):
-    status: str = Field(description="Status of email send request")
+    message: str = Field(description="Result of sending the email.")
 
 
 @tool(
-    name="send_email_mailersend",
+    name= "send_email_notification",
     permission=ToolPermission.READ_ONLY,
-    description="Send an email using the MailerSend transactional email API.",
+    description="Send an email notification to a specified users."
 )
-def send_email_mailersend(to_email: str, subject: str, body: str) -> EmailResponse:
+def send_email_notification(to_email: str, quote: str) -> EmailResponse:
     """
-    Sends an email using the MailerSend API.
-    Requires MAILERSEND_API_KEY and MAILERSEND_FROM_EMAIL in environment variables.
+    Sends an email using SMTP.
+    You can configure this to use Gmail SMTP or any internal SMTP relay.
     """
+
     try:
-        
-        api_key = os.getenv("MAILERSEND_API")
-        from_email = os.getenv("MAILERSEND_DOMAIN")
-        if not api_key:
-            return EmailResponse(status="❌ Missing MAILERSEND_API_KEY environment variable")
+        # SMTP configuration
+        smtp_server = os.getenv("SMTP_SERVER", "example.ibm.com")
+        smtp_port = os.getenv("SMTP_PORT", "25")
+        sender_email = os.getenv("SENDER_EMAIL", "yourname@in.ibm.com")
+        # Create message
+        msg = MIMEMultipart()
+        msg["From"] = sender_email
+        msg["To"] = to_email
+        msg["Subject"] = "Wxo Scheduler Testing"
+        msg.attach(MIMEText(quote, "plain"))
 
-        url = "https://api.mailersend.com/v1/email"
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
 
-        payload = {
-            "from": {"email": from_email, "name": "Watson Orchestrate Agent"},
-            "to": [{"email": "<receiver email>"}],
-            "subject": subject,
-            "text": body
-        }
+        # Send mail
+        with smtplib.SMTP(smtp_server,smtp_port) as server:
+            server.starttls()
+            server.send_message(msg)
 
-        response = requests.post(url, json=payload, headers=headers, timeout=10)
-
-        if response.status_code in [200, 202]:
-            return EmailResponse(status=f"✅ Email successfully sent to {to_email}")
-        else:
-            return EmailResponse(
-                status=f"❌ MailerSend API Error: {response.status_code} - {response.text}"
-            )
+        return EmailResponse(message=f"Email sent successfully to {to_email}")
 
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
-        return EmailResponse(status=f"❌ Exception: {repr(e)}\nTraceback:\n{tb}")
+        return EmailResponse(message=f"Error sending email: {repr(e)}\nTraceback:\n{tb}")
+

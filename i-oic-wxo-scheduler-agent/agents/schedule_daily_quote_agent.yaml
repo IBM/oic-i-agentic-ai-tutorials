@@ -1,6 +1,6 @@
 spec_version: v1
 kind: native
-name: schedule_daily_quote_agent_min
+name: daily_quote_agent
 description: >
   An agent that schedules or runs a simple daily quote flow.
 instructions: >
