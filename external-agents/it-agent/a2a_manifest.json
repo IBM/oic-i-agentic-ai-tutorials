@@ -1,0 +1,20 @@
+{
+  "name": "IT Provisioning Agent",
+  "version": "1.0.0",
+  "description": "Provisions IT resources including directory accounts and hardware for employees",
+  "endpoints": {
+    "provision_account": {
+      "input": {
+        "employeeId": "string",
+        "fullName": "string",
+        "email": "string",
+        "jobTitle": "string"
+      },
+      "output": {
+        "directoryUserId": "string",
+        "hardwareRequestId": "string",
+        "status": "string"
+      }
+    }
+  }
+}

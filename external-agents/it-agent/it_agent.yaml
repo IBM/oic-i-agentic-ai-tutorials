@@ -1,0 +1,13 @@
+spec_version: v1
+kind: external
+name: it_agent_a2a
+title: IT Agent (Streaming)
+provider: external_chat
+description: IT provisioning via OpenAI Chat Completions (streaming).
+tags: [it, provisioning, streaming]
+api_url: https://it-agent-a2a.206hm5j0cjd0.us-south.codeengine.appdomain.cloud/v1/chat/completions
+auth_scheme: NONE
+chat_params:
+  model: it-agent
+  stream: true
+config: { hidden: false }

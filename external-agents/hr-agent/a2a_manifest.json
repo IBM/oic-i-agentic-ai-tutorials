@@ -1,0 +1,20 @@
+{
+  "name": "HR Agent",
+  "version": "1.0.0",
+  "description": "Validates and processes new hire information, generating employee records",
+  "endpoints": {
+    "validate_new_hire": {
+      "input": {
+        "firstName": "string",
+        "lastName": "string",
+        "role": "string"
+      },
+      "output": {
+        "employeeId": "string",
+        "fullName": "string",
+        "email": "string",
+        "jobTitle": "string"
+      }
+    }
+  }
+}
