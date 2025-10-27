@@ -13,7 +13,7 @@ tags:
   - onboarding
   - employee
   - recruitment
-api_url: "https://hr-agent-pure-a2a.20xtogjmfdje.us-south.codeengine.appdomain.cloud"
+api_url: "HR_AGENT_A2A_ENDPOINT"
 style: default
 auth_scheme: NONE
 chat_params:
