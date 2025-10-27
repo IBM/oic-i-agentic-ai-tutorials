@@ -27,6 +27,8 @@ from a2a.types import (
     AgentSkill,
 )
 from dotenv import load_dotenv
+from starlette.responses import JSONResponse
+from starlette.routing import Route
 
 from app.agent import HRAgent
 from app.agent_executor import HRAgentExecutor
@@ -38,6 +40,11 @@ load_dotenv()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+async def health_check(request):
+    """Health check endpoint for monitoring and load balancers."""
+    return JSONResponse({"status": "healthy"})
 
 
 @click.command()
@@ -119,11 +126,14 @@ def main(host, port):
         # This automatically sets up:
         # - /.well-known/agent.json (agent card)
         # - / (JSON-RPC 2.0 endpoint)
-        # - /health (health check)
-        server = A2AStarletteApplication(
+        a2a_app = A2AStarletteApplication(
             agent_card=agent_card,
             http_handler=request_handler
         )
+
+        # Build the Starlette app and add custom health check endpoint
+        server = a2a_app.build()
+        server.routes.append(Route('/health', health_check, methods=['GET']))
 
         # Log startup information
         logger.info(f"Starting HR Agent on {host}:{port}")
@@ -131,7 +141,7 @@ def main(host, port):
         logger.info(f"Agent Card: {agent_url}.well-known/agent.json")
 
         # Start the server
-        uvicorn.run(server.build(), host=host, port=port)
+        uvicorn.run(server, host=host, port=port)
 
     except Exception as e:
         logger.error(f'An error occurred during server startup: {e}')
