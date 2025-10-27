@@ -1,9 +1,8 @@
 """
 HR Agent Server - A2A Protocol Implementation
 
-This module sets up and runs the HR Agent as an A2A-compliant server
-using the official a2a-sdk. The server exposes an agent card for discovery
-and handles employee onboarding requests via JSON-RPC 2.0.
+Employee onboarding agent that implements the A2A protocol for watsonx Orchestrate.
+Handles natural language requests like "Onboard John Smith as Software Engineer".
 """
 
 import logging
@@ -34,16 +33,14 @@ from app.agent import HRAgent
 from app.agent_executor import HRAgentExecutor
 
 
-# Load environment variables from .env file if present
 load_dotenv()
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 async def health_check(request):
-    """Health check endpoint for monitoring and load balancers."""
+    """Health check endpoint for container orchestration platforms."""
     return JSONResponse({"status": "healthy"})
 
 
@@ -51,20 +48,15 @@ async def health_check(request):
 @click.option('--host', 'host', default='0.0.0.0', help='Host to bind to')
 @click.option('--port', 'port', default=8080, help='Port to listen on')
 def main(host, port):
-    """
-    Start the HR Agent A2A server.
-
-    This server implements the A2A protocol for employee onboarding,
-    providing automated employee record creation from natural language requests.
-    """
+    """Start the HR onboarding agent server."""
     try:
-        # Define agent capabilities
+        # Configure what the agent supports
         capabilities = AgentCapabilities(
-            streaming=True,  # Support real-time status updates
-            push_notifications=True  # Support push notifications
+            streaming=True,  # Send progress updates in real-time
+            push_notifications=True  # Enable async notifications
         )
 
-        # Define the employee onboarding skill
+        # Define the skill exposed in the agent card
         skill = AgentSkill(
             id='employee_onboarding',
             name='Employee Onboarding',
@@ -77,22 +69,18 @@ def main(host, port):
             ],
         )
 
-        # Determine the public agent URL for the agent card
-        # Priority: AGENT_URL env var > Code Engine auto-detect > localhost
+        # Determine the public URL for the agent
+        # Priority: AGENT_URL env var > IBM Code Engine detection > localhost
         agent_url = os.getenv('AGENT_URL')
         if not agent_url:
-            # Check for IBM Code Engine environment variables
             ce_subdomain = os.getenv('CE_SUBDOMAIN')
             ce_domain = os.getenv('CE_DOMAIN')
             if ce_subdomain and ce_domain:
-                # Running in Code Engine - use auto-detected public URL
                 agent_url = f'https://{ce_subdomain}.{ce_domain}/'
             else:
-                # Local development - use host and port
                 agent_url = f'http://{host}:{port}/'
 
-        # Create the agent card for discovery
-        # This will be exposed at /.well-known/agent.json
+        # Create the agent card for discovery (served at /.well-known/agent.json)
         agent_card = AgentCard(
             name='HR Agent',
             description='HR agent that creates employee records from natural language',
@@ -104,47 +92,41 @@ def main(host, port):
             skills=[skill],
         )
 
-        # Set up HTTP client for push notifications
+        # Set up push notifications for async task updates
         httpx_client = httpx.AsyncClient()
-
-        # Configure push notification system
         push_config_store = InMemoryPushNotificationConfigStore()
         push_sender = BasePushNotificationSender(
             httpx_client=httpx_client,
             config_store=push_config_store
         )
 
-        # Create the request handler with all components
+        # Wire up the request handler with our custom executor
         request_handler = DefaultRequestHandler(
-            agent_executor=HRAgentExecutor(),  # Our custom executor
-            task_store=InMemoryTaskStore(),  # In-memory task storage
+            agent_executor=HRAgentExecutor(),
+            task_store=InMemoryTaskStore(),  # Using in-memory storage (no persistence)
             push_config_store=push_config_store,
             push_sender=push_sender
         )
 
-        # Build the A2A Starlette application
-        # This automatically sets up:
-        # - /.well-known/agent.json (agent card)
-        # - / (JSON-RPC 2.0 endpoint)
+        # Initialize the A2A application
         a2a_app = A2AStarletteApplication(
             agent_card=agent_card,
             http_handler=request_handler
         )
 
-        # Build the Starlette app and add custom health check endpoint
+        # Build the server and add health check endpoint
+        # Note: The SDK doesn't provide /health by default, so we add it manually
         server = a2a_app.build()
         server.routes.append(Route('/health', health_check, methods=['GET']))
 
-        # Log startup information
         logger.info(f"Starting HR Agent on {host}:{port}")
         logger.info(f"Agent URL: {agent_url}")
         logger.info(f"Agent Card: {agent_url}.well-known/agent.json")
 
-        # Start the server
         uvicorn.run(server, host=host, port=port)
 
     except Exception as e:
-        logger.error(f'An error occurred during server startup: {e}')
+        logger.error(f'Startup failed: {e}')
         sys.exit(1)
 
 

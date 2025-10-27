@@ -1,8 +1,8 @@
 """
 HR Agent Executor - A2A Protocol Implementation
 
-This module implements the AgentExecutor interface from the A2A SDK,
-managing the task lifecycle for employee onboarding requests.
+Bridges the A2A SDK with our HR agent logic. Handles task lifecycle,
+state transitions, and streaming responses.
 """
 
 import logging
@@ -33,15 +33,13 @@ logger = logging.getLogger(__name__)
 
 class HRAgentExecutor(AgentExecutor):
     """
-    HR Onboarding Agent Executor for A2A Protocol.
+    Executor that connects the A2A protocol handler to our HR agent.
 
-    This executor manages the lifecycle of employee onboarding tasks,
-    handling streaming updates and task state transitions according
-    to the A2A protocol specification.
+    Manages task states (working -> completed/input_required) and
+    streams progress updates back through the event queue.
     """
 
     def __init__(self):
-        """Initialize the executor with an HR agent instance."""
         self.agent = HRAgent()
 
     async def execute(
@@ -50,43 +48,35 @@ class HRAgentExecutor(AgentExecutor):
         event_queue: EventQueue,
     ) -> None:
         """
-        Execute an employee onboarding request.
+        Process an onboarding request and stream updates back to the client.
 
-        This method processes incoming A2A messages, manages task states,
-        and streams progress updates back to the client.
-
-        Args:
-            context: Request context containing user message and task info
-            event_queue: Queue for publishing task state changes
-
-        Raises:
-            ServerError: If validation fails or an error occurs during execution
+        Handles the full task lifecycle: creation, status updates, and completion.
         """
-        # Validate the incoming request
+        # Validate the request (placeholder for future validation logic)
         error = self._validate_request(context)
         if error:
             raise ServerError(error=InvalidParamsError())
 
-        # Extract the user's query from the request
+        # Get the user's message text
         query = context.get_user_input()
 
-        # Get or create a task for this request
+        # Get or create a task - each conversation turn might reuse an existing task
         task = context.current_task
         if not task:
             task = new_task(context.message)  # type: ignore
             await event_queue.enqueue_event(task)
 
-        # Create a task updater for managing task state
+        # TaskUpdater handles sending state changes back through the event queue
         updater = TaskUpdater(event_queue, task.id, task.contextId)
 
         try:
-            # Stream responses from the HR agent
+            # Process the request and stream updates
             async for item in self.agent.stream(query, task.contextId):
                 is_task_complete = item['is_task_complete']
                 require_user_input = item['require_user_input']
 
                 if not is_task_complete and not require_user_input:
-                    # Task is in progress - send status update
+                    # Still working - send progress update
                     await updater.update_status(
                         TaskState.working,
                         new_agent_text_message(
@@ -96,7 +86,7 @@ class HRAgentExecutor(AgentExecutor):
                         ),
                     )
                 elif require_user_input:
-                    # Task needs user input - transition to input_required state
+                    # Need more info from the user
                     await updater.update_status(
                         TaskState.input_required,
                         new_agent_text_message(
@@ -108,7 +98,7 @@ class HRAgentExecutor(AgentExecutor):
                     )
                     break
                 else:
-                    # Task is complete - add result as artifact and mark done
+                    # All done - attach the result as an artifact
                     await updater.add_artifact(
                         [Part(root=TextPart(text=item['content']))],
                         name='onboarding_result',
@@ -117,21 +107,15 @@ class HRAgentExecutor(AgentExecutor):
                     break
 
         except Exception as e:
-            logger.error(f'An error occurred while streaming the response: {e}')
+            logger.error(f'Error during task execution: {e}')
             raise ServerError(error=InternalError()) from e
 
     def _validate_request(self, context: RequestContext) -> bool:
         """
-        Validate the incoming request.
+        Validate the request before processing.
 
-        Currently performs no validation (returns False = no error).
-        Can be extended to validate message format, authentication, etc.
-
-        Args:
-            context: Request context to validate
-
-        Returns:
-            False if valid, error object if invalid
+        Returns False (no error) for now. Could be extended to check
+        message format, authentication, rate limits, etc.
         """
         return False
 
@@ -139,15 +123,8 @@ class HRAgentExecutor(AgentExecutor):
         self, context: RequestContext, event_queue: EventQueue
     ) -> None:
         """
-        Cancel a running task.
+        Cancel a task in progress.
 
-        Task cancellation is not supported in this implementation.
-
-        Args:
-            context: Request context for the task to cancel
-            event_queue: Event queue for publishing cancellation
-
-        Raises:
-            ServerError: Always raises UnsupportedOperationError
+        Not implemented yet - raises an error if called.
         """
         raise ServerError(error=UnsupportedOperationError())
