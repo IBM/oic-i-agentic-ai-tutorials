@@ -1,9 +1,6 @@
 spec_version: v1
-kind: external
-name: hr_manager_agent_pure_a2a
-title: HR Manager Agent (Pure A2A)
-nickname: hr_manager
-provider: external_chat/A2A/0.2.1
+kind: native
+name: onboarding_agent
 description: >
   HR Manager agent that orchestrates employee onboarding and management tasks.
   Can delegate to specialized HR agents for specific operations like onboarding,
@@ -14,11 +11,10 @@ tags:
   - onboarding
   - employee
   - orchestration
-api_url: "https://hr-agent-pure-a2a.20xtogjmfdje.us-south.codeengine.appdomain.cloud"
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
 style: default
-auth_scheme: NONE
-chat_params:
-  stream: true  # Enable streaming for real-time status updates
+collaborators: []
+tools: []
 config:
   hidden: false  # Make agent visible in UI
 behavior: >
