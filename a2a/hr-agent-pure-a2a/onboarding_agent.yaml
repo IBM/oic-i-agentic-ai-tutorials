@@ -13,15 +13,16 @@ tags:
   - orchestration
 llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
 style: default
-collaborators: []
+collaborators:
+  - hr_agent_pure_a2a
 tools: []
 config:
-  hidden: false  # Make agent visible in UI
-behavior: >
+  hidden: false
+instructions: |
   You are an HR management assistant. When users request to onboard new employees,
   collaborate with the hr_agent_pure_a2a to create employee records.
 
-  For employee onboarding requests (e.g., "Onboard John Doe as Software Engineer"),
+  For employee onboarding requests, for example "Onboard John Doe as Software Engineer",
   always delegate to hr_agent_pure_a2a.
 
   You can also help with:
