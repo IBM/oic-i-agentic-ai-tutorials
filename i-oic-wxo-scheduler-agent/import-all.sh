@@ -9,10 +9,10 @@ echo "🚀 Starting Watson Orchestrate import process..."
 echo "📦 Importing tools..."
 
 # Tool that fetches a motivational quote
-orchestrate tools import -k python -f get_quote_min.py
+orchestrate tools import -k python -f ./tools/get_quote_min.py
 
 # Tool that sends email using MailerSend API
-orchestrate tools import -k python -f send_email_tool.py
+orchestrate tools import -k python -f ./tools/send_email_tool.py
 
 echo "✅ Tools imported successfully!"
 
@@ -23,7 +23,7 @@ echo "✅ Tools imported successfully!"
 echo "🌀 Importing flows..."
 
 # Flow that retrieves a quote
-orchestrate flows import -f daily_quote_flow_min.py
+orchestrate flows import -f ./tools/daily_quote_flow_min.py
 
 
 echo "✅ Flows imported successfully!"
@@ -35,10 +35,10 @@ echo "✅ Flows imported successfully!"
 echo "🤖 Importing agents..."
 
 # Agent responsible for sending emails via SMTP
-orchestrate agents import -f email_test_agent.yaml
+orchestrate agents import -f ./agents/email_test_agent.yaml
 
 # Agent responsible for scheduling email or quote flows
-orchestrate agents import -f schedule_daily_quote_agent.yaml
+orchestrate agents import -f ./agents/schedule_daily_quote_agent.yaml
 
 echo "✅ Agents imported successfully!"
 
