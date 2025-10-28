@@ -61,7 +61,7 @@ After import, verify via UI: **Agents** should list `email_test_agent` and `sche
 
 ---
 
-## Schedule the flow (WXO UI)
+## Schedule the flow (watsonx Orchestrate UI)
 
 ![wxo-scheduler-agent](./images/image1.png.png)
 ![wxo-scheduler-agent](./images/image2.png)
