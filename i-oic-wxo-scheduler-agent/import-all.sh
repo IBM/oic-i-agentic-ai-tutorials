@@ -23,7 +23,7 @@ echo "✅ Tools imported successfully!"
 echo "🌀 Importing flows..."
 
 # Flow that retrieves a quote
-orchestrate flows import -f ./tools/daily_quote_flow_min.py
+orchestrate tools import -k flow -f ./tools/daily_quote_flow_min.py
 
 
 echo "✅ Flows imported successfully!"
