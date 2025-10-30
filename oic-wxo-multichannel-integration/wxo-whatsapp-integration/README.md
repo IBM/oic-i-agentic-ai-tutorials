@@ -39,7 +39,6 @@ Step 2: Set Up Your Meta Business Account
 
 ![business_facebook](img/business_facebook.png)
 
- 
 
 
 Step 3: Enable Twilio Numbers for WhatsApp
