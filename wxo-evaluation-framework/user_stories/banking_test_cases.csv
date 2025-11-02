@@ -1,0 +1,11 @@
+Prompt,Answer
+My username is alice. I want to find out my current account balance.,Your current account balance is $12 500.75 (available) and $12750.75 (ledger).
+My username is bob. I want to list my last 5 transactions for account: ACC10002.,Your last 5 transactions for account ACC1****02 are: Transaction ID: T2001
+My username is alice. I want to transfer 250 USD from my account ACC10001 to ACC10002.,Your funds transfer of $250 from account ACC101 to ACC102 has been initiated. The transaction ID is FT20251102152508.
+My username is cust-555. I want to get my account ID.,Your account ID is ACC1****03.
+My username is alice. I want to know the branch code for New York.,The branch code for New York is BR001.
+My username is bob. I want to update my registered email to bob.new@abc.com.,Your registered email has been updated to bob.new@abc.com for account ACC1****02.
+My username is cust-555. I want to update my phone number to +1-555-909-2323.,Your phone number has been updated to +1-555-909-2323 for account ACC1****03.
+My username is alice. I want to see all my transactions between 2025-09-01 and 2025-09-30.,"Your transactions between 2025-09-01 and 2025-09-30 are: Transaction ID: T1002 Date: 2025-09-28	 Type: credit	 Amount: $1500.00	 Description: Payroll - Transaction ID: T1003	 Date: 2025-09-15	 Type: debit	 Amount: -$200.00	 Description: Electric Bill	"
+My username is bob. I want to get details of all my recent transactions.,"Your recent transactions are: Transaction ID: T2001  Date: 2025-10-02  Type: debit	 Amount: -$20.00	 Description: Lunch"
+My username is alice. I want to know if I have sufficient balance to transfer 5000 USD to ACC10003.,You have a sufficient balance to transfer $5000 to ACC1****03. Your current available balance is $12500.75.
