@@ -1,0 +1,509 @@
+Design CSV file that can be used to analyze: It should cover Cost Inflation as well as Customer Feedback sentiment mapped to a common use case that's understood by the general public. and also share how can I accomplish these 2 tasks manually step by step.
+
+
+assistant
+
+Reasoning
+We need to design a CSV file that can be used to analyze cost inflation and customer feedback sentiment. It should be mapped to a common use case understood by general public. And explain how to accomplish these two tasks manually step by step.
+So tasks: design CSV file format with columns to capture cost inflation data and customer feedback sentiment. Provide example data entries maybe. Use a common use case e.g., "Monthly Grocery Shopping" or "Ride-hailing services" or "Electricity bills". Let's choose "Monthly Grocery Shopping" as common.
+The CSV could include: date, item, quantity, price per unit, total cost, inflation_rate, customer_feedback_text, sentiment_label (positive/neutral/negative). Or maybe separate sections but combine.
+Also we need step-by-step manual process to analyze cost inflation (e.g., calculate year-over-year price changes, compute inflation rates, visualize trends). And manually analyze customer feedback sentiment mapping to use case: read feedback, categorize sentiment, count frequencies, maybe compute sentiment scores.
+Explain manual steps: import CSV into spreadsheet, calculate differences, use simple formulas, categorize feedback using simple heuristics.
+Provide a sample CSV snippet and explain each column.
+Also mention mapping to common use case: "Monthly Grocery Shopping" and "Ride-hailing" maybe.
+Ok. Let's produce answer with:
+- Explanation of common use case
+- CSV schema with header row and example rows
+- Step-by-step manual analysis for cost inflation
+- Step-by-step manual analysis for customer feedback sentiment
+- Tools: spreadsheet, manual coding, etc.
+Also mention possible use of pivot tables.
+Let's produce.
+1. What We’re Trying to Measure
+Goal	What it means to most people
+Cost Inflation	How much the price of everyday things (eg. groceries, gas, phone data) has gone up month‑over‑month or year‑over‑year.
+Customer‑Feedback Sentiment	Whether people feel good, neutral or upset about those same everyday services/products.
+Common, everyday use‑case: “Monthly Grocery Shopping” – almost everyone shops for food every month, so the numbers and words will be instantly relatable.
+
+2. CSV Design
+A single CSV file that can answer both questions.
+Each row is one purchase event. We also attach the text of a customer comment that you may have received in a survey, email, or social‑media reply.
+
+Date,Store,Item,Unit,Qty,PricePerUnit,TotalPrice,PrevPrice,InflationRate,Comment,Sentiment
+2024-01-01,Whole Foods,Apples,per lb,2,1.50,3.00,1.40,7.14%,"Loved the crispness!",Positive
+2024-01-01,Whole Foods,Milk,gal,1,3.25,3.25,3.10,4.84%,"Too pricey for a small family.",Negative
+2024-02-01,Whole Foods,Apples,per lb,2,1.60,3.20,1.50,6.67%,"Great selection but a bit expensive.",Neutral
+2024-02-01,Whole Foods,Milk,gal,1,3.50,3.50,3.25,7.69%,"Can't keep up with the costs.",Negative
+...
+
+Column Definitions
+Column	Type	Example	Why it matters
+Date	date	2024‑01‑01	Lets you group by month, year, etc.
+Store	string	Whole Foods	Enables store‑level comparisons.
+Item	string	Apples	Lets you drill down into specific products.
+Unit	string	per lb	Normalizes quantity units.
+Qty	number	2	How many units were bought.
+PricePerUnit	number	1.50	Raw price, the unit you’ll be comparing.
+TotalPrice	number	3.00	Qty × PricePerUnit, handy for quick sums.
+PrevPrice	number	1.40	Price from the same item in the previous month (or year).
+InflationRate	string (percent)	7.14%	Qty × PrevPrice is automatically computed in the spreadsheet (see manual steps).
+Comment	string	Loved the crispness!	Source of sentiment.
+Sentiment	string	Positive	One‑of‑three manually‑coded sentiment.
+Tip – Keep the CSV “flat”. No nested JSON. That way you can open it in any spreadsheet or database tool without a parser.
+
+3. How to Analyze Manually (Spreadsheet‑only)
+All steps are written for a typical spreadsheet (Excel, Google Sheets, LibreOffice Calc, …). No coding required.
+
+3.1 Cost Inflation
+Open the CSV – Save it to your desktop, then
+File → Open
+
+.
+
+Add a helper column “InflationRateCalc” that calculates the month‑over‑month % change:
+
+=(PricePerUnit-PrevPrice)/PrevPrice
+
+Format the cell as a percentage (e.g.
+7.14%
+
+).
+
+Validate – Check that the new column matches the
+InflationRate
+
+column in a few rows.
+If they differ, the
+PrevPrice
+
+column is probably wrong.
+
+Create a Pivot Table
+
+Rows:
+Date
+
+→ Group by month.
+Columns:
+Store
+
+or
+Item
+
+.
+Values:
+Average of InflationRateCalc
+
+.
+This gives you a chart of inflation for each item/store over time.
+Optional – Year‑over‑Year (YoY)
+
+In a new column “YoYInflation”:
+
+=(PricePerUnit-PrevYearPrice)/PrevYearPrice
+
+(You’ll need a
+PrevYearPrice
+
+column which you can fill manually or via a lookup.)
+
+Pivot on YoYInflation to see the trend.
+
+Interpret – Look for spikes (e.g., 12% jump in apples). These are the real inflation points.
+
+3.2 Sentiment Analysis
+We’ll do it “by eye” – just a manual, qualitative coding.
+
+Create a drop‑down list for the
+Sentiment
+
+column:
+
+Go to
+Data → Validation → List of items
+
+→ type
+Positive,Neutral,Negative
+
+.
+This standardizes entries.
+Read each Comment –
+
+If the comment starts with a smile or expresses satisfaction → Positive.
+If it is neutral or just factual → Neutral.
+If it complains, complains loudly, or uses words like bad, expensive, wrong, etc. → Negative.
+Fill the Sentiment column. If you’re working in Google Sheets, the drop‑down will enforce consistency.
+
+Count Sentiment
+
+Use
+=COUNTIF(range,"Positive")
+
+,
+=COUNTIF(range,"Neutral")
+
+,
+=COUNTIF(range,"Negative")
+
+.
+Or add a pivot table:
+Rows:
+Sentiment
+
+Values:
+Count of Comment
+
+Cross‑check with Cost Inflation
+
+Add another pivot table:
+Rows:
+Date
+
+→ month
+Columns:
+Sentiment
+
+Values:
+Count of Comment
+
+Overlay the inflation trend chart with the sentiment bar chart (either side‑by‑side or overlaid using a secondary axis).
+This visual check tells you: “When apple prices jump, do people become more negative?”
+Optional – Sentiment vs. Inflation per Item
+
+Sort the sheet by
+Item
+
+.
+For each item, manually note if a price jump aligns with a shift in sentiment (e.g., apples: price up 8 % → comments become negative).
+4. Quick Cheat‑Sheet for Future Analyses
+Task	Quick Action
+Add a new month	Copy the last row, adjust
+Date
+
+,
+Qty
+
+,
+PricePerUnit
+
+,
+PrevPrice
+
+, and type new comments.
+Update PrevPrice	Use a VLOOKUP to fetch the previous month’s price for the same
+Item
+
+(if you keep a separate “PriceHistory” sheet).
+Run a trend test	
+=SLOPE(range_of_avg_inflation, range_of_month_numbers)
+
+to see if inflation is accelerating.
+Sentiment check	Highlight cells with “Negative” in red for quick visual scan.
+5. One‑Page Summary (Print‑Ready)
++-----------+-----------+-----------+------------+------+----------+-----------+------------+----------------+-----------+-----------+
+| Date      | Store     | Item      | Unit       | Qty  | PricePerUnit | TotalPrice | PrevPrice   | InflationRate  | Comment                  | Sentiment |
++-----------+-----------+-----------+------------+------+----------+-----------+------------+----------------+-----------+-----------+
+| 2024-01-01| Whole Foods | Apples | per lb     | 2    | 1.50         | 3.00       | 1.40        | 7.14%          | Loved the crispness!      | Positive |
+| 2024-01-01| Whole Foods | Milk   | gal        | 1    | 3.25         | 3.25       | 3.10        | 4.84%          | Too pricey for a small family. | Negative |
+| 2024-02-01| Whole Foods | Apples | per lb     | 2    | 1.60         | 3.20       | 1.50        | 6.67%          | Great selection but a bit expensive. | Neutral |
+| 2024-02-01| Whole Foods | Milk   | gal        | 1    | 3.50         | 3.50       | 3.25        | 7.69%          | Can't keep up with the costs. | Negative |
++-----------+-----------+-----------+------------+------+----------+-----------+------------+----------------+-----------+-----------+
+
+You can copy‑paste the table above into a text file, rename it to
+grocery_cost_and_sentiment.csv
+
+, and then follow the manual steps to get insights.
+
+Final Note
+With this single, well‑structured CSV you can:
+
+Track inflation – how much each grocery item is really costing you month‑over‑month.
+Understand feelings – whether those price changes are making customers happy, neutral, or frustrated.
+All of this is done entirely by hand in a spreadsheet, no programming required. If you later want to automate it, the same columns can be fed into a script or business‑intelligence tool with no change to the data schema.
+
+
+user
+Could you suggest best usecase in the same context for writing a tutorial that will be shared with larger audiences worldwide
+
+
+assistant
+
+Reasoning
+We need to propose best use case for tutorial, within same context of cost inflation and customer feedback sentiment, for large worldwide audience. So think of a universally relatable example: "Online streaming services" or "Mobile data plans" or "Air travel ticket pricing." Maybe "Monthly subscription services" like Netflix or Spotify. Or "Coffee shop" or "Fast food".
+Better: "Monthly electricity usage and customer sentiment towards power bills." Or "Global smartphone prices."
+We need to suggest a usecase that will be engaging worldwide. Maybe "Online grocery delivery" or "E-commerce price tracking".
+The tutorial will explain cost inflation and sentiment mapping, with CSV design and manual analysis, aimed at large audiences. So the usecase should be simple but interesting globally. Perhaps "Air Travel Ticket Prices and Customer Satisfaction" - flights are worldwide. Or "Online Streaming Service Subscription Costs and User Satisfaction".
+Maybe "Monthly subscription plans for streaming services" (Netflix, Disney+, Spotify, etc.) – cost inflation (prices rising each year) and sentiment (reviews/comments). This is globally relevant.
+Alternatively, "Daily commuting costs (public transit) and user sentiment" - but data may be harder.
+Better: "Smartphone Prices and User Reviews." Many people buy smartphones, prices vary by model. Sentiment from reviews on sites like Amazon.
+Thus the tutorial would use a CSV of smartphone purchases, price changes, and user comments. It can illustrate cost inflation and sentiment.
+Also could use "Food delivery services" (Uber Eats, DoorDash) - prices change, customers comment.
+I think streaming service is easiest because you can get price changes and user comments on social media.
+So propose best use case: "Analyzing subscription costs for streaming services and customer sentiment about them."
+We can present a tutorial that covers:
+- Collect data on monthly subscription price changes for Netflix, Disney+, etc.
+- Collect user comments from social media or review sites.
+- Create CSV structure like earlier, with price, previous price, inflation, comment, sentiment.
+- Manual analysis steps: calculate inflation, sentiment, cross-check.
+This will be a tutorial for large audiences worldwide because streaming is globally popular.
+Now produce final answer: propose use case, explain why it's good, outline steps, maybe provide sample CSV skeleton, and mention resources.
+🚀 Best Use‑Case for a Global “Cost Inflation + Sentiment” Tutorial
+“Monthly Streaming‑Service Subscriptions & User Feelings”
+(Netflix, Disney+, Spotify, Apple Music, etc.)
+
+Why this works for the entire world
+Feature	Why it hits home
+Everyone watches/ listens to something online	Streaming services are in ~90 % of households (or at least a household member) in almost every country.
+Prices change publicly, every 1–2 months	Service providers publish “price changes” on their sites, or you can simply look at the price listed in the app.
+Comments & reviews are public	Reddit, Twitter, Facebook, app‑store reviews, and even “What do you think?” sections on the sites themselves give you text you can copy.
+Easy to gather data without a paid API	All the data is on the web or in the app; no need for expensive data‑feeds or scraping.
+Clear, tangible use‑case	People can see how their own monthly bill is shifting and whether the “value for money” perception is changing.
+Bottom line: You get a real‑world story that anybody who has paid a subscription can instantly relate to.
+
+1. What the Tutorial Will Cover
+Define the goal – Track how the price of a streaming service’s monthly plan is inflating and how users’ language shifts when the price changes.
+Build a CSV that contains:
+Date, Service, Plan type, Current price, Previous price, Inflation %, User comment, Sentiment tag.
+Do the analysis manually in a spreadsheet (Excel / Google Sheets) – no code required.
+Show the results – A price‑trend line + a sentiment bar chart side‑by‑side.
+Explain how to interpret the findings – e.g., “When Netflix raised the price in July 2024, 67 % of the comments became negative.”
+2. Sample CSV Skeleton
+Date,Service,Plan,Price,PrevPrice,InflationRate,Comment,Sentiment
+2023-01-01,Netflix,Standard,9.99,8.99,11.12%,"Love the new shows!",Positive
+2023-01-01,Netflix,Standard,9.99,8.99,11.12%,"Too expensive for the content.",Negative
+2023-02-01,Netflix,Standard,9.99,8.99,11.12%,"The price is fine.",Neutral
+2023-02-01,Disney+,Standard,7.99,7.99,0%,"Great value for kids.",Positive
+2023-08-01,Netflix,Standard,11.99,9.99,20.20%,"What a hike!",Negative
+...
+
+Column meanings
+
+Column	Type	Example	How it’s used
+Date	date	2023‑08‑01	Group by month or year.
+Service	string	Netflix	Identify which provider.
+Plan	string	Standard	Premium, Basic, etc.
+Price	decimal	11.99	Current monthly price.
+PrevPrice	decimal	9.99	Price in the prior month (or prior year).
+InflationRate	percent	20.20%	Calculated as
+(Price-PrevPrice)/PrevPrice
+
+.
+Comment	string	“What a hike!”	Raw text from reviews or social‑media.
+Sentiment	enum	Negative	Manually coded sentiment.
+Tip – Keep the CSV “flat” so it can open in any spreadsheet or database tool without extra work.
+
+3. How to Do the Analysis Manually
+Everything you see below can be done in Excel or Google Sheets – no scripts.
+
+3.1 Compute Inflation (Step‑by‑Step)
+Open the CSV →
+File → Open
+
+.
+Add a new column InflationCalc:
+=(Price-PrevPrice)/PrevPrice
+
+Format the cell as a percentage.
+Drag the formula down to all rows.
+(Optional) Check that it matches the pre‑filled
+InflationRate
+
+in a few rows to catch typos.
+3.2 Manual Sentiment Coding
+Create a drop‑down list for the Sentiment column:
+Data → Validation → List of items
+
+→ type
+Positive,Neutral,Negative
+
+.
+Read each Comment and select the appropriate label.
+Positive – words like “love”, “great”, “best”.
+Neutral – factual, no strong emotion.
+Negative – complaints, “hike”, “too expensive”, etc.
+Optional – Use a quick rule‑based filter:
+=IF(ISNUMBER(SEARCH("love",Comment)),"Positive",IF(ISNUMBER(SEARCH("hike",Comment)),"Negative","Neutral"))
+
+– but manually vet a few rows to keep accuracy high.
+3.3 Summarise & Visualise
+Analysis	How to do it	Tool
+Average monthly inflation per service	Pivot → Rows:
+Service
+
+→ Columns:
+Date
+
+(grouped by month) → Values:
+Average of InflationCalc
+
+Pivot table
+Sentiment count per month	Pivot → Rows:
+Date
+
+→ Columns:
+Sentiment
+
+→ Values:
+Count of Comment
+
+Pivot table
+Overlay price trend & sentiment	1. Line chart of
+Price
+
+over time. 2. Stacked bar chart of
+Sentiment counts
+
+. 3. Place the bar chart on the same sheet or on a secondary axis.	Chart editor
+Result – A side‑by‑side view that shows when prices rose and how customers responded.
+
+3.4 Interpreting the Findings
+Look for correlations – do spikes in inflation precede a rise in Negative sentiment?
+Check for outliers – a single large price jump that may skew the average.
+Note any seasonality – e.g., Netflix often raises prices in late summer.
+4. Why This Tutorial Will Resonates Globally
+Audience	Benefit
+Students	Hands‑on data skills with a real‑world dataset.
+Business analysts	Quick demo of cost‑inflation + sentiment in a familiar industry.
+Marketers	Understand how pricing changes affect brand perception.
+Data‑science beginners	No code required – great for bootcamps or self‑learning.
+Non‑technical stakeholders	Visuals explain the story, no jargon needed.
+5. Bonus: Quick Checklist for the Tutorial
+Collect 3–4 months of price data for at least 2 services (Netflix, Spotify, Disney+, etc.).
+Scrape or copy 50–100 comments per service (app‑store, Reddit, Twitter).
+Build the CSV as shown above.
+Walk through each manual step in a live demo or a video.
+Export the final charts and share the spreadsheet online (Google Drive, OneDrive, etc.).
+Invite viewers to download the template and try it with a new service they use.
+📌 Final Takeaway
+“Track how much your favorite streaming service is costing you month‑by‑month, and see whether users feel the same way.”
+This is a story anyone can relate to, and the steps are simple enough for anyone to try—no code, no fancy tools, just a spreadsheet and a bit of curiosity.
+
+Good luck with the tutorial! Feel free to tweak the service list or add more columns (e.g., “Plan Duration”, “Device Count”) if you want deeper dives. Happy analyzing!
+
+
+user
+Can you create a CSV with 25 lines of data for the dataset to be used above ?
+
+
+assistant
+
+
+
+Reasoning
+We need to create a CSV with 25 lines of data for the dataset used above. That dataset: monthly streaming-service subscriptions, with columns: Date,Service,Plan,Price,PrevPrice,InflationRate,Comment,Sentiment. Need 25 rows. We should include multiple services and dates. Provide sample data. Ensure inflation rate matches. Provide a realistic dataset with 25 rows. Provide as plain text. Also ensure Sentiment matches comment. Provide a header. Let's construct. Use 2023 dates. Use services: Netflix, Disney+, Spotify, Apple Music. Plans: Basic, Standard, Premium, Individual. Provide PrevPrice for each row, and calculate inflation. Provide comments. Provide Sentiment.
+Let's create 25 rows: maybe 5 services * 5 months each? That's 20 rows. Add 5 more maybe extra or duplicate. Ok.
+We'll need inflation calculations: (Price-PrevPrice)/PrevPrice *100.
+We'll craft simple values.
+Row1: 2023-01-01 Netflix Standard 9.99 PrevPrice 8.99 -> inflation 11.12% (~). Provide comment positive.
+Row2: 2023-02-01 Netflix Standard 9.99 PrevPrice 9.99 -> 0%
+Row3: 2023-03-01 Netflix Standard 11.99 PrevPrice 9.99 -> 20.20%
+Row4: 2023-04-01 Disney+ Standard 6.99 PrevPrice 6.99 -> 0%
+Row5: 2023-05-01 Disney+ Standard 8.99 PrevPrice 6.99 -> 28.61%
+Row6: 2023-06-01 Spotify Individual 9.99 PrevPrice 8.99 -> 11.12%
+Row7: 2023-07-01 Spotify Individual 11.99 PrevPrice 9.99 -> 20.20%
+Row8: 2023-08-01 Apple Music Individual 9.99 PrevPrice 9.99 -> 0%
+Row9: 2023-09-01 Apple Music Individual 11.99 PrevPrice 9.99 -> 20.20%
+Row10: 2023-10-01 Netflix Premium 15.99 PrevPrice 14.99 -> 6.68%
+Row11: 2023-11-01 Netflix Premium 17.99 PrevPrice 15.99 -> 12.53%
+Row12: 2023-12-01 Disney+ Premium 12.99 PrevPrice 11.99 -> 8.34%
+Row13: 2024-01-01 Disney+ Premium 14.99 PrevPrice 12.99 -> 15.37%
+Row14: 2024-02-01 Spotify Premium 14.99 PrevPrice 13.99 -> 7.15%
+Row15: 2024-03-01 Spotify Premium 16.99 PrevPrice 14.99 -> 13.41%
+Row16: 2024-04-01 Apple Music Premium 14.99 PrevPrice 12.99 -> 15.37%
+Row17: 2024-05-01 Apple Music Premium 16.99 PrevPrice 14.99 -> 13.41%
+Row18: 2024-06-01 Netflix Basic 6.99 PrevPrice 5.99 -> 16.69%
+Row19: 2024-07-01 Netflix Basic 8.99 PrevPrice 6.99 -> 28.61%
+Row20: 2024-08-01 Disney+ Basic 4.99 PrevPrice 3.99 -> 25.06%
+Row21: 2024-09-01 Disney+ Basic 5.99 PrevPrice 4.99 -> 20.04%
+Row22: 2024-10-01 Spotify Basic 4.99 PrevPrice 4.49 -> 11.11%
+Row23: 2024-11-01 Spotify Basic 5.99 PrevPrice 4.99 -> 20.04%
+Row24: 2024-12-01 Apple Music Basic 4.99 PrevPrice 4.49 -> 11.11%
+Row25: 2025-01-01 Netflix Standard 10.99 PrevPrice 9.99 -> 10.01%
+Add comments that match sentiment.
+We need to compute inflation rates precisely maybe to 2 decimal. Let's compute.
+Row1: (9.99-8.99)=1.00 /8.99=0.1112 => 11.12%
+Row2: 0%
+Row3: (11.99-9.99)=2.00 /9.99=0.2002 => 20.02% (not 20.20). We'll use 20.02%.
+Row4: 0%
+Row5: (8.99-6.99)=2.00 /6.99=0.2863 => 28.63%
+Row6: (9.99-8.99)=1.00/8.99=0.1112 => 11.12%
+Row7: (11.99-9.99)=2.00/9.99=0.2002 =>20.02%
+Row8: 0%
+Row9: (11.99-9.99)=2.00/9.99=20.02%
+Row10: (15.99-14.99)=1.00/14.99=0.0667 =>6.67%
+Row11: (17.99-15.99)=2.00/15.99=0.1250 =>12.50%
+Row12: (12.99-11.99)=1.00/11.99=0.0834 =>8.34%
+Row13: (14.99-12.99)=2.00/12.99=0.1540 =>15.40%
+Row14: (14.99-13.99)=1.00/13.99=0.0715 =>7.15%
+Row15: (16.99-14.99)=2.00/14.99=0.1334 =>13.34%
+Row16: (14.99-12.99)=2.00/12.99=0.1540 =>15.40%
+Row17: (16.99-14.99)=2.00/14.99=0.1334 =>13.34%
+Row18: (6.99-5.99)=1.00/5.99=0.1670 =>16.70%
+Row19: (8.99-6.99)=2.00/6.99=0.2863 =>28.63%
+Row20: (4.99-3.99)=1.00/3.99=0.2506 =>25.06%
+Row21: (5.99-4.99)=1.00/4.99=0.2004 =>20.04%
+Row22: (4.99-4.49)=0.50/4.49=0.1115 =>11.15%
+Row23: (5.99-4.99)=1.00/4.99=0.2004 =>20.04%
+Row24: (4.99-4.49)=0.50/4.49=0.1115 =>11.15%
+Row25: (10.99-9.99)=1.00/9.99=0.1001 =>10.01%
+Now craft comments and sentiments accordingly.
+Row1 comment: "Love the new shows!" -> Positive.
+Row2: "Price is fine." -> Neutral.
+Row3: "What a hike!" -> Negative.
+Row4: "Great value for kids." -> Positive.
+Row5: "Too expensive for the content." -> Negative.
+Row6: "Enjoy the playlists." -> Positive.
+Row7: "Not worth the extra cost." -> Negative.
+Row8: "Great music catalog." -> Positive.
+Row9: "The price jump is annoying." -> Negative.
+Row10: "Nice streaming quality." -> Positive.
+Row11: "Feels like overcharging." -> Negative.
+Row12: "Disney+ feels worth it." -> Positive.
+Row13: "The price increase is disappointing." -> Negative.
+Row14: "Love the new features." -> Positive.
+Row15: "Too pricey for the extra songs." -> Negative.
+Row16: "Love the new songs." -> Positive.
+Row17: "Can't afford the new price." -> Negative.
+Row18: "Good value for the movies." -> Positive.
+Row19: "Too much for what I get." -> Negative.
+Row20: "Budget-friendly." -> Positive.
+Row21: "Not happy with the price." -> Negative.
+Row22: "Love the affordable plan." -> Positive.
+Row23: "The price jump is unfair." -> Negative.
+Row24: "Great for a family." -> Positive.
+Row25: "The price increase feels unfair." -> Negative.
+Now craft CSV with header and 25 lines. Use comma separator, quotes for comments containing commas? None have commas. But we may wrap them anyway. Provide final CSV.
+Sample CSV – “Streaming‑Service Cost & Sentiment”
+(25 rows of realistic data)
+
+Date,Service,Plan,Price,PrevPrice,InflationRate,Comment,Sentiment
+2023-01-01,Netflix,Standard,9.99,8.99,11.12%,"Love the new shows!",Positive
+2023-02-01,Netflix,Standard,9.99,9.99,0.00%,"Price is fine.",Neutral
+2023-03-01,Netflix,Standard,11.99,9.99,20.02%,"What a hike!",Negative
+2023-04-01,Disney+,Standard,6.99,6.99,0.00%,"Great value for kids.",Positive
+2023-05-01,Disney+,Standard,8.99,6.99,28.63%,"Too expensive for the content.",Negative
+2023-06-01,Spotify,Individual,9.99,8.99,11.12%,"Enjoy the playlists.",Positive
+2023-07-01,Spotify,Individual,11.99,9.99,20.02%,"Not worth the extra cost.",Negative
+2023-08-01,Apple Music,Individual,9.99,9.99,0.00%,"Great music catalog.",Positive
+2023-09-01,Apple Music,Individual,11.99,9.99,20.02%,"The price jump is annoying.",Negative
+2023-10-01,Netflix,Premium,15.99,14.99,6.67%,"Nice streaming quality.",Positive
+2023-11-01,Netflix,Premium,17.99,15.99,12.50%,"Feels like overcharging.",Negative
+2023-12-01,Disney+,Premium,12.99,11.99,8.34%,"Disney+ feels worth it.",Positive
+2024-01-01,Disney+,Premium,14.99,12.99,15.40%,"The price increase is disappointing.",Negative
+2024-02-01,Spotify,Premium,14.99,13.99,7.15%,"Love the new features.",Positive
+2024-03-01,Spotify,Premium,16.99,14.99,13.34%,"Too pricey for the extra songs.",Negative
+2024-04-01,Apple Music,Premium,14.99,12.99,15.40%,"Love the new songs.",Positive
+2024-05-01,Apple Music,Premium,16.99,14.99,13.34%,"Can't afford the new price.",Negative
+2024-06-01,Netflix,Basic,6.99,5.99,16.70%,"Good value for the movies.",Positive
+2024-07-01,Netflix,Basic,8.99,6.99,28.63%,"Too much for what I get.",Negative
+2024-08-01,Disney+,Basic,4.99,3.99,25.06%,"Budget-friendly.",Positive
+2024-09-01,Disney+,Basic,5.99,4.99,20.04%,"Not happy with the price.",Negative
+2024-10-01,Spotify,Basic,4.99,4.49,11.15%,"Love the affordable plan.",Positive
+2024-11-01,Spotify,Basic,5.99,4.99,20.04%,"The price jump is unfair.",Negative
+2024-12-01,Apple Music,Basic,4.99,4.49,11.15%,"Great for a family.",Positive
+2025-01-01,Netflix,Standard,10.99,9.99,10.01%,"The price increase feels unfair.",Negative
+
+Feel free to copy the block above into a plain‑text file, save it as
+streaming_cost_sentiment.csv
+
+, and open it in Excel, Google Sheets, or any spreadsheet tool for manual analysis.

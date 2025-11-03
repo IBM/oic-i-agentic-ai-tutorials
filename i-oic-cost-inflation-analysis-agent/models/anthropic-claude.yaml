@@ -1,0 +1,16 @@
+spec_version: v1
+kind: model
+name: anthropic/claude-sonnet-4-5-20250929
+display_name: Claude Sonnet 4-5
+ddescription: |
+    Claude Sonnet 4-5 is Anthropic’s advanced reasoning model built for fast, accurate analysis and intelligent task execution.
+tags:
+  - anthropic
+  - claude
+  - reasoning
+  - code-conversion
+model_type: chat
+app_id: anthropic_credentials
+provider_config:
+  { 
+  }
