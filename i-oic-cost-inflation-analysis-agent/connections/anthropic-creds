@@ -1,0 +1,6 @@
+orchestrate connections add -a anthropic_credentials
+orchestrate connections configure -a anthropic_credentials --env draft -k key_value -t team
+orchestrate connections set-credentials -a anthropic_credentials --env draft -e "api_key=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"
+
+
+orchestrate models import --file anthropic-claude.yaml --app-id anthropic_credentials
