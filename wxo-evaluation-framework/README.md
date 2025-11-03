@@ -21,9 +21,9 @@ This repository contains an example **Banking Agent** built for **IBM watsonx Or
 Run the import script which registers the Python tools and the agent definition into your watsonx Orchestrate workspace.
 
 1. Create .env file
-Copy the content from .env_sample file and paste it into .env file.
+- Copy the content from .env_sample file and paste it into .env file.
 
-🚨 Note: we expect `WATSONX_APIKEY, WATSONX_SPACE_ID` or `WO_INSTANCE, WO_API_KEY` be part of the environment variables or specified in .env file. 
+  🚨 Note: we expect `WATSONX_APIKEY, WATSONX_SPACE_ID` or `WO_INSTANCE, WO_API_KEY` be part of the environment variables or specified in .env file. 
 
 2. Ensure `import-all.sh` is executable:
 ```bash
