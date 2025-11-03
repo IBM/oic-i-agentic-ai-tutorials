@@ -13,6 +13,7 @@ This repository contains an example **Banking Agent** built for **IBM watsonx Or
 ├─ import-all.sh                # Script to import tools and agent into wxo
 ├─ user_stories/                # This folder contains the user stories for testing
 |  ├─ banking_user_stories.csv  # User stories to be tested
+|  ├─ banking_test_cases.csv    # Test cases to be tested(In watsonx orchestrate UI)
 └─ README_Watsonx_Orchestrate_Banking_Agent.md  # This document
 ```
 
