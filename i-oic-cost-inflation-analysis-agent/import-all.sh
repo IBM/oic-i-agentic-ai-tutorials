@@ -1,10 +1,12 @@
 set -e
 
-orchestrate env add --name oictutorial --url https://api.eu-central-1.dl.watson-orchestrate.ibm.com/instances/20250508-1435-1457-50e0-b8f069e11f66
+orchestrate env add --name oictutorial --url <WXO Instance URL>
 
 orchestrate env activate oictutorial --api-key <your api api_key>
 
 ## Create Connections 
+
+### Groq Credentials
 
 orchestrate connections add -a groq_credentials
 orchestrate connections configure -a groq_credentials --env draft -k key_value -t team
@@ -13,7 +15,7 @@ orchestrate connections set-credentials -a groq_credentials --env draft -e "api_
 orchestrate connections configure -a groq_credentials --env live -k key_value -t team
 orchestrate connections set-credentials -a groq_credentials --env live -e "api_key=grok-api-key"
 
-
+### Anthropic Credentials
 
 orchestrate connections add -a anthropic_credentials
 orchestrate connections configure -a anthropic_credentials --env draft -k key_value -t team
@@ -30,17 +32,17 @@ orchestrate models import --file anthropic-claude.yaml --app-id anthropic_creden
 
 ## Import Knowledge Base
 
-orchestrate knowledge-bases import -f knowledge-base.yaml
+orchestrate knowledge-bases import -f knowledge-bases/knowledge-base.yaml
 
 ## Import Tools 
 
-orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt
+orchestrate tools import -k python -f tools/oic_granite_summary_tool.py -r requirements.txt
 
 ## Import Agents
 
-orchestrate agents import --file oic_cost_inflation_analysis_agent.yaml 
+orchestrate agents import --file agents/oic_cost_inflation_analysis_agent.yaml 
 
-orchestrate agents import --file oic_cost_insights_master_agent.yaml
+orchestrate agents import --file agents/oic_cost_insights_master_agent.yaml
 
 
 
