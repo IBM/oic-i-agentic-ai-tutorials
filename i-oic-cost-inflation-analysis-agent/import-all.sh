@@ -28,6 +28,10 @@ orchestrate models import --file groq-openai.yaml --app-id groq_credentials
 
 orchestrate models import --file anthropic-claude.yaml --app-id anthropic_credentials
 
+## Import Knowledge Base
+
+orchestrate knowledge-bases import -f knowledge-base.yaml
+
 ## Import Tools 
 
 orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt
