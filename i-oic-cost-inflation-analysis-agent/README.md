@@ -4,6 +4,9 @@
 ## Steps Overview
 This tutorial demonstrates how an agent uses Groq for IBM watsonx Orchestrate , it provides a single-tenant cloud service where dedicated racks are provisioned exclusively for each user. This configuration enables the deployment of specific supported models that are selected by you, including compatible Bring Your Own Model (BYOM) options.
 
+### Why Groq ?
+Groq delivers ultra-low-latency, high-throughput AI inference through its innovative LPU (Language Processing Unit) architecture, enabling real-time reasoning and faster model execution at dramatically lower power and cost. By integrating Groq’s compute acceleration with IBM watsonx and Granite foundation models, enterprises gain the ability to deploy near-instant, on-prem or edge AI inference for mission-critical use cases - from financial analysis to conversational agents.
+
 https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=entitlements-licenses-groq
 
 ---
@@ -45,6 +48,8 @@ In this tutorial, you'll import the Clause Sonnet and GPT OSS model. You can con
 List to view if the model is imported properly or not .
 **Note**: Please find the list of supported LLM providers [here](https://developer.watson-orchestrate.ibm.com/llm/managing_llm).
 
+![external-model](./images/models_config.png)
+
 ```
 
 orchestrate models import --file groq-openai.yaml --app-id groq_credentials
@@ -54,7 +59,7 @@ orchestrate models import --file anthropic-claude.yaml --app-id anthropic_creden
 orchestrate models list
 
 ```
-![external-model](./images/external_model.png)
+![external-model](./images/models_list.png)
 
 ## Step 3: Import Tools
 
@@ -76,12 +81,12 @@ orchestrate agents import --file oic_cost_inflation_analysis_agent.yaml
 orchestrate agents import --file oic_cost_insights_master_agent.yaml
 
 ```
-![agent](./images/agent.png)
+![agent](./images/import_agent.png)
 
 ## Conclusion 
 In this tutorial, you:
 
-- Imported an external LLM (e.g., GPT OSS 120B )
+- Imported an external LLM (e.g., GPT OSS 120B, Claude Sonnet )
 
 This setup enables low-code, LLM-driven access to your data — directly within IBM watsonx Orchestrate.
 
