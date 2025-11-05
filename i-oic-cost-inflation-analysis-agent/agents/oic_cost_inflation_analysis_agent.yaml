@@ -42,6 +42,8 @@ instructions: >
     Sentiment_Score: -2 to +2 scale
 tools:
 collaborators:
+knowledge_base:
+  - streaming_cost_docs
 welcome_content:
   welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"
   description: "Track and visualize price trends, analyze user sentiment, and discover what is driving cost changes — all in one place."
