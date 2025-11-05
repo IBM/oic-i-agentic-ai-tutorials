@@ -16,8 +16,6 @@ description: |
     - Sentiment_Score: -2 to +2 scale
 
 documents:
-  - path: .
-    url: streaming_cost_inflation.xlsx
-
+  - path: "/Users/eladixit26/Code/OIC/oic-public-ibm/oic-i-agentic-ai-tutorials/i-oic-cost-inflation-analysis-agent/knowledge-bases/streaming_cost_inflation.xlsx"
 vector_index:
   embeddings_model_name: virtual-model/openai/text-embedding-3-small
