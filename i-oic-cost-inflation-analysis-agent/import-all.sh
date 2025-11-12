@@ -24,6 +24,7 @@ orchestrate connections set-credentials -a anthropic_credentials --env draft -e 
 orchestrate connections configure -a anthropic_credentials --env team -k key_value -t team
 orchestrate connections set-credentials -a anthropic_credentials --env team -e "api_key=anthropic_api_key"
 
+
 ## Import Models 
 
 orchestrate models import --file groq-openai.yaml --app-id groq_credentials
@@ -36,13 +37,11 @@ orchestrate knowledge-bases import -f knowledge-bases/knowledge-base.yaml
 
 ## Import Tools 
 
-orchestrate tools import -k python -f tools/oic_granite_summary_tool.py -r requirements.txt
+cd tools
+orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt
 
 ## Import Agents
 
 orchestrate agents import --file agents/oic_cost_inflation_analysis_agent.yaml 
 
 orchestrate agents import --file agents/oic_cost_insights_master_agent.yaml
-
-
-
