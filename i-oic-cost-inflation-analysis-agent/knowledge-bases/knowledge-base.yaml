@@ -2,20 +2,8 @@ spec_version: v1
 kind: knowledge_base
 name: streaming_cost_docs
 description: |
-  This knowledge base addresses data for price inflation in streaming platforms.
-  Columns:
-    - Service: Streaming platform name
-    - Region: Geographic market
-    - Plan: Subscription tier
-    - Date: Pricing period (YYYY-MM)
-    - Price: Current subscription price
-    - Previous_Price: Price from last period
-    - Inflation_%: Percentage increase
-    - Customer_Comment: User feedback
-    - Sentiment: Positive/Neutral/Negative
-    - Sentiment_Score: -2 to +2 scale
-
+  This xlsx data addresses data for price inflation in streaming platforms.
 documents:
   - path: "/Users/eladixit26/Code/OIC/oic-public-ibm/oic-i-agentic-ai-tutorials/i-oic-cost-inflation-analysis-agent/knowledge-bases/streaming_cost_inflation.xlsx"
 vector_index:
-  embeddings_model_name: virtual-model/openai/text-embedding-3-small
+  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
