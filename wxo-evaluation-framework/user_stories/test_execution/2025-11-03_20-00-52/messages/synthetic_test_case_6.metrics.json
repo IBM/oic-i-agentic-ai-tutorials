@@ -1,0 +1,18 @@
+{
+    "dataset_name": "",
+    "total_steps": 16,
+    "llm_step": 8,
+    "total_tool_calls": 4,
+    "expected_tool_calls": 3,
+    "correct_tool_calls": 2,
+    "relevant_tool_calls": 4,
+    "total_routing_calls": 0,
+    "relevant_routing_calls": 0,
+    "tool_calls_with_incorrect_parameter": 2,
+    "text_match": "Summary MisMatched",
+    "is_success": false,
+    "avg_resp_time": -1,
+    "tool_call_recall": 0.67,
+    "tool_call_precision": 0.5,
+    "agent_routing_accuracy": 0.0
+}

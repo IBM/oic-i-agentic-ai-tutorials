@@ -1,0 +1,21 @@
+auth_config:
+  tenant_name: local
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMjQyZWFkZi0wZGM5LTRlYWUtYjJkNy02NWIwOWI0YjRiMTYiLCJ1c2VybmFtZSI6Ind4by5hcmNoZXJAaWJtLmNvbSIsImF1ZCI6ImF1dGhlbnRpY2F0ZWQiLCJ0ZW5hbnRfaWQiOiI5ODM5NjY2OC0wMTEwLTQzYzctYjdiMS04YjIxOGQ0MDlhM2UiLCJ3b1RlbmFudElkIjoiOTgzOTY2NjgtMDExMC00M2M3LWI3YjEtOGIyMThkNDA5YTNlIiwid29Vc2VySWQiOiJmMjQyZWFkZi0wZGM5LTRlYWUtYjJkNy02NWIwOWI0YjRiMTYifQ.90FEl5yVl1ooYK5sgOSKk5DqB8oi8MBkLNVFmHfDMw4
+  url: http://localhost:4321
+data_annotation_run: false
+enable_manual_user_input: false
+enable_verbose_logging: true
+llm_user_config:
+  model_id: meta-llama/llama-3-405b-instruct
+  prompt_config: /Users/ahmedazraq/Documents/agents/wxo-env/lib/python3.11/site-packages/wxo_agentic_evaluation/prompt/llama_user_prompt.jinja2
+  user_response_style: []
+n_runs: 1
+num_workers: 2
+output_dir: ./user_stories/test_execution/2025-11-03_20-00-52
+provider_config:
+  model_id: meta-llama/llama-3-405b-instruct
+  provider: watsonx
+skip_available_results: false
+test_paths:
+- ./user_stories/banking_agent_test_cases/
+wxo_lite_version: 1.14.0

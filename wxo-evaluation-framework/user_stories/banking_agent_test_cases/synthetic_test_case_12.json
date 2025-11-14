@@ -1,0 +1,41 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is bob. I want to update my registered email to bob.new@abc.com.",
+  "starting_sentence": "I'd like to update my email address.",
+  "goals": {
+    "fetch_account_id-1": [
+      "update_contact_details-1"
+    ],
+    "update_contact_details-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "bob"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "update_contact_details-1",
+      "tool_name": "banking_update_contact_details",
+      "args": {
+        "account_id": "ACC10002",
+        "email": "bob.new@abc.com"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "Your email has been updated to bob.new@abc.com for account ACC10002.",
+      "keywords": [
+        "bob.new@abc.com",
+        "ACC10002"
+      ]
+    }
+  ]
+}

@@ -49,53 +49,6 @@ def banking_retrieve_account_balance(account_id: str) -> str:
     return json.dumps(bal)
 
 
-# @tool(name="banking_list_recent_transactions", description="List recent transactions for an account within optional date range.", permission=ToolPermission.ADMIN)
-# def banking_list_recent_transactions(account_id: str, start_date: str = None, end_date: str = None, limit: int = 20) -> str:
-#     """
-#     Return a list of recent transactions for the account.
-#     :param account_id: Account identifier
-#     :param start_date: Optional start date YYYY-MM-DD
-#     :param end_date: Optional end date YYYY-MM-DD
-#     :param limit: Max number of transactions to return
-#     :return: JSON-encoded list of transactions or error message
-#     """
-#     # Validate dates if provided
-#     if start_date and not _is_valid_date(start_date):
-#         return f"Invalid start_date: {start_date}. Expected YYYY-MM-DD."
-#     if end_date and not _is_valid_date(end_date):
-#         return f"Invalid end_date: {end_date}. Expected YYYY-MM-DD."
-
-#     # Mock transactions store
-#     mock_txns = {
-#         "ACC10001": [
-#             {"id": "T1001", "date": "2025-10-01", "type": "debit", "amount": "-50.00", "desc": "Coffee Shop"},
-#             {"id": "T1002", "date": "2025-09-28", "type": "credit", "amount": "1500.00", "desc": "Payroll"},
-#             {"id": "T1003", "date": "2025-09-15", "type": "debit", "amount": "-200.00", "desc": "Electric Bill"},
-#         ],
-#         "ACC10002": [
-#             {"id": "T2001", "date": "2025-10-02", "type": "debit", "amount": "-20.00", "desc": "Lunch"},
-#         ],
-#         "ACC10003": []
-#     }
-
-#     txns = mock_txns.get(account_id)
-#     if txns is None:
-#         return json.dumps({"error": "account not found"})
-
-#     # Filter by date range if provided
-#     def in_range(tx):
-#         tx_date = tx["date"]
-#         if start_date and tx_date < start_date:
-#             return False
-#         if end_date and tx_date > end_date:
-#             return False
-#         return True
-
-#     filtered = [t for t in txns if in_range(t)]
-#     # Apply limit
-#     result = filtered[:max(0, int(limit))]
-#     return json.dumps(result)
-
 @tool(
     name="banking_list_recent_transactions",
     description="List recent transactions for an account within optional date range.",

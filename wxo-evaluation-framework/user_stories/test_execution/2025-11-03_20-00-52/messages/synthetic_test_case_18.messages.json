@@ -1,0 +1,86 @@
+[
+    {
+        "role": "user",
+        "content": "I'd like to check my recent transactions.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "What is your account ID or username?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "My username is bob.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"bob\"}, \"id\": \"chatcmpl-tool-9fef2cf17caf498da0d2e678f5\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10002\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-9fef2cf17caf498da0d2e678f5\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_list_recent_transactions\", \"args\": {\"account_id\": \"ACC10002\"}, \"id\": \"chatcmpl-tool-8bb70bc9798d4a6ca7ecd2541a\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"[{\\\"id\\\": \\\"T2001\\\", \\\"date\\\": \\\"2025-10-02\\\", \\\"type\\\": \\\"debit\\\", \\\"amount\\\": \\\"-20.00\\\", \\\"desc\\\": \\\"Lunch\\\"}]\", \"name\": \"banking_list_recent_transactions\", \"tool_call_id\": \"chatcmpl-tool-8bb70bc9798d4a6ca7ecd2541a\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your recent transactions are:\n\n* T2001: Debit of $20.00 on 2025-10-02 for Lunch\n\nWould you like to see more transactions or is there something else I can help you with?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "I'd like to see more transactions, please.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_list_recent_transactions\", \"args\": {\"account_id\": \"ACC10002\", \"limit\": \"50\"}, \"id\": \"chatcmpl-tool-fc0e4576ca6f49db93fa51a327\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"[{\\\"id\\\": \\\"T2001\\\", \\\"date\\\": \\\"2025-10-02\\\", \\\"type\\\": \\\"debit\\\", \\\"amount\\\": \\\"-20.00\\\", \\\"desc\\\": \\\"Lunch\\\"}]\", \"name\": \"banking_list_recent_transactions\", \"tool_call_id\": \"chatcmpl-tool-fc0e4576ca6f49db93fa51a327\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "There are no more transactions beyond the initial one displayed:\n\n* T2001: Debit of $20.00 on 2025-10-02 for Lunch\n\nIf you'd like to see transactions within a specific date range or have any other questions, feel free to ask.",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]
