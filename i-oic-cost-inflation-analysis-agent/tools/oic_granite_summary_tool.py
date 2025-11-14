@@ -2,12 +2,12 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 import requests
 import json
 
-OLLAMA_ROUTE_OCP = "REPLACE_OLLAMA_ROUTE_OCP_VARIABLE"
+OLLAMA_ROUTE_OCP = "REPLACE_WITH_OLLAMA_ROUTE_OCP"
 
 @tool(
     name="oic_granite_summary_tool",
     description=(
-        "Calls a Granite model endpoint hosted on Ollama to summarize or analyze text input. "
+        "Calls a Granite model endpoint hosted on Ollama on Red Hat OpenShift to summarize or analyze text input. "
         "The input must be a trend, analysis, or insight derived from knowledge sources. It gives sentitment analysis for customer feedback of the product"
     ),
     permission=ToolPermission.READ_ONLY
@@ -19,7 +19,7 @@ def call_granite_as_endpoint(prompt: str) -> str:
     """
 
     #Granite nano model is hosted and accessed as ollama API
-    url = "https://ollama-route-ollama.apps.6913556aa0a1cb9f21cd70d7.eu1.techzone.ibm.com/v1/chat/completions"
+    url = f"https://{OLLAMA_ROUTE_OCP}/v1/chat/completions"
     headers = {"Content-Type": "application/json"}
 
     payload = {

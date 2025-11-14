@@ -4,6 +4,6 @@ name: streaming_cost_docs
 description: |
   This xlsx data addresses data for price inflation in streaming platforms in multiple languages
 documents:
-  - path: "/Users/eladixit26/Code/OIC/oic-public-ibm/oic-i-agentic-ai-tutorials/i-oic-cost-inflation-analysis-agent/knowledge-bases/streaming_cost_inflation.xlsx"
+  - path: "./streaming_cost_inflation.xlsx"
 vector_index:
   embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
