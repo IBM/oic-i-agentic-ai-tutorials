@@ -44,6 +44,25 @@ tools:
 collaborators:
 knowledge_base:
   - streaming_cost_docs
+starter_prompts:
+    prompts:
+        - id: "prompt1"
+          title: "Identify if any streaming service had stable pricing but worsening sentiment."
+          subtitle: ""
+          prompt: "Identify if any streaming service had stable pricing but worsening sentiment."
+        - id: "prompt2"
+          title: "Compare Disney+ price changes"
+          subtitle: ""
+          prompt: "Compare Disney+ price changes with shifts in consumer sentiment. Did negative sentiment increase after price hikes?"
+        - id: "prompt3"
+          title: "Show the top 3 months inflation for Netflix."
+          subtitle: ""
+          prompt: "Show the top 3 months with the highest price inflation for Netflix."
+        - id: "prompt4"
+          title: "Identify if any streaming service had stable pricing but worsening sentiment."
+          subtitle: ""
+          prompt: "Analyze the monthly price changes for Netflix over the last 12 months and tell me whether the increase is gradual, sudden, or seasonal."
+       
 welcome_content:
   welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"
   description: "Track and visualize price trends, analyze user sentiment, and discover what is driving cost changes — all in one place."
