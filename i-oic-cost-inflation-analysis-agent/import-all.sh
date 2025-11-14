@@ -21,8 +21,8 @@ orchestrate connections add -a anthropic_credentials
 orchestrate connections configure -a anthropic_credentials --env draft -k key_value -t team
 orchestrate connections set-credentials -a anthropic_credentials --env draft -e "api_key=anthropic_api_key"
 
-orchestrate connections configure -a anthropic_credentials --env team -k key_value -t team
-orchestrate connections set-credentials -a anthropic_credentials --env team -e "api_key=anthropic_api_key"
+orchestrate connections configure -a anthropic_credentials --env live -k key_value -t team
+orchestrate connections set-credentials -a anthropic_credentials --env live -e "api_key=anthropic_api_key"
 
 
 ## Import Models 
