@@ -1,0 +1,76 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I'd like to find out the branch code for a city.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "What is the name of the city?",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "The city is New York.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_get_branch_code\", \"args\": {\"branch_query\": \"New York\"}, \"id\": \"chatcmpl-tool-26b96b7d6b5c445587227fe16c\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"BR001\", \"name\": \"banking_get_branch_code\", \"tool_call_id\": \"chatcmpl-tool-26b96b7d6b5c445587227fe16c\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "The branch code for New York is BR001.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_get_branch_code"
+            ],
+            "actual_tool_calls": [
+                "banking_get_branch_code"
+            ],
+            "missed_tool_calls": [
+                "banking_fetch_account_id"
+            ]
+        }
+    }
+]

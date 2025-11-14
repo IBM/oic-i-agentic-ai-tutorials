@@ -1,0 +1,65 @@
+{
+    "agent": "banking_agent",
+    "goals": {
+        "banking_fetch_account_id-1": [
+            "banking_list_recent_transactions-1"
+        ],
+        "banking_list_recent_transactions-1": [
+            "banking_update_contact_details-1"
+        ],
+        "banking_update_contact_details-1": [
+            "banking_retrieve_account_balance-1"
+        ],
+        "banking_retrieve_account_balance-1": [
+            "summarize"
+        ]
+    },
+    "goal_details": [
+        {
+            "type": "tool_call",
+            "name": "banking_fetch_account_id-1",
+            "tool_name": "banking_fetch_account_id",
+            "args": {
+                "identifier": "alice"
+            }
+        },
+        {
+            "type": "tool_call",
+            "name": "banking_list_recent_transactions-1",
+            "tool_name": "banking_list_recent_transactions",
+            "args": {
+                "account_id": "ACC10001",
+                "limit": "5"
+            }
+        },
+        {
+            "type": "tool_call",
+            "name": "banking_update_contact_details-1",
+            "tool_name": "banking_update_contact_details",
+            "args": {
+                "account_id": "ACC10001",
+                "email": "alex.new@abc.com"
+            }
+        },
+        {
+            "type": "tool_call",
+            "name": "banking_retrieve_account_balance-1",
+            "tool_name": "banking_retrieve_account_balance",
+            "args": {
+                "account_id": "ACC10001"
+            }
+        },
+        {
+            "name": "summarize",
+            "type": "text",
+            "response": "You have a sufficient balance to transfer 5000 USD. Your current available balance is $12,500.75 and your ledger balance is $12,750.75.",
+            "keywords": [
+                "5000 USD",
+                "$12,500.75",
+                "$12,750.75"
+            ]
+        }
+    ],
+    "story": "Your username is alice. You want to find out your current account balance.",
+    "starting_sentence": "My username is alice. I want to find out my current account balance"
+}

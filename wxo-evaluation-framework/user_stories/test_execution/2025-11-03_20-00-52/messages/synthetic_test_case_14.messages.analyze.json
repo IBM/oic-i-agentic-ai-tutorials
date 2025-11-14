@@ -1,0 +1,201 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I'd like to update my contact information.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"your username or customer number\"}, \"id\": \"chatcmpl-tool-9fc6f50d55c34f4c929d4dd43c\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": {
+            "reason": "incorrect parameter",
+            "actual": {
+                "identifier": "your username or customer number"
+            },
+            "expected": [
+                {
+                    "identifier": "cust-555"
+                }
+            ]
+        }
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"not found\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-9fc6f50d55c34f4c929d4dd43c\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": {
+            "reason": "runtime error"
+        }
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "What is your username or customer number?",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "My username is cust-555.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"cust-555\"}, \"id\": \"chatcmpl-tool-68c0de81a8b74c0597781a578d\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10003\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-68c0de81a8b74c0597781a578d\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_update_contact_details\", \"args\": {\"account_id\": \"ACC10003\"}, \"id\": \"chatcmpl-tool-a67583d4a52f43c9a2bd623bba\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": {
+            "reason": "incorrect parameter",
+            "actual": {
+                "account_id": "ACC10003"
+            },
+            "expected": [
+                {
+                    "account_id": "ACC10003",
+                    "phone": "+1-555-909-2323"
+                }
+            ]
+        }
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"Either email or phone must be provided to update.\", \"name\": \"banking_update_contact_details\", \"tool_call_id\": \"chatcmpl-tool-a67583d4a52f43c9a2bd623bba\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "What email would you like to use for your contact information?",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "I do not have access to that information, can you try something else? My username is cust-555 and I want to update my phone number to +1-555-909-2323.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"cust-555\"}, \"id\": \"chatcmpl-tool-1429a8c2399d45be80b5651dfd\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10003\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-1429a8c2399d45be80b5651dfd\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_update_contact_details\", \"args\": {\"phone\": \"+1-555-909-2323\", \"account_id\": \"ACC10003\"}, \"id\": \"chatcmpl-tool-08e1d061724f410388d3582419\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"Contact details for ACC10003 updated: {\\\"phone\\\": \\\"+1-555-909-2323\\\"}\", \"name\": \"banking_update_contact_details\", \"tool_call_id\": \"chatcmpl-tool-08e1d061724f410388d3582419\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "Your contact details for account ACC10003 have been updated with the phone number +1-555-909-2323.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_update_contact_details"
+            ],
+            "actual_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_fetch_account_id",
+                "banking_update_contact_details",
+                "banking_fetch_account_id",
+                "banking_update_contact_details"
+            ],
+            "missed_tool_calls": []
+        }
+    }
+]

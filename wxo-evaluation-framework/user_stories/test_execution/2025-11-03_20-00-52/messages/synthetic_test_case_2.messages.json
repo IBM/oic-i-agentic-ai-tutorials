@@ -1,0 +1,58 @@
+[
+    {
+        "role": "user",
+        "content": "I'd like to check my account balance.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "What is your account ID or username?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "My username is alice.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-cf70bd055d3d4eb7ba350fc0c9\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-cf70bd055d3d4eb7ba350fc0c9\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_retrieve_account_balance\", \"args\": {\"account_id\": \"ACC10001\"}, \"id\": \"chatcmpl-tool-76693b0d6c8445d6b1a799046d\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"{\\\"currency\\\": \\\"USD\\\", \\\"available\\\": \\\"12500.75\\\", \\\"ledger\\\": \\\"12750.75\\\"}\", \"name\": \"banking_retrieve_account_balance\", \"tool_call_id\": \"chatcmpl-tool-76693b0d6c8445d6b1a799046d\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your account balance is $12,500.75 (available) and $12,750.75 (ledger).",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

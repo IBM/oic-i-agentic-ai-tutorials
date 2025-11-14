@@ -1,0 +1,44 @@
+[
+    {
+        "role": "user",
+        "content": "I am cust-555 and I want to update my phone number to +1-555-909-2323.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"cust-555\"}, \"id\": \"chatcmpl-tool-79033e485d7343fbbf7334b370\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10003\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-79033e485d7343fbbf7334b370\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_update_contact_details\", \"args\": {\"account_id\": \"ACC10003\", \"phone\": \"+1-555-909-2323\"}, \"id\": \"chatcmpl-tool-cb9403017f7b4d62841807d36d\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"Contact details for ACC10003 updated: {\\\"phone\\\": \\\"+1-555-909-2323\\\"}\", \"name\": \"banking_update_contact_details\", \"tool_call_id\": \"chatcmpl-tool-cb9403017f7b4d62841807d36d\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your phone number has been updated to +1-555-909-2323 for account ACC1****003.",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

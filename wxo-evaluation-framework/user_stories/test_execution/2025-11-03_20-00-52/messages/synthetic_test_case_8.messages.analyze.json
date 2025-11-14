@@ -1,0 +1,73 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I'd like to get my account ID.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "What is your username or customer number?",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "My username is cust-555.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"cust-555\"}, \"id\": \"chatcmpl-tool-e0ea8198740b472f9c717cf7fd\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10003\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-e0ea8198740b472f9c717cf7fd\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "Your account ID is ACC1****003.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id"
+            ],
+            "actual_tool_calls": [
+                "banking_fetch_account_id"
+            ],
+            "missed_tool_calls": []
+        }
+    }
+]

@@ -1,0 +1,30 @@
+[
+    {
+        "role": "user",
+        "content": "I am cust-555 and I want to get my account ID.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"cust-555\"}, \"id\": \"chatcmpl-tool-138d22e814ec466c91ab9adfc9\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10003\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-138d22e814ec466c91ab9adfc9\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your account ID is ACC1****003.",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]
