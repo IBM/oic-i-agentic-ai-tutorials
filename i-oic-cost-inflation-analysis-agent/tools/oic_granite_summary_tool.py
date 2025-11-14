@@ -2,7 +2,7 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 import requests
 import json
 
-OLLAMA_ROUTE_OCP = "REPLACE_WITH_OLLAMA_ROUTE_OCP"
+OLLAMA_ROUTE_OCP = "ollama-route-ollama.apps.6913556aa0a1cb9f21cd70d7.eu1.techzone.ibm.com"
 
 @tool(
     name="oic_granite_summary_tool",
