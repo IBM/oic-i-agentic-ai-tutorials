@@ -7,8 +7,8 @@ OLLAMA_ROUTE_OCP = "REPLACE_OLLAMA_ROUTE_OCP_VARIABLE"
 @tool(
     name="oic_granite_summary_tool",
     description=(
-        "Calls a Granite model endpoint hosted on Ollama on Red Hat OpenShift to summarize or analyze text input. "
-        "The input must be a trend, analysis, or insight derived from knowledge sources."
+        "Calls a Granite model endpoint hosted on Ollama to summarize or analyze text input. "
+        "The input must be a trend, analysis, or insight derived from knowledge sources. It gives sentitment analysis for customer feedback of the product"
     ),
     permission=ToolPermission.READ_ONLY
 )
@@ -19,12 +19,17 @@ def call_granite_as_endpoint(prompt: str) -> str:
     """
 
     #Granite nano model is hosted and accessed as ollama API
-    url = f"https://{OLLAMA_ROUTE_OCP}/v1/chat/completions"
+    url = "https://ollama-route-ollama.apps.6913556aa0a1cb9f21cd70d7.eu1.techzone.ibm.com/v1/chat/completions"
     headers = {"Content-Type": "application/json"}
 
     payload = {
         "model": "granite4:350m-h",
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [{"role": "user", "content": "Summarize the following input :"+prompt}],
+        "temperature": 0.5,     # Randomness (0 = deterministic, 1 = creative)
+        "max_tokens": 150,      # Max tokens in the output
+        "top_p": 0.9,           # Nucleus sampling
+        "top_k": 40,            # Top-k sampling (if supported)
+        "stop": ["\n\n"],        # Optional stop sequence(s)
         "stream": False
     }
 
