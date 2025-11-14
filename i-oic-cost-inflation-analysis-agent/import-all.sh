@@ -1,47 +1,105 @@
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-orchestrate env add --name oictutorial --url <WXO Instance URL>
+#######################################
+# Environment Configuration
+#######################################
 
-orchestrate env activate oictutorial --api-key <your api api_key>
+ENV_NAME="oictutorial"
+WXO_URL="https://api.eu-central-1.dl.watson-orchestrate.ibm.com/instances/20250508-1435-1457-50e0-b8f069e11f66"
+WXO_API_KEY="WXO_API_KEY"
+GROQ_API_KEY="GROQ_API_KEY"
+ANTHROPIC_API_KEY="ANTHROPIC_API_KEY"
 
-## Create Connections 
+#######################################
+# Environment Setup
+#######################################
 
-### Groq Credentials
+# Add and activate orchestrate environment
+orchestrate env add --name "$ENV_NAME" --url "$WXO_URL"
+orchestrate env activate "$ENV_NAME" --api-key "$WXO_API_KEY"
 
-orchestrate connections add -a groq_credentials
-orchestrate connections configure -a groq_credentials --env draft -k key_value -t team
-orchestrate connections set-credentials -a groq_credentials --env draft -e "api_key=grok-api-key"
+#######################################
+# Connections – Groq
+#######################################
 
-orchestrate connections configure -a groq_credentials --env live -k key_value -t team
-orchestrate connections set-credentials -a groq_credentials --env live -e "api_key=grok-api-key"
+orchestrate connections add -a "groq_credentials"
 
-### Anthropic Credentials
+# Configure for draft environment
+orchestrate connections configure -a "groq_credentials" --env draft \
+  -t team \
+  -k key_value
 
-orchestrate connections add -a anthropic_credentials
-orchestrate connections configure -a anthropic_credentials --env draft -k key_value -t team
-orchestrate connections set-credentials -a anthropic_credentials --env draft -e "api_key=anthropic_api_key"
+orchestrate connections set-credentials -a "groq_credentials" --env draft \
+  -e api_key="$GROQ_API_KEY"
 
-orchestrate connections configure -a anthropic_credentials --env live -k key_value -t team
-orchestrate connections set-credentials -a anthropic_credentials --env live -e "api_key=anthropic_api_key"
+# Configure for live environment
+orchestrate connections configure -a "groq_credentials" --env live \
+  -t team \
+  -k key_value
 
+orchestrate connections set-credentials -a "groq_credentials" --env live \
+  -e api_key="$GROQ_API_KEY"
 
-## Import Models 
+#######################################
+# Connections – Anthropic
+#######################################
 
-orchestrate models import --file groq-openai.yaml --app-id groq_credentials
+orchestrate connections add -a "anthropic_credentials"
 
-orchestrate models import --file anthropic-claude.yaml --app-id anthropic_credentials
+# Configure for draft
+orchestrate connections configure -a "anthropic_credentials" --env draft \
+  -t team \
+  -k key_value
 
-## Import Knowledge Base
+orchestrate connections set-credentials -a "anthropic_credentials" --env draft \
+  -e api_key="$ANTHROPIC_API_KEY"
 
-orchestrate knowledge-bases import -f knowledge-bases/knowledge-base.yaml
+# Configure for live
+orchestrate connections configure -a "anthropic_credentials" --env live \
+  -t team \
+  -k key_value
 
-## Import Tools 
+orchestrate connections set-credentials -a "anthropic_credentials" --env live \
+  -e api_key="$ANTHROPIC_API_KEY"
+
+#######################################
+# Import Models
+#######################################
+
+orchestrate models import \
+  --file models/groq-openai.yaml \
+  --app-id groq_credentials
+
+orchestrate models import \
+  --file models/anthropic-claude.yaml \
+  --app-id anthropic_credentials
+
+#######################################
+# Import Knowledge Base
+#######################################
+
+orchestrate knowledge-bases import \
+  -f knowledge-bases/knowledge-base.yaml
+
+#######################################
+# Import Tools
+#######################################
 
 cd tools
-orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt
 
-## Import Agents
+orchestrate tools import -k python \
+  -f oic_granite_summary_tool.py \
+  -r requirements.txt
 
-orchestrate agents import --file agents/oic_cost_inflation_analysis_agent.yaml 
+cd ..
 
-orchestrate agents import --file agents/oic_cost_insights_master_agent.yaml
+#######################################
+# Import Agents
+#######################################
+
+orchestrate agents import \
+  --file agents/oic_cost_inflation_analysis_agent.yaml
+
+orchestrate agents import \
+  --file agents/oic_cost_insights_master_agent.yaml

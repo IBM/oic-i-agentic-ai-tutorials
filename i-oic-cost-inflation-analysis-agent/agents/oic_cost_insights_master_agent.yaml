@@ -17,6 +17,26 @@ tools:
   - oic_granite_summary_tool
 collaborators:
   - oic_cost_inflation_analysis_agent
+starter_prompts:
+    prompts:
+        - id: "prompt4"
+          title: "Spot sudden price spikes"
+          subtitle: ""
+          prompt: "Identify any sudden price spikes in Spotify’s monthly subscription cost and explain how consumer sentiment reacted."
+        - id: "prompt6"
+          title: "Compare sentiment across platforms"
+          subtitle: ""
+          prompt: "Compare consumer sentiment trends for Netflix, Disney+, and Amazon Prime during the months when each platform increased prices."
+
+        - id: "prompt7"
+          title: "Top negative sentiment months"
+          subtitle: ""
+          prompt: "Show the top 3 months with the most negative sentiment for Spotify and determine if price changes contributed."
+        - id: "prompt18"
+          title: "Sentiment trend after price freeze"
+          subtitle: ""
+          prompt: "Check how consumer sentiment shifted during months when Netflix froze its prices. Did sentiment improve, worsen, or stay the same?"
+
 welcome_content:
   welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"
   description: "Track and visualize price trends, analyze user sentiment, and discover what is driving cost changes — all in one place."
