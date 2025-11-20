@@ -1,9 +1,15 @@
 from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 import requests
 import json
+from pydantic import Field
+from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
+from ibm_watsonx_orchestrate.agent_builder.connections import ConnectionType
+from ibm_watsonx_orchestrate.run import connections
 
-OLLAMA_ROUTE_OCP = REPLACE_WITH_OCP_ROUTE"
-
+#OLLAMA_ROUTE_OCP = "ollama-route-ollama.apps.6913556aa0a1cb9f21cd70d7.eu1.techzone.ibm.com" 
+#"REPLACE_WITH_OLLAMA_ROUTE_OCP"
+MY_APP_ID="oic_llm_creds"
+ 
 @tool(
     name="oic_granite_summary_tool",
     description=(
@@ -18,8 +24,12 @@ def call_granite_as_endpoint(prompt: str) -> str:
     and returns the model’s generated response as a string.
     """
 
+    # Get credentials
+    creds = connections.key_value(MY_APP_ID)
+    GRANITE_ROUTE_URL = creds['GRANITE_ROUTE_URL']
+
     #Granite nano model is hosted and accessed as ollama API
-    url = f"https://{OLLAMA_ROUTE_OCP}/v1/chat/completions"
+    url = f"https://{GRANITE_ROUTE_URL}/v1/chat/completions"
     headers = {"Content-Type": "application/json"}
 
     payload = {

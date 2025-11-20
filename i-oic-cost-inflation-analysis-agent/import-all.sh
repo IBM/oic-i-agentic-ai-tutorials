@@ -10,6 +10,7 @@ WXO_URL="https://api.eu-central-1.dl.watson-orchestrate.ibm.com/instances/202505
 WXO_API_KEY="WXO_API_KEY"
 GROQ_API_KEY="GROQ_API_KEY"
 ANTHROPIC_API_KEY="ANTHROPIC_API_KEY"
+GRANITE_ROUTE_URL="GRANITE_ROUTE_URL"
 
 #######################################
 # Environment Setup
@@ -18,6 +19,19 @@ ANTHROPIC_API_KEY="ANTHROPIC_API_KEY"
 # Add and activate orchestrate environment
 orchestrate env add --name "$ENV_NAME" --url "$WXO_URL"
 orchestrate env activate "$ENV_NAME" --api-key "$WXO_API_KEY"
+
+# Connections 
+
+orchestrate connections set-credentials -a oic_llm_creds --env draft \
+  -e GRANITE_ROUTE_URL="$GRANITE_ROUTE_URL"
+
+orchestrate connections configure -a oic_llm_creds --env live \
+  -t team \
+  -k key_value
+
+orchestrate connections set-credentials -a oic_llm_creds --env live \
+  -e GRANITE_ROUTE_URL="$GRANITE_ROUTE_URL"
+  
 
 #######################################
 # Connections – Groq
@@ -79,8 +93,7 @@ orchestrate models import \
 # Import Knowledge Base
 #######################################
 
-orchestrate knowledge-bases import \
-  -f knowledge-bases/knowledge-base.yaml
+orchestrate knowledge-bases import -f knowledge-bases/knowledge-base.yaml
 
 #######################################
 # Import Tools
@@ -88,9 +101,7 @@ orchestrate knowledge-bases import \
 
 cd tools
 
-orchestrate tools import -k python \
-  -f oic_granite_summary_tool.py \
-  -r requirements.txt
+orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt
 
 cd ..
 

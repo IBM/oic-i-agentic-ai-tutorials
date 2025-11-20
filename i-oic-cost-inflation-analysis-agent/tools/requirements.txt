@@ -1,2 +1,4 @@
 requests>=2.31.0
 ibm-watsonx-orchestrate-agent-builder>=0.4.0
+pandas==2.1.4
+pandasql==0.7.3
