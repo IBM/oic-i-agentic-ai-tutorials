@@ -109,3 +109,11 @@ This tutorial is part of the watsonx Orchestrate learning path:
 - IBM Developer Community: [developer.ibm.com](https://developer.ibm.com)
 - watsonx Orchestrate Docs: [developer.watson-orchestrate.ibm.com](https://developer.watson-orchestrate.ibm.com)
 
+## Troubleshooting
+
+- LangFlow can't connect to pgvector: - Use host.docker.internal instead of localhost in connection strings - Verify the pgvector container is running: docker ps | grep pgvector
+- No documents retrieved: - Verify documents loaded successfully:  docker exec -it rag-pgvector psql -U postgres -d ragdb -c &quot;SELECT COUNT(*) FROM langchainpgembedding;&quot; Check that you used the same embedding model for loading and retrieval 
+- Agent doesn't use tool: - Check that agent instructions mention the tool - Verify the tool is enabled in agent configuration - Test the MCP server independently with the Inspector
+- Embedding dimension mismatch: - Ensure the same embedding model is used for loading and retrieval - Drop and recreate the pgvector table if you change models
+
+
