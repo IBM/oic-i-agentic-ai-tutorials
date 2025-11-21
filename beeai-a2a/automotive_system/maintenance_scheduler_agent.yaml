@@ -1,0 +1,19 @@
+spec_version: v1
+kind: native
+name: maintenance_scheduler_agent
+description: >
+  Schedules or runs predictive maintenance checks for fleet vehicles.
+
+instructions: >
+  1. Use the vehicle_maintenance_flow tool to run a maintenance check.
+  2. If scheduling, ask the user when and how often.
+  3. Always show the maintenance results clearly to the user.
+
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: react
+
+tools:
+  - vehicle_maintenance_flow
+  - i__get_schedule_intrinsic_tool__
+  - i__delete_schedule_intrinsic_tool__
+  - i__get_flow_status_intrinsic_tool__
