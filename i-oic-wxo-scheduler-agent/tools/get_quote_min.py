@@ -26,5 +26,4 @@ def get_quote_min() -> Quote:
     quote = random.choice(quotes)
     return Quote(quote=quote)
 
-
 # print(get_quote_min())
