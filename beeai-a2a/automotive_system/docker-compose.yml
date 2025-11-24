@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  beeai_agent:
+    build: ./beeai_agent
+    ports:
+      - "9999:9999"
+  beeai_host:
+    build: ./beeai_host
+    depends_on:
+      - beeai_agent

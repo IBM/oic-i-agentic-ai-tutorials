@@ -1,0 +1,10 @@
+spec_version: v1
+kind: native
+name: maintenance_agent
+description: Agent to run predictive maintenance flow.
+instructions: >
+  Use predictive_maintenance_flow to execute vehicle maintenance prediction and handle downstream steps.
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: react
+tools:
+  - predictive_maintenance_flow

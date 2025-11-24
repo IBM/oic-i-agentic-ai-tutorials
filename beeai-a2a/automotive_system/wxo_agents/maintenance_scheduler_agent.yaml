@@ -1,0 +1,13 @@
+spec_version: v1
+kind: native
+name: maintenance_scheduler_agent
+description: Agent to schedule predictive maintenance flows.
+instructions: >
+  Ask user when and how often predictions should run. Use intrinsic scheduling tools.
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: react
+tools:
+  - predictive_maintenance_flow
+  - i__get_schedule_intrinsic_tool__
+  - i__delete_schedule_intrinsic_tool__
+  - i__get_flow_status_intrinsic_tool__

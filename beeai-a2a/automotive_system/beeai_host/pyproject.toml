@@ -1,0 +1,7 @@
+[project]
+name = "beeai-host"
+version = "0.0.1"
+dependencies = [
+  "beeai-framework[a2a]>=0.1.36,<0.2.0",
+  "pydantic>=1.10,<2"
+]
