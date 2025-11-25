@@ -29,7 +29,7 @@ def call_granite_as_endpoint(prompt: str) -> str:
     # Get credentials
     creds = connections.key_value(MY_APP_ID)
     VLLM_ROUTE_OCP = creds['url_name']
-    print(VLLM_ROUTE_OCP)
+
     #Granite nano model is hosted and accessed as ollama API
     url = f"https://{VLLM_ROUTE_OCP}/v1/chat/completions"
     headers = {"Content-Type": "application/json"}

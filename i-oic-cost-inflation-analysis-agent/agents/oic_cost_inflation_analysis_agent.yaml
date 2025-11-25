@@ -64,17 +64,13 @@ tools:
 starter_prompts:
     prompts:
         - id: "prompt1"
-          title: "Identify if any streaming service had stable pricing but worsening sentiment."
+          title: "Show the price history for Netflix, Disney+, and HBO subscriptions."
           subtitle: ""
-          prompt: "Identify if any streaming service had stable pricing but worsening sentiment."
+          prompt: "Show the price history for Netflix, Disney+, and HBO subscriptions."
         - id: "prompt2"
           title: "Compare Disney+ price changes"
           subtitle: ""
           prompt: "Compare Disney+ price changes with shifts in consumer sentiment."
-        - id: "prompt3"
-          title: "Show the top 3 months inflation for Netflix."
-          subtitle: ""
-          prompt: "Show the top 3 months with the highest price inflation for Netflix." 
 welcome_content:
   welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"
   description: "Track and visualize price trends, analyze user sentiment, and discover what is driving cost changes — all in one place."
