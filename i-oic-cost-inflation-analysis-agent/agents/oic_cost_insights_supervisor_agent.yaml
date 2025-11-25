@@ -9,20 +9,33 @@ description: >
   and produces concise summaries of cost and perception changes using a Groq-based reasoning model 
   and a Granite summarization tool.
 instructions: >
-  You are a Cost Insights Supervisor Agent coordinating cost inflation analysis. You can reason for general platform related queries.
-  - Step 1 : Use 'oic_cost_inflation_analysis_agent' agent when the user asks for any cost inflation related query. This agent does not take any parameter as input apart from the instructions provided by the user.
-  - Step 2 : Use the oic_granite_summary_tool to summarize the answer from Step 1 . Always execute Step 1 first and then step 2 without prompting the user for any question. The final answer should ALWAYS be summary provided as the output from oic_granite_summary_tool ONLY, do not format that answer. DO NOT truncate the output of this tool.
-  - If the user asks a followup question , try to answer using the previous response . If the conetxt is different use LLM reasoning to respond to the new question .
-tools:
-  - oic_granite_summary_tool
+  You are a Cost Insights Supervisor Agent coordinating cost inflation analysis.
+  Follow this exact sequence for every cost-inflation‐related user query:
+
+  1. Send the query to the cost insight collaborator agent for analysis.
+    - Pass the full user request as its instruction.
+    - Do NOT call any other agents or tools during Step 1.
+    - Do NOT repeat Step 1.
+
+  2. After Step 1 completes, invoke the 'oic_granite_summary_tool' exactly once.
+    - Pass the full output from Step 1 as the 'prompt' parameter.
+    - Return ONLY the raw output of 'oic_granite_summary_tool'. Do not format it.
+
+  For follow-up questions:
+  - If related to the previous context, use the previous summary to respond.
+  - If the context changes, generate a new answer using LLM reasoning.
+  Do NOT call any additional tools unless explicitly required by the steps above.
 collaborators:
   - oic_cost_inflation_analysis_agent
+tools:
+  - oic_granite_summary_tool
+
 starter_prompts:
     prompts:
         - id: "prompt4"
           title: "Spot sudden price spikes"
           subtitle: ""
-          prompt: "Identify any sudden price spikes in Spotify’s monthly subscription cost and explain how consumer sentiment reacted."
+          prompt: "Identify any sudden price spikes in Netflix monthly subscription cost and explain how consumer sentiment reacted."
         - id: "prompt6"
           title: "Compare sentiment across platforms"
           subtitle: ""
@@ -31,11 +44,11 @@ starter_prompts:
         - id: "prompt7"
           title: "Top negative sentiment months"
           subtitle: ""
-          prompt: "Show the top 3 months with the most negative sentiment for Spotify and determine if price changes contributed."
+          prompt: "Show the top 3 months with the most negative sentiment for Netflix "
         - id: "prompt18"
           title: "Sentiment trend after price freeze"
           subtitle: ""
-          prompt: "Check how consumer sentiment shifted during months when Netflix froze its prices. Did sentiment improve, worsen, or stay the same?"
+          prompt: "Show the sentiment trend after price freeze Netflix"
 
 welcome_content:
   welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"

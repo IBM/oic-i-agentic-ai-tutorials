@@ -2,65 +2,73 @@ from ibm_watsonx_orchestrate.agent_builder.tools import tool, ToolPermission
 import pandas as pd
 import pandasql
 import traceback
-import os
+from io import StringIO
+
+# -----------------------------
+# Embedded CSV data
+# -----------------------------
+CSV_DATA = """service,region,plan,date,price,prev_price,inflation_pct,comment,sentiment,sentiment_score
+Netflix,United States,Standard,2022-01,13.99,13.99,0.0,Great content library but getting expensive,Neutral,0
+Netflix,United States,Standard,2023-01,15.49,13.99,10.72,Another price hike? Considering canceling,Negative,-1
+Netflix,United States,Standard,2024-01,15.49,15.49,0.0,At least they didn't raise prices this year,Neutral,0
+Netflix,United States,Standard,2025-01,17.99,15.49,16.14,"This is getting ridiculous, quality hasn't improved",Negative,-2
+Disney+,United States,Premium,2022-01,7.99,7.99,0.0,Amazing value for families with kids!,Positive,2
+Disney+,United States,Premium,2023-01,10.99,7.99,37.55,Huge jump but still cheaper than Netflix,Neutral,0
+Disney+,United States,Premium,2024-01,13.99,10.99,27.3,Two big increases in two years feels unfair,Negative,-1
+Disney+,United States,Premium,2025-01,15.99,13.99,14.3,Starting to match Netflix pricing now,Negative,-1
+Spotify,United Kingdom,Premium,2022-01,9.99,9.99,0.0,"Best music service, worth every penny",Positive,2
+Spotify,United Kingdom,Premium,2023-01,10.99,9.99,10.01,Small increase but understandable with inflation,Neutral,0
+Spotify,United Kingdom,Premium,2024-01,11.99,10.99,9.1,Another year another hike,Neutral,0
+Spotify,United Kingdom,Premium,2025-01,11.99,11.99,0.0,Happy they held pricing this year,Positive,1
+Amazon Prime Video,India,Monthly,2022-01,179.0,179.0,0.0,"बहुत अच्छी सेवा, reasonable price",Positive,2
+Amazon Prime Video,India,Monthly,2023-01,199.0,179.0,11.17,Price increase but still affordable,Neutral,0
+Amazon Prime Video,India,Monthly,2024-01,299.0,199.0,50.25,Massive jump! This is too much,Negative,-2
+Amazon Prime Video,India,Monthly,2025-01,299.0,299.0,0.0,At least stable now but expensive,Neutral,0
+"""
+
 
 @tool(
     name="cost_analysis_tool",
     description=(
-        "Run SQL SELECT queries on the 'df' table, which is loaded from "
-        "streaming_cost_inflation.csv. Only SELECT queries are allowed. "
-        "Useful for reasoning on streaming platform price inflation. "
-        "The table is exposed as 'df' and contains all columns from the CSV."
+        "Run SQL SELECT queries on an in-memory DataFrame called `prices` containing "
+        "streaming price inflation data. Only SELECT queries are allowed."
     ),
     permission=ToolPermission.READ_ONLY
 )
-def getCostAnalytics(query: str) -> str:
-    """
-    Executes a SQL SELECT query on a CSV file using pandas + pandasql.
-    """
-
-    # Resolve CSV path relative to this script (safe for agent packaging)
-    csv_path = os.path.join(os.path.dirname(__file__), "streaming_cost_inflation.csv")
-
+def sql_db_query_csv(query: str) -> str:
     try:
-        # Validate SQL
-        cleaned = query.strip().lower()
-        if not cleaned.startswith("select"):
-            return ("❌ Only SELECT statements are supported. "
-                    "Example: SELECT * FROM df LIMIT 5")
+        if not query.strip().lower().startswith("select"):
+            return "Only SELECT queries are supported."
 
-        # Load CSV
-        if not os.path.exists(csv_path):
-            return f"❌ CSV file not found at: {csv_path}"
+        # Load CSV from embedded string
+        df = pd.read_csv(StringIO(CSV_DATA))
 
-        df = pd.read_csv(csv_path)
-
-        # Make df available for SQL engine
-        pysqldf = lambda q: pandasql.sqldf(q, {"df": df})
-
-        # Execute query
+        # Run SQL
+        pysqldf = lambda q: pandasql.sqldf(q, {"prices": df, "df": df})
         result_df = pysqldf(query)
 
-        # No rows
         if result_df.empty:
-            return "Query executed successfully — no rows matched."
+            return "Query executed successfully. No rows returned."
 
-        # Format output
-        col_line = " | ".join(result_df.columns)
-        separator = "-" * len(col_line)
-
-        rows = []
+        # Format output as readable string
+        lines = []
         for _, row in result_df.iterrows():
-            rows.append(" | ".join(str(val) for val in row))
+            line = (
+                f"{row.get('date', '')}: {row.get('service', '')} "
+                f"({row.get('region', '')}, {row.get('plan', '')}) - "
+                f"Price: ${row.get('price', 0):.2f}, Previous: ${row.get('prev_price', 0):.2f}, "
+                f"Inflation: {row.get('inflation_pct', 0):.2f}%, "
+                f"Sentiment: {row.get('sentiment', '')} ({row.get('sentiment_score', 0)}), "
+                f"Comment: {row.get('comment', '')}"
+            )
+            lines.append(line)
 
-        return f"{col_line}\n{separator}\n" + "\n".join(rows)
+        return "\n".join(lines)
 
-    except Exception:
-        return f"Unexpected error:\n{traceback.format_exc()}"
+    except Exception as e:
+        return f"Error executing query: {str(e)}\n{traceback.format_exc()}"
 
 
-# Example usage
+# For local debugging
 if __name__ == "__main__":
-    query = "SELECT * FROM df LIMIT 5"
-    result = sql_db_query_csv(query)
-    print(result)
+    print(sql_db_query_csv("SELECT date, region, plan, price, prev_price, inflation_pct, sentiment, sentiment_score, comment FROM prices WHERE service='Disney+' AND sentiment='Negative' ORDER BY sentiment_score ASC LIMIT 3"))

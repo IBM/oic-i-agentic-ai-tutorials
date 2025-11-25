@@ -19,11 +19,13 @@ orchestrate agents remove -n oic_cost_insight_agent -k native || true
 # -----------------------------
 # (these were imported from tools directory in your script)
 orchestrate tools remove -n oic_granite_summary_tool || true
+orchestrate tools remove -n cost_analysis_tool || true
+
 
 # -----------------------------
 # Remove Knowledge Bases
 # -----------------------------
-orchestrate knowledge-bases remove -n streaming_cost_docs || true
+#orchestrate knowledge-bases remove -n streaming_cost_docs || true
 
 # -----------------------------
 # Remove Models
@@ -37,6 +39,7 @@ orchestrate models remove -n virtual-model/anthropic/claude-sonnet-4-5-20250929 
 # -----------------------------
 # Remove Connections
 # -----------------------------
+orchestrate connections remove -a "oic_llm_creds" || true
 orchestrate connections remove -a "groq_credentials" || true
 orchestrate connections remove -a "anthropic_credentials" || true
 
