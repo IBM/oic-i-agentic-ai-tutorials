@@ -38,7 +38,7 @@ chmod +x import-all.sh
 After successful import you should see the agent and corresponding tools listed in the watsonx Orchestrate console.
 
 4. Generate test cases from the user stories
-Run `orchestrate evaluations generate --stories-path user_stories/banking_user_stories_positive.csv --tools-path agent_tools/ --env-file .env`
+Run `orchestrate evaluations generate --stories-path user_stories/banking_user_stories.csv --tools-path agent_tools/ --env-file .env`
 
 5. Evaluate the test cases
 Run `orchestrate evaluations evaluate --test-paths user_stories/banking_agent_test_cases/ --output-dir user_stories/banking_test_execution/ --env-file .env`
