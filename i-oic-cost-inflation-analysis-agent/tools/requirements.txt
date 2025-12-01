@@ -1,13 +1,25 @@
-requests>=2.31.0
-ibm-watsonx-orchestrate-agent-builder>=0.4.0
-# Core dependencies
+# requests>=2.31.0
+# ibm-watsonx-orchestrate-agent-builder>=0.4.0
+# # Core dependencies
 
 
-# Data stack compatible with Python 3.11
-numpy==1.26.4
-pandas==2.2.2
-openpyxl==3.1.2
-python-dateutil>=2.8.2
+# # Data stack compatible with Python 3.11
+# numpy==1.26.4
+# pandas==2.2.2
+# openpyxl==3.1.2
+# python-dateutil>=2.8.2
 
-# Add pandasql to support SQL queries on pandas DataFrames
-pandasql==0.7.3
+# # Add pandasql to support SQL queries on pandas DataFrames
+# pandasql==0.7.3
+# pydantic
+# #sentence-transformers
+# python-dotenv
+# ibm-watsonx-orchestrate
+# langchain-ibm
+# ibm-watsonx-ai
+# chromadb
+ibm-watsonx-ai
+langchain-ibm
+chromadb
+faiss-cpu
+openpyxl

@@ -88,6 +88,22 @@ In this tutorial, you:
 
 - Imported an external LLM (e.g., GPT OSS 120B, Claude Sonnet )
 
+```
+curl --request POST \
+  --url "https://sai-vllm-vllm.apps.6913556aa0a1cb9f21cd70d7.eu1.techzone.ibm.com/v1/chat/completions" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "ibm-granite/granite-4.0-350m",
+    "messages": [
+      {
+        "role": "user",
+        "content": "## Netflix Streaming Platform - Cost Inflation Details\n\nHere'\''s a comprehensive breakdown of Netflix'\''s pricing evolution and cost inflation:\n\n### Price History (U.S. Standard Plan)\n\n| Year | Price | Previous Price | YoY Inflation | User Sentiment |\n|------|-------|----------------|---------------|----------------|\n| 2022 | $13.99 | $13.99 | 0.0% | Neutral - \"Great content library but getting expensive\" |\n| 2023 | $15.49 | $13.99 | 10.72% | Negative - \"Another price hike? Considering canceling\" |\n| 2024 | $15.49 | $15.49 | 0.0% | Neutral - \"At least they didn'\''t raise prices this year\" |\n| 2025 | $17.99 | $15.49 | 16.14% | Negative - \"This is getting ridiculous, quality hasn'\''t improved\" |\n\n### Key Metrics\n\n- Total Price Increase (2022-2025): $4.00\n- Cumulative Inflation: ~28.6%\n- Average Inflation (years with price hikes): ~13.4% per year\n- Price Stability: No changes in 2022 & 2024\n\n### Analysis Highlights\n\n- 2023: First major increase of 10.7%\n- 2024: Price held steady\n- 2025: Steepest increase at 16.1%\n- Sentiment: Negative during price hikes\n\n---\n\nNetflix (U.S. – Standard plan) – Price-inflation overview\n\n| Year (Jan) | Price (USD) | Prior price (USD) | YoY inflation % | Comment |\n|------------|-------------|-------------------|------------------|---------|\n| 2022 | 13.99 | 13.99 | 0.0% | Neutral |\n| 2023 | 15.49 | 13.99 | 10.72% | Negative |\n| 2024 | 15.49 | 15.49 | 0.0% | Neutral |\n| 2025 | 17.99 | 15.49 | 16.14% | Negative |\n\n*Inflation formula: ((current - previous) / previous) * 100*\n\n---\n\n### Key take-aways\n\n- Total increase: $4.00\n- Cumulative inflation: 28.6%\n- Avg inflation (years with hikes): 13.4%\n- No-change years: 2022 & 2024\n- Sentiment: Neutral → Negative when prices rise\n\n---\n\n### Summary\n\nPrices increased sharply in 2023 and 2025, causing negative sentiment. 2024 remained flat, improving user perception.\n"
+      }
+    ],
+    "stream": false
+  }'
+```
+
 This setup enables low-code, LLM-driven access to your data — directly within IBM watsonx Orchestrate.
 
 ## Tips

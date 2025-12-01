@@ -81,7 +81,7 @@ orchestrate models import \
 
 cd tools
 
-orchestrate tools import -k python -f cost_analysis_tool.py -r requirements.txt
+orchestrate tools import -k python -f oic_excel_rag_tool.py -p . -r requirements.txt --app-id anthropic_credentials
 orchestrate tools import -k python -f oic_granite_summary_tool.py -r requirements.txt --app-id oic_llm_creds
 
 cd ..

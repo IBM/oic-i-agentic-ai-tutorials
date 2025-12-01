@@ -1,9 +1,0 @@
-spec_version: v1
-kind: knowledge_base
-name: streaming_cost_docs
-description: |
-  This csv data addresses data for price inflation in streaming platforms in multiple languages
-documents:
-  - path: "./streaming_cost_inflation.csv"
-vector_index:
-  embeddings_model_name: ibm/slate-125m-english-rtrvr-v2
