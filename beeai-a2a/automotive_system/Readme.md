@@ -71,8 +71,9 @@ automotive_system/
 * Granite model pulled:
 
 ```bash
-ollama pull granite3.3:8b
+ollama pull granite4:3b
 ```
+Try out with other granite model - [Ollama/granite](https://ollama.com/library/granite4)
 
 * BeeAI Framework:
 
