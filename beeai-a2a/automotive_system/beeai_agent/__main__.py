@@ -21,7 +21,7 @@ from .tools_dummy import (
 
 def main():
 
-    llm = ChatModel.from_name("ollama:granite3.3:8b")
+    llm = ChatModel.from_name("ollama:granite4:3b")
 
     instructions = """
 You are a Predictive Maintenance Agent.
