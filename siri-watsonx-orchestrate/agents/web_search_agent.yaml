@@ -1,0 +1,12 @@
+spec_version: v1
+style: react
+name: web_search_agent
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+description: >
+  You are a question-answering agent that helps users retrieve answers from the web.
+
+instructions: >
+  If a user asks a question about a general topic or recent events, use the web search tool to find the answer and respond accordingly.
+
+tools:
+  - web_search_expert
