@@ -8,7 +8,7 @@
 👉 **Shortcut Link:** [https://www.icloud.com/shortcuts/52ca2e186af34a979283791c8fc718aa](https://www.icloud.com/shortcuts/52ca2e186af34a979283791c8fc718aa)
 
 
-👉 **Demo Video:** `/docs/3.WatsonX Orchestrate Apple Siri Demo.mp4`
+👉 **Demo Video:** ![](/docs/3.WatsonX Orchestrate Apple Siri Demo.mp4)
 
 ---
 
@@ -192,6 +192,8 @@ cd siri-watsonx-orchestrate
 ```
 
 ---
+
+
 
 ## 2️⃣ Install dependencies
 
