@@ -1,0 +1,58 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ask About Tables",
+    "version": "1.0.0",
+    "description": "Extract tables from a file stored in IBM COS using Docling"
+  },
+  "servers": [
+    {
+      "url": "https://docling-tutorial.202knqssix9i.us-south.codeengine.appdomain.cloud/",
+      "description": "Prod"
+    }
+  ],
+  "paths": {
+    "/v1/chat": {
+      "post": {
+        "summary": "Extract tables from a stored COS PDF",
+        "operationId": "getTables",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "object_name": {
+                    "type": "string",
+                    "description": "The COS object name / key of the file"
+                  }
+                },
+                "required": ["object_name"]
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "object_name": "test1.pdf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extracted tables from document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
