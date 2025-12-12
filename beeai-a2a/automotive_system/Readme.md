@@ -54,7 +54,7 @@ automotive_system/
 │     └── maintenance_scheduler_agent.yaml
 │
 ├── scripts/
-│     └── import_all.sh           # Import tools + flows + agents to WXO
+│     └── import_all.sh           # Import tools + flows + agents to WXO + Observability
 │
 ├── docker-compose.yml
 ├── maintenance_flow.py
