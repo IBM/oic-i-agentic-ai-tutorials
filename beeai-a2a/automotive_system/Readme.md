@@ -1,6 +1,6 @@
 # 🚗 Predictive Maintenance Automation
 
-Using BeeAI + Ollama + Watsonx Orchestrate + Scheduler + Agents Observability
+### Using BeeAI + Ollama + Watsonx Orchestrate + Scheduler + Agents Observability
 
 This repository contains a complete **end-to-end predictive maintenance automation system** powered by:
 
@@ -8,6 +8,7 @@ This repository contains a complete **end-to-end predictive maintenance automati
 * **Ollama Granite 3.3 8B (local LLM runtime)**
 * **Watsonx Orchestrate (flows, tools, agents)**
 * **WXO Scheduler (recurring automation)**
+* **Agents Observability (Langfuse Integration)**
 
 The system can run:
 
@@ -54,7 +55,7 @@ automotive_system/
 │     └── maintenance_scheduler_agent.yaml
 │
 ├── scripts/
-│     └── import_all.sh           # Import tools + flows + agents to WXO + Observability
+│     └── import_all.sh           # Import tools + Flows + Agents to WXO + Observability
 │
 ├── docker-compose.yml
 ├── maintenance_flow.py
