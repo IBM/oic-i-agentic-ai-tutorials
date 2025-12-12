@@ -64,41 +64,6 @@ automotive_system/
 
 ---
 
-## **Agents Observability (Langfuse Integration)**
-
-This system includes **agent observability** using **Langfuse**, allowing you to track:
-
-✔ tool calls
-✔ model inputs/outputs
-✔ latency
-✔ errors
-✔ execution traces for BeeAI agents
-
-### **1. Configuration File**
-
-The observability configuration is located here:
-
-```
-agents_observability/langfuse_config.yml
-```
-
-### **2. Add Required Keys**
-
-Update the file using your Langfuse project keys:
-
-```yaml
-api_key: "sk-lf-00000-00000-00000-00000-00000"
-public_key: "pk-lf-00000-00000-00000-00000-00000"
-```
-
-### **3. How It Works**
-
-* BeeAI A2A server automatically loads the observability middleware.
-* Every request/response, model call, and tool execution is reported.
-* You can view insights in your **Langfuse dashboard**.
-
----
-
 ## **Requirements**
 
 ### Local Requirements
@@ -130,6 +95,40 @@ pip install ibm-watsonx-orchestrate
 
 * Access to Orchestrate workspace
 * API key configured (`orchestrate login`)
+
+
+### **Agents Observability (Langfuse Integration)**
+
+This system includes **agent observability** using **Langfuse**, allowing you to track:
+
+✔ tool calls
+✔ model inputs/outputs
+✔ latency
+✔ errors
+✔ execution traces for BeeAI agents
+
+#### **1. Configuration File**
+
+The observability configuration is located here:
+
+```
+agents_observability/langfuse_config.yml
+```
+
+#### **2. Add Required Keys**
+
+Update the file using your Langfuse project keys:
+
+```yaml
+api_key: "sk-lf-00000-00000-00000-00000-00000"
+public_key: "pk-lf-00000-00000-00000-00000-00000"
+```
+
+#### **3. How It Works**
+
+* BeeAI A2A server automatically loads the observability middleware.
+* Every request/response, model call, and tool execution is reported.
+* You can view insights in your **Langfuse dashboard**.
 
 ---
 
