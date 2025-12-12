@@ -105,7 +105,7 @@ This system includes **agent observability** using **Langfuse**, allowing you to
 ✔ model inputs/outputs
 ✔ latency
 ✔ errors
-✔ execution traces for BeeAI agents
+✔ execution traces for AI Agents
 
 #### **1. Configuration File**
 
