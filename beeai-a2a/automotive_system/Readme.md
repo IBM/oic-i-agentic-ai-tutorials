@@ -59,7 +59,7 @@ automotive_system/
 ├── docker-compose.yml
 ├── maintenance_flow.py
 ├── maintenance_scheduler_agent.yaml
-└── README_GITHUB.md
+└── Readme.md
 ```
 
 ---
