@@ -1,6 +1,6 @@
 # 🚗 Predictive Maintenance Automation
 
-Using BeeAI + Ollama + Watsonx Orchestrate + Scheduler
+Using BeeAI + Ollama + Watsonx Orchestrate + Scheduler + Agents Observability
 
 This repository contains a complete **end-to-end predictive maintenance automation system** powered by:
 
@@ -24,40 +24,78 @@ The system can run:
 ## Folder Structure
 
 ```
-automotive_system/
- ├── beeai_agent/              # BeeAI Predictive Maintenance A2A server
- │    ├── __main__.py
- │    ├── tools_dummy.py
- │    ├── Dockerfile
- │    └── pyproject.toml
- │
- ├── beeai_host/               # Simple BeeAI A2A client (local test tool)
- │    ├── __main__.py
- │    ├── Dockerfile
- │    └── pyproject.toml
- │
- ├── wxo_tools/                # WXO Tools (Python)
- │    ├── predict_failure.py
- │    ├── order_parts_tool.py
- │    ├── book_slot_tool.py
- │    ├── maintenance_cost_tool.py
- │    └── send_notification_tool.py
- │
- ├── wxo_flows/
- │    └── predictive_maintenance_flow.py
- │
- ├── wxo_agents/
- │    ├── maintenance_agent.yaml
- │    └── maintenance_scheduler_agent.yaml
- │
- ├── scripts/
- │    └── import_all.sh        # Import tools + flows + agents to WXO
- │
- ├── docker-compose.yml
- ├── maintenance_flow.py
- ├── maintenance_scheduler_agent.yaml
- └── README_GITHUB.md
+automotive_system/ 
+├── agents_observability/         # Agents observability configuration (Langfuse)
+│     └── langfuse_config.yml
+│
+├── beeai_agent/                  # BeeAI Predictive Maintenance A2A server
+│     ├── __main__.py
+│     ├── tools_dummy.py
+│     ├── Dockerfile
+│     └── pyproject.toml
+│
+├── beeai_host/                   # Simple BeeAI A2A client (local test tool)
+│     ├── __main__.py
+│     ├── Dockerfile
+│     └── pyproject.toml
+│
+├── wxo_tools/                    # WXO Tools (Python)
+│     ├── predict_failure.py
+│     ├── order_parts_tool.py
+│     ├── book_slot_tool.py
+│     ├── maintenance_cost_tool.py
+│     └── send_notification_tool.py
+│
+├── wxo_flows/
+│     └── predictive_maintenance_flow.py
+│
+├── wxo_agents/
+│     ├── maintenance_agent.yaml
+│     └── maintenance_scheduler_agent.yaml
+│
+├── scripts/
+│     └── import_all.sh           # Import tools + flows + agents to WXO
+│
+├── docker-compose.yml
+├── maintenance_flow.py
+├── maintenance_scheduler_agent.yaml
+└── README_GITHUB.md
 ```
+
+---
+
+## **Agents Observability (Langfuse Integration)**
+
+This system includes **agent observability** using **Langfuse**, allowing you to track:
+
+✔ tool calls
+✔ model inputs/outputs
+✔ latency
+✔ errors
+✔ execution traces for BeeAI agents
+
+### **1. Configuration File**
+
+The observability configuration is located here:
+
+```
+agents_observability/langfuse_config.yml
+```
+
+### **2. Add Required Keys**
+
+Update the file using your Langfuse project keys:
+
+```yaml
+api_key: "sk-lf-00000-00000-00000-00000-00000"
+public_key: "pk-lf-00000-00000-00000-00000-00000"
+```
+
+### **3. How It Works**
+
+* BeeAI A2A server automatically loads the observability middleware.
+* Every request/response, model call, and tool execution is reported.
+* You can view insights in your **Langfuse dashboard**.
 
 ---
 
@@ -73,7 +111,8 @@ automotive_system/
 ```bash
 ollama pull granite4:3b
 ```
-Try out with other granite model - [Ollama/granite](https://ollama.com/library/granite4)
+
+Try out with other granite model — [https://ollama.com/library/granite4](https://ollama.com/library/granite4)
 
 * BeeAI Framework:
 
@@ -96,10 +135,6 @@ pip install ibm-watsonx-orchestrate
 
 ## **Part 1 — Run Locally (BeeAI + Ollama)**
 
-This mode is ideal for development, debugging, and demonstrating the predictive maintenance LLM agent offline.
-
----
-
 ### **1. Start Ollama**
 
 ```bash
@@ -116,14 +151,12 @@ ollama run granite3.3:8b "hello"
 
 ### **2. Start the BeeAI A2A Server**
 
-From project root:
-
 ```bash
 cd automotive_system
 python -m beeai_agent
 ```
 
-If successful, you will see:
+Expected:
 
 ```
 A2A server running on port 9999
@@ -134,143 +167,59 @@ Tools loaded: [...]
 
 ### **3. Test Using the BeeAI A2A Host**
 
-Open another terminal:
-
 ```bash
 cd automotive_system/beeai_host
 python __main__.py TRUCK-22
 ```
 
-You should see a full maintenance summary:
-
-✓ vehicle location
-✓ driver schedule
-✓ dealership slots
-✓ parts inventory
-✓ recommended repair time
+You should see a complete maintenance summary.
 
 ---
 
 ## **Part 2 — Run in Watsonx Orchestrate (WXO)**
 
-Watsonx Orchestrate provides:
-
-* UI for interacting with your agent
-* A flow engine for automation
-* A scheduler for recurring tasks
-* Governance & execution history
-
----
-
-### **1. Import All Tools, Flows, and Agents**
-
-Run the script:
+### **1. Import Everything**
 
 ```bash
 cd automotive_system/scripts
 ./import_all.sh
 ```
 
-This imports:
+Imports:
 
-✔ Python tools (predict failure, cost, booking, parts, notifications)
-✔ A predictive maintenance flow
-✔ On-demand and scheduled agents
+✔ tools
+✔ flow
+✔ agents (on-demand + scheduled)
 
 ---
 
 ### **2. Interact With Agent in WXO UI**
 
-Open Watsonx Orchestrate → Chat interface.
-
-Try:
-
 ```
 Run a maintenance check for TRUCK-22
 ```
 
-You will receive a complete maintenance report generated by BeeAI and orchestrated by WXO.
-
 ---
 
-### **3. Schedule Automatic Maintenance Checks**
-
-You can ask:
+### **3. Schedule Maintenance**
 
 ```
 Schedule a maintenance check for TRUCK-22 every day at 9am.
 ```
 
-WXO will:
-
-* Create a scheduled job
-* Run your workflow at the specified time
-* Track run history
-* Notify you when maintenance is due
-
-To list schedules:
-
-```
-List my schedules
-```
-
-To delete one:
-
-```
-Delete schedule <id>
-```
-
-(Uses Orchestrate intrinsic scheduling tools.)
-
----
-
-## **How the Full System Works**
-
-### 1. BeeAI generates predictions
-
-The A2A server calls multiple automotive tools:
-
-* get_vehicle_location
-* get_driver_schedule
-* get_dealership_slots
-* get_parts_inventory
-
-### 2. Watsonx Orchestrate runs the workflow
-
-* Predict failure
-* Check inventory
-* Book slot
-* Compute cost
-* Notify fleet manager
-
-### 3. Scheduler triggers the workflow automatically
-
-Daily, weekly, or custom frequency.
-
-### 4. Everything appears in the WXO UI
-
-* Results
-* History
-* Logs
-* Errors
-* Schedules
-
 ---
 
 ## **Troubleshooting**
 
-### ✔ Agent says “vehicle not found”
+### Agent says “vehicle not found”
 
-Your BeeAI server did not load tools.
-Ensure:
+Ensure your tools have proper decorators:
 
 ```python
 @tool(description="...")
 ```
 
-is present in each tool decorator.
-
-### ✔ A2A server error: no module named tools_dummy
+### Server error: module not found
 
 Run BeeAI from project root:
 
@@ -278,18 +227,17 @@ Run BeeAI from project root:
 python -m beeai_agent
 ```
 
-### ✔ WXO cannot find your flow
+### Flow not visible in WXO
 
-Check import directory:
+Check:
 
 ```
 wxo_flows/predictive_maintenance_flow.py
 ```
 
-### ✔ Scheduler not working
+### Scheduler not working
 
-Confirm you used `maintenance_scheduler_agent.yaml`
-and imported intrinsic tools:
+Ensure intrinsic tools are imported:
 
 ```
 i__get_schedule_intrinsic_tool__
@@ -301,11 +249,12 @@ i__get_flow_status_intrinsic_tool__
 
 ## **Conclusion**
 
-You now have a fully operational:
-#### ✔ Predictive Maintenance LLM Agent (BeeAI + Granite)
-#### ✔ End-to-End Workflow Automation (WXO Flow Builder)
-#### ✔ Enterprise Orchestration and Scheduling (WXO Scheduler)
-#### ✔ Local + Cloud Hybrid Setup
+You now have:
 
-This project demonstrates how local LLM agents can integrate seamlessly with enterprise orchestration platforms.
+✔ Predictive Maintenance LLM Agent (BeeAI + Granite)
+✔ End-to-End Workflow Automation (WXO Flow Builder)
+✔ Enterprise Scheduling (WXO Scheduler)
+✔ Local + Cloud Hybrid Setup
+✔ Full Observability with Langfuse
 
+---
