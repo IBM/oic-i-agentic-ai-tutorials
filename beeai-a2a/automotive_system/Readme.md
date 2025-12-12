@@ -250,14 +250,10 @@ i__get_flow_status_intrinsic_tool__
 
 You now have:
 
-✔ Predictive Maintenance LLM Agent (BeeAI + Granite)
-
-✔ End-to-End Workflow Automation (WXO Flow Builder)
-
-✔ Enterprise Scheduling (WXO Scheduler)
-
-✔ Local + Cloud Hybrid Setup
-
-✔ Full Observability with Langfuse
+####✔ Predictive Maintenance LLM Agent (BeeAI + Granite)
+####✔ End-to-End Workflow Automation (WXO Flow Builder)
+####✔ Enterprise Scheduling (WXO Scheduler)
+####✔ Local + Cloud Hybrid Setup
+####✔ Full Observability with Langfuse
 
 ---
