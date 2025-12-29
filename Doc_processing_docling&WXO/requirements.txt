@@ -1,0 +1,6 @@
+ibm-cos-sdk
+docling
+fastapi
+python-multipart
+uvicorn
+python-dotenv
