@@ -1,0 +1,4 @@
+confluent-kafka==2.12.2
+python-dotenv==1.2.1
+requests==2.32.5
+fastmcp==2.14.1

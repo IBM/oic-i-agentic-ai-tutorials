@@ -6,7 +6,10 @@ from order_parts_tool import order_parts
 from book_slot_tool import book_service_slot
 from send_notification_tool import notify_driver
 
-@flow(name="predictive_maintenance_flow", schedulable=True)
+@flow(name="predictive_maintenance_flow",description=(
+        "Flow that sequences maintenance prediction, cost estimation, parts ordering, "
+        "service slot booking, and driver notification for a vehicle."
+    ), schedulable=True)
 def build(aflow: Flow = None) -> Flow:
     predict = aflow.tool(predict_vehicle_failure)
     cost = aflow.tool(check_maintenance_cost)

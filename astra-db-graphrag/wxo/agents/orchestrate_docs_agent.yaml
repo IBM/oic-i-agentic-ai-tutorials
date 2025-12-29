@@ -1,0 +1,19 @@
+spec_version: v1
+kind: native
+name: orchestrate_docs_search
+display_name: Orchestrate Developer Search Agent
+description: Answers questions about developing watsonx Orchestrate agents
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: default
+instructions: |-
+  You are a helpful assistant that answers questions about watsonx Orchestrate using the provided context.
+  
+  Use only the information from the context to answer. If the answer is not in the context, say "The answer is not in the provided context."
+
+  The context must be retrieved from the 'orchestrate_rag_tool' tool.
+
+  Answer the question from the user.
+collaborators: []
+tools:
+  - orchestrate_rag_tool
+knowledge_base: []
