@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 Clear Kafka Topic Messages
-Deletes all messages from a Kafka topic by setting retention to 1ms temporarily
+Deletes all messages from a Kafka topic by deleting and recreating it
 """
 
-from confluent_kafka.admin import AdminClient, ConfigResource, ResourceType
+from confluent_kafka.admin import AdminClient, NewTopic
 import os
 import sys
 import time
@@ -37,7 +37,7 @@ def validate_config():
     return True
 
 def clear_topic():
-    """Clear all messages from the topic"""
+    """Clear all messages from the topic by deleting and recreating it"""
     
     if not validate_config():
         sys.exit(1)
@@ -54,63 +54,59 @@ def clear_topic():
         # Create admin client
         admin_client = AdminClient(config)
         
-        # Get current topic configuration
-        resource = ConfigResource(ResourceType.TOPIC, TOPIC_NAME)
+        print(f"📋 Deleting topic: {TOPIC_NAME}")
         
-        print(f"📋 Getting current configuration for topic: {TOPIC_NAME}")
+        # Delete the topic
+        fs = admin_client.delete_topics([TOPIC_NAME], operation_timeout=30)
         
-        # Describe topic to verify it exists
-        result = admin_client.describe_configs([resource])
-        configs = result[resource].result()
+        # Wait for deletion to complete
+        for topic, f in fs.items():
+            try:
+                f.result()  # The result itself is None
+                print(f"✅ Topic {topic} deleted successfully")
+            except Exception as e:
+                print(f"⚠️  Failed to delete topic {topic}: {e}")
         
-        # Store original retention
-        original_retention = configs.get('retention.ms')
-        print(f"   Original retention: {original_retention.value if original_retention else 'default'}")
+        # Wait a bit for deletion to propagate
+        print("\n⏳ Waiting 5 seconds for deletion to propagate...")
+        time.sleep(5)
         
-        # Set retention to 1ms to delete all messages
-        print("\n🔧 Setting retention.ms to 1ms (this will delete all messages)...")
+        # Recreate the topic with infinite retention
+        print(f"\n🔧 Recreating topic: {TOPIC_NAME}")
         
-        # Create new resource with updated config
-        resource.set_config('retention.ms', '1')
-        result = admin_client.alter_configs([resource])
+        new_topic = NewTopic(
+            TOPIC_NAME,
+            num_partitions=6,
+            replication_factor=3,
+            config={
+                'retention.ms': '-1',  # Infinite retention
+                'cleanup.policy': 'delete'
+            }
+        )
         
-        # Wait for the operation to complete
-        result[resource].result()
-        print("✅ Retention updated to 1ms")
+        fs = admin_client.create_topics([new_topic])
         
-        # Wait for messages to be deleted
-        print("\n⏳ Waiting 10 seconds for messages to be deleted...")
-        time.sleep(10)
-        
-        # Restore original retention (or set to default 7 days)
-        print("\n🔧 Restoring retention settings...")
-        
-        if original_retention and original_retention.value != '-1':
-            restore_value = original_retention.value
-        else:
-            restore_value = '604800000'  # 7 days in milliseconds
-        
-        # Create new resource for restoration
-        resource = ConfigResource(ResourceType.TOPIC, TOPIC_NAME)
-        resource.set_config('retention.ms', restore_value)
-        result = admin_client.alter_configs([resource])
-        result[resource].result()
-        
-        print(f"✅ Retention restored to: {restore_value}ms")
+        # Wait for creation to complete
+        for topic, f in fs.items():
+            try:
+                f.result()  # The result itself is None
+                print(f"✅ Topic {topic} created successfully")
+            except Exception as e:
+                print(f"❌ Failed to create topic {topic}: {e}")
+                sys.exit(1)
         
         print("\n" + "="*60)
         print("✅ SUCCESS")
         print("="*60)
-        print(f"All messages deleted from topic: {TOPIC_NAME}")
+        print(f"Topic {TOPIC_NAME} cleared and recreated")
+        print("Retention: Infinite (keeps all messages)")
         print("Topic is now empty and ready for new messages.")
         print("="*60)
         
     except Exception as e:
         print(f"\n❌ Error: {e}")
-        print("\nNote: This operation requires admin permissions on the topic.")
-        print("If you don't have permissions, you may need to:")
-        print("  1. Delete and recreate the topic in Confluent Cloud UI")
-        print("  2. Or contact your Kafka administrator")
+        print("\nNote: This operation requires admin permissions.")
+        print("Make sure your API key has permissions to delete and create topics.")
         sys.exit(1)
 
 if __name__ == "__main__":
