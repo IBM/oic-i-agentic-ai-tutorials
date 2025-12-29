@@ -62,7 +62,7 @@ langsmith==0.3.45
 lark==1.2.2
 markdown-it-py==4.0.0
 MarkupSafe==3.0.2
-marshmallow==3.26.1
+marshmallow==4.1.2
 matplotlib-inline==0.1.7
 mdurl==0.1.2
 mistune==3.1.4
