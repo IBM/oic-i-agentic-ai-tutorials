@@ -18,15 +18,15 @@ config = {
     'bootstrap.servers': os.getenv('BOOTSTRAP_SERVERS'),
     'security.protocol': 'SASL_SSL',
     'sasl.mechanisms': 'PLAIN',
-    'sasl.username': os.getenv('API_KEY'),
-    'sasl.password': os.getenv('API_SECRET')
+    'sasl.username': os.getenv('KAFKA_API_KEY'),
+    'sasl.password': os.getenv('KAFKA_API_SECRET')
 }
 
 TOPIC_NAME = os.getenv('TOPIC_NAME', 'inventory.transactions')
 
 def validate_config():
     """Validate configuration"""
-    required_vars = ['BOOTSTRAP_SERVERS', 'API_KEY', 'API_SECRET']
+    required_vars = ['BOOTSTRAP_SERVERS', 'KAFKA_API_KEY', 'KAFKA_API_SECRET']
     missing_vars = [var for var in required_vars if not os.getenv(var)]
     
     if missing_vars:
