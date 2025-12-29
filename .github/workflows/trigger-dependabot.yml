@@ -14,6 +14,10 @@ on:
           - npm
           - docker
 
+permissions:
+  contents: read
+  security-events: read
+
 jobs:
   trigger-dependabot:
     runs-on: ubuntu-latest
@@ -21,23 +25,67 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Trigger Dependabot via API
+      - name: Display Dependabot Information
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ECOSYSTEM: ${{ inputs.package-ecosystem }}
+          REPO: ${{ github.repository }}
         run: |
-          echo "Triggering Dependabot for ecosystem: $ECOSYSTEM"
-          echo "Note: Dependabot runs automatically based on schedule in dependabot.yml"
-          echo "This workflow exists for documentation purposes."
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📦 Dependabot Manual Trigger Guide"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo ""
-          echo "To manually trigger Dependabot:"
-          echo "1. Go to: Insights > Dependency graph > Dependabot"
-          echo "2. Click 'Check for updates' button"
+          echo "Selected ecosystem: $ECOSYSTEM"
           echo ""
-          echo "Current configuration:"
-          cat .github/dependabot.yml
+          echo "⚠️  NOTE: GitHub doesn't provide a direct API to trigger"
+          echo "    Dependabot on-demand via workflows."
+          echo ""
+          echo "✅ To manually trigger Dependabot updates:"
+          echo ""
+          echo "   Method 1 (Web UI - Easiest):"
+          echo "   1. Go to: https://github.com/$REPO/network/updates"
+          echo "   2. OR: Insights > Dependency graph > Dependabot"
+          echo "   3. Click 'Check for updates' button"
+          echo ""
+          echo "   Method 2 (Security Alerts):"
+          echo "   1. Go to: https://github.com/$REPO/security/dependabot"
+          echo "   2. View current vulnerabilities"
+          echo "   3. Dependabot will auto-create PRs for these"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-      - name: List current vulnerabilities
+      - name: Show Configuration Summary
         run: |
-          echo "To see current security alerts, visit:"
-          echo "https://github.com/${{ github.repository }}/security/dependabot"
+          echo ""
+          echo "📋 Current Dependabot Configuration:"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+
+          if [ -f .github/dependabot.yml ]; then
+            echo "✅ Configuration file exists"
+            echo ""
+            echo "Monitored ecosystems:"
+            grep -A 2 "package-ecosystem:" .github/dependabot.yml | grep -v "^--$" || true
+            echo ""
+            echo "Schedule:"
+            grep "interval:" .github/dependabot.yml | sort -u || true
+            echo ""
+            echo "Full configuration:"
+            cat .github/dependabot.yml
+          else
+            echo "❌ No dependabot.yml found!"
+          fi
+
+      - name: Next Steps
+        run: |
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📝 Next Steps:"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "1. Visit: https://github.com/${{ github.repository }}/network/updates"
+          echo "2. Click 'Check for updates' for each ecosystem"
+          echo "3. Wait for Dependabot to create PRs"
+          echo "4. Security patches will auto-merge (if configured)"
+          echo ""
+          echo "For more details, see: .github/DEPENDABOT_SETUP.md"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
