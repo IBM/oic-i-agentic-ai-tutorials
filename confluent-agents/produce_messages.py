@@ -19,8 +19,8 @@ config = {
     'bootstrap.servers': os.getenv('BOOTSTRAP_SERVERS'),
     'security.protocol': 'SASL_SSL',
     'sasl.mechanisms': 'PLAIN',
-    'sasl.username': os.getenv('API_KEY'),
-    'sasl.password': os.getenv('API_SECRET'),
+    'sasl.username': os.getenv('KAFKA_API_KEY'),
+    'sasl.password': os.getenv('KAFKA_API_SECRET'),
     'client.id': 'inventory-producer'
 }
 
@@ -29,7 +29,7 @@ MESSAGES_FILE = 'sample-transactions.json'
 
 def validate_config():
     """Validate that all required configuration is present"""
-    required_vars = ['BOOTSTRAP_SERVERS', 'API_KEY', 'API_SECRET']
+    required_vars = ['BOOTSTRAP_SERVERS', 'KAFKA_API_KEY', 'KAFKA_API_SECRET']
     missing_vars = [var for var in required_vars if not os.getenv(var)]
     
     if missing_vars:
@@ -39,7 +39,7 @@ def validate_config():
         print("\nPlease update your .env file with the correct values.")
         return False
     
-    if 'xxxxx' in config['bootstrap.servers'] or 'your-api-key' in config['sasl.username']:
+    if 'xxxxx' in config['bootstrap.servers'] or 'your-kafka-api-key' in str(config['sasl.username']):
         print("❌ Error: Please update .env file with your actual Confluent Cloud credentials")
         return False
     
