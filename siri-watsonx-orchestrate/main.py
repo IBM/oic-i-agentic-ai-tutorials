@@ -9,6 +9,7 @@ import requests
 from fastapi import FastAPI, HTTPException, Depends, Query
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
+import uvicorn
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -70,7 +71,6 @@ async def lifespan(app: FastAPI):
             retry_on_timeout=True,
             health_check_interval=30
         )
-        # Test connection
         redis_client.ping()
         logger.info("Redis connection established")
     except Exception as e:
@@ -79,7 +79,6 @@ async def lifespan(app: FastAPI):
     
     yield
     
-    # Shutdown
     logger.info("Shutting down application...")
     if redis_client:
         redis_client.close()
@@ -310,6 +309,8 @@ async def get_history(
             status_code=500,
             detail="Failed to retrieve conversation history"
         )
+    
+
 
 @app.delete("/history")
 async def clear_history(
@@ -334,5 +335,4 @@ async def http_exception_handler(request, exc):
     return ErrorResponse(detail=exc.detail)
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
