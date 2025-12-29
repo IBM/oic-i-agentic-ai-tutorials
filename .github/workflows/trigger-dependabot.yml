@@ -1,0 +1,43 @@
+name: Trigger Dependabot
+
+on:
+  workflow_dispatch:
+    inputs:
+      package-ecosystem:
+        description: 'Package ecosystem to check (or "all")'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - pip
+          - npm
+          - docker
+
+jobs:
+  trigger-dependabot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Dependabot via API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ECOSYSTEM: ${{ inputs.package-ecosystem }}
+        run: |
+          echo "Triggering Dependabot for ecosystem: $ECOSYSTEM"
+          echo "Note: Dependabot runs automatically based on schedule in dependabot.yml"
+          echo "This workflow exists for documentation purposes."
+          echo ""
+          echo "To manually trigger Dependabot:"
+          echo "1. Go to: Insights > Dependency graph > Dependabot"
+          echo "2. Click 'Check for updates' button"
+          echo ""
+          echo "Current configuration:"
+          cat .github/dependabot.yml
+
+      - name: List current vulnerabilities
+        run: |
+          echo "To see current security alerts, visit:"
+          echo "https://github.com/${{ github.repository }}/security/dependabot"
