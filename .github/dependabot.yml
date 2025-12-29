@@ -1,0 +1,220 @@
+version: 2
+
+# Best practice configuration for a monorepo with multiple projects
+# Note: Dependabot doesn't support wildcards, but we can use groups to reduce PR noise
+
+# Enable automatic security updates for all ecosystems
+# This creates PRs for vulnerabilities like the ones you're seeing
+enable-beta-ecosystems: true
+
+updates:
+  # Root-level Python dependencies (if any exist)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    # Auto-merge security patches
+    allow:
+      - dependency-type: "all"
+    groups:
+      # Group all non-security updates together
+      all-dependencies:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "python"
+    # Ignore dependencies that are in subdirectories (managed separately)
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  # Python dependencies for major projects
+  - package-ecosystem: "pip"
+    directory: "/external-agents/hr-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "hr-agent"
+
+  - package-ecosystem: "pip"
+    directory: "/external-agents/it-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "it-agent"
+
+  - package-ecosystem: "pip"
+    directory: "/a2a/hr-agent-pure-a2a"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "a2a"
+
+  - package-ecosystem: "pip"
+    directory: "/external-llms"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "llms"
+
+  - package-ecosystem: "pip"
+    directory: "/confluent-agents"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "confluent"
+
+  # Additional projects with known vulnerabilities
+  - package-ecosystem: "pip"
+    directory: "/siri-watsonx-orchestrate"
+    schedule:
+      interval: "daily"  # More frequent for security
+    open-pull-requests-limit: 10
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "security"
+      - "siri"
+
+  - package-ecosystem: "pip"
+    directory: "/i-oic-confluent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    labels:
+      - "dependencies"
+      - "python"
+      - "confluent"
+
+  # Node.js dependencies
+  - package-ecosystem: "npm"
+    directory: "/i-oic-integrate-headless-ai-agent/frontend_code"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      # Group all production dependencies
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "react-scripts"
+          - "@types/*"
+        dependency-type: "production"
+      # Group all dev dependencies
+      development-dependencies:
+        patterns:
+          - "*"
+        dependency-type: "development"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "frontend"
+
+  # Docker - monitor key Dockerfiles
+  - package-ecosystem: "docker"
+    directory: "/external-agents/hr-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+      - "hr-agent"
+
+  - package-ecosystem: "docker"
+    directory: "/external-llms"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+      - "llms"
+
+  - package-ecosystem: "docker"
+    directory: "/confluent-agents"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+      - "confluent"
