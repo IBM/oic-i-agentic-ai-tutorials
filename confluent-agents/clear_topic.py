@@ -76,7 +76,7 @@ def clear_topic():
         
         new_topic = NewTopic(
             TOPIC_NAME,
-            num_partitions=6,
+            num_partitions=1,
             replication_factor=3,
             config={
                 'retention.ms': '-1',  # Infinite retention
