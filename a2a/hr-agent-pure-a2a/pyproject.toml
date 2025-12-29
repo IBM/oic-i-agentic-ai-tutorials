@@ -5,7 +5,7 @@ description = "HR Agent with pure A2A Protocol for watsonx Orchestrate"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "a2a-sdk==0.2.16",
+    "a2a-sdk==0.3.22",
     "click>=8.1.8",
     "httpx>=0.28.1",
     "pydantic>=2.10.6",
