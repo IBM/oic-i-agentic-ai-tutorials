@@ -29,7 +29,7 @@ instructions: |
   - DubaiMall
   - MallOfEgypt
   
-  Always provide helpful context about the inventory status and suggest actions if items are out of stock.
+  Always provide helpful context about the inventory status.
 
 tools:
   - sku-availability-checker:get_sku_availability
