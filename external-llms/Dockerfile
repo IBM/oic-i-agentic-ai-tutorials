@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.14-slim
 
 
 # optional: install system libs for torch wheels as needed
