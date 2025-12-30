@@ -1,5 +1,8 @@
 name: View Dependabot Configuration
 
+# Displays current Dependabot configuration and provides manual trigger instructions
+# Note: This workflow doesn't actually trigger Dependabot - it shows you how to do it manually
+
 on:
   workflow_dispatch:
     inputs:

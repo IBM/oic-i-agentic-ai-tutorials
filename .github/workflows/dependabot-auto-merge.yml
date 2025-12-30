@@ -1,4 +1,8 @@
 name: Auto-Approve Security Patches
+
+# Automatically approves and enables auto-merge for security patch PRs from Dependabot
+# Only runs for patch-level updates (semver-patch) to minimize risk
+
 on: pull_request
 
 permissions:
