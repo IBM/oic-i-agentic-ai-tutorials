@@ -3,10 +3,18 @@
 # Script to manually trigger Dependabot checks
 # Usage: ./trigger-dependabot.sh [GITHUB_TOKEN]
 
-set -e
+# Don't exit on errors - we'll handle them gracefully
+set +e
 
-REPO_OWNER=$(git config --get remote.origin.url | sed -n 's/.*github.com[:/]\([^/]*\)\/.*/\1/p')
-REPO_NAME=$(git config --get remote.origin.url | sed -n 's/.*github.com[:/][^/]*\/\([^.]*\).*/\1/p')
+# Try to get repo info from git, with fallback
+REPO_OWNER=$(git config --get remote.origin.url 2>/dev/null | sed -n 's/.*github.com[:/]\([^/]*\)\/.*/\1/p')
+REPO_NAME=$(git config --get remote.origin.url 2>/dev/null | sed -n 's/.*github.com[:/][^/]*\/\([^.]*\).*/\1/p')
+
+# Fallback to hardcoded values if git fails
+if [ -z "$REPO_OWNER" ] || [ -z "$REPO_NAME" ]; then
+    REPO_OWNER="IBM"
+    REPO_NAME="oic-i-agentic-ai-tutorials"
+fi
 
 if [ -z "$1" ]; then
     echo "Error: GitHub token required"
