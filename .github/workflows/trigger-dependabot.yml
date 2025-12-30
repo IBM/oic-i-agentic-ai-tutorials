@@ -1,4 +1,4 @@
-name: Trigger Dependabot
+name: View Dependabot Configuration
 
 on:
   workflow_dispatch:

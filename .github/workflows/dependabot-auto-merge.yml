@@ -1,4 +1,4 @@
-name: Dependabot Auto-Merge
+name: Auto-Approve Security Patches
 on: pull_request
 
 permissions:
