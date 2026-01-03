@@ -38,7 +38,7 @@ ipywidgets==8.1.8
 isoduration==20.11.0
 jedi==0.19.2
 Jinja2==3.1.6
-json5==0.12.1
+json5==0.13.0
 jsonargparse==4.45.0
 jsonpatch==1.33
 jsonpointer==3.0.0
