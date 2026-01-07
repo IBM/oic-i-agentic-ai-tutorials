@@ -71,7 +71,7 @@ automotive_system/
 * Granite model pulled:
 
 ```bash
-ollama pull granite3.3:8b
+ollama pull granite4:350m
 ```
 
 * BeeAI Framework:
@@ -108,7 +108,7 @@ ollama serve &
 Test model:
 
 ```bash
-ollama run granite3.3:8b "hello"
+ollama run granite4:350m "hello"
 ```
 
 ---
