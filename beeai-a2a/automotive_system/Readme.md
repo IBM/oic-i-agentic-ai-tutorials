@@ -5,7 +5,7 @@ Using BeeAI + Ollama + Watsonx Orchestrate + Scheduler
 This repository contains a complete **end-to-end predictive maintenance automation system** powered by:
 
 * **BeeAI Framework (A2A agent with tool-calling)**
-* **Ollama Granite 3.3 8B (local LLM runtime)**
+* **Ollama granite4:350m (local LLM runtime)**
 * **Watsonx Orchestrate (flows, tools, agents)**
 * **WXO Scheduler (recurring automation)**
 
