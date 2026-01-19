@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@carbon/icons-react": "^11.71.0",
-    "@carbon/react": "^1.97.0",
+    "@carbon/icons-react": "^11.73.0",
+    "@carbon/react": "^1.99.0",
     "cra-template": "1.3.0",
     "eventsource-parser": "^3.0.3",
     "glob": "^13.0.0",
