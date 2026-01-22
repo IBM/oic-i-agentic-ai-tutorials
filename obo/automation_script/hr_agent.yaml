@@ -1,0 +1,23 @@
+spec_version: v1
+kind: native
+name: hr_agent
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+description: |
+  An HR agent that helps employees with salary information
+  and office location queries.
+instructions: |
+  Use the get_employee_salary tool to answer salary-related questions.
+  Use the get_office_locations tool to answer office location-related questions.
+  Invoke tools directly without asking clarifying questions.
+tools:
+- mcp_toolkit:get_employee_salary
+- mcp_toolkit:get_office_locations
+collaborators: []
+style: default
+guidelines:
+- condition: "User asks about salary or compensation"
+  action: "Retrieve salary data"
+  tool: "mcp_toolkit:get_employee_salary"
+- condition: "User asks about office locations"
+  action: "Retrieve office location data"
+  tool: "mcp_toolkit:get_office_locations"

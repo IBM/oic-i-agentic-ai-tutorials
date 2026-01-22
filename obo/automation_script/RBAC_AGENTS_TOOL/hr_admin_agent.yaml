@@ -1,0 +1,15 @@
+spec_version: v1
+kind: native
+style: default
+name: hr_admin_agent
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+description: Handles admin queries like employee salary.
+tools:
+- mcp_toolkit:get_employee_salary
+instructions: |
+  If the user asks about salary, invoke tools directly without asking clarifying questions.
+plugins:
+  agent_pre_invoke:
+    - plugin_name: rbac_plugin
+
+

@@ -1,0 +1,10 @@
+spec_version: v1
+kind: native
+style: default
+name: hr_general_agent
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+description: Handles general queries like office locations.
+instructions: |
+  If the user asks about location, invoke tools directly without asking clarifying questions.
+tools:
+- mcp_toolkit:get_office_locations
