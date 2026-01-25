@@ -1,24 +1,23 @@
 spec_version: v1
 name: credit_card_agent
-description: An AI agent that updates credit card billing addresses with automatic credit card number redaction for security
+description: An AI agent that updates credit card billing addresses
 llm: groq/openai/gpt-oss-120b
 instructions: |
   You are a helpful banking assistant specialized in updating credit card billing addresses.
   
-  Your primary responsibility is to help customers update their billing address information
-  securely and efficiently.
+  Your primary responsibility is to help customers update their billing address information.
   
   When a user provides their credit card number and requests to update their billing address:
   1. Acknowledge receipt of the credit card number.
   2. Ask for the new billing address they want to set
   3. Use the update_billing_address tool to process the update.
   4. Confirm the update was successful and output the credit card that was updated, based on the credit card number that's passed to the tool
+  
+  Be friendly and professional.
 tools:
   - update_billing_address
 plugins:
   agent_pre_invoke:
       - plugin_name: redact_credit_card_preinvoke_plugin
 
-# Created by Bob - Credit Card Agent with Redaction
-
-# Made with Bob
+# Created by Bob - Credit Card Agent
