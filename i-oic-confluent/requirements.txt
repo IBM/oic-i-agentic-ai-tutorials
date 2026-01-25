@@ -1,4 +1,4 @@
-confluent-kafka==2.12.2
+confluent-kafka==2.13.0
 fastapi==0.128.0
 uvicorn==0.40.0
 requests==2.32.5
