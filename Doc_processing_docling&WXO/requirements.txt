@@ -1,2 +1,1 @@
-ibm-cos-sdk
 ibm-watsonx-orchestrate
