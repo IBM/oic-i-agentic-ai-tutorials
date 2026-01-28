@@ -30,7 +30,7 @@ mkdir -p "$MULTI_DIR" "$SINGLE_DIR"
 # PREREQUISITES
 #############################################
 require() {
-  command -v "$1" >/dev/null || { echo "❌ Missing dependency: $1"; exit 1; }
+  command -v "$1" >/dev/null || { echo "Missing dependency: $1"; exit 1; }
 }
 
 for cmd in curl jq openssl awk; do
@@ -42,7 +42,7 @@ done
 #############################################
 assert_json() {
   echo "$1" | jq . >/dev/null 2>&1 || {
-    echo "❌ Invalid JSON response"
+    echo "Invalid JSON response"
     echo "$1"
     exit 1
   }
@@ -115,7 +115,7 @@ fi
 #############################################
 # CREATE SINGLE-LINE KEYS
 #############################################
-echo "📦 Creating single-line key versions..."
+echo "Creating single-line key versions..."
 
 to_single_line < "$CLIENT_PRIVATE_MULTI" > "$CLIENT_PRIVATE_SINGLE"
 to_single_line < "$CLIENT_PUBLIC_MULTI"  > "$CLIENT_PUBLIC_SINGLE"
