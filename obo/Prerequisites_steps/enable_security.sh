@@ -55,7 +55,7 @@ to_single_line() {
 #############################################
 # GENERATE CLIENT KEYS
 #############################################
-echo "🔐 Generating client RSA keys..."
+echo "Generating client RSA keys..."
 
 openssl genpkey -algorithm RSA \
   -pkeyopt rsa_keygen_bits:4096 \
@@ -70,7 +70,7 @@ chmod 644 "$CLIENT_PUBLIC_MULTI"
 #############################################
 # FETCH IBM KEY + SECURE EMBED STATUS
 #############################################
-echo "🚀 Fetching IBM public key & Secure Embed status..."
+echo "Fetching IBM public key & Secure Embed status..."
 
 GEN_RESPONSE=$(curl -sS -X POST \
   "${SERVICE_INSTANCE_URL}/v1/embed/secure/generate-key-pair" \
@@ -85,14 +85,14 @@ jq -r '.public_key' <<< "$GEN_RESPONSE" > "$IBM_PUBLIC_MULTI"
 
 chmod 644 "$IBM_PUBLIC_MULTI"
 
-echo "🆔 Orchestrate ID       : $ORCHESTRATE_ID"
+echo "Orchestrate ID       : $ORCHESTRATE_ID"
 echo "🔎 Secure Embed enabled : $SECURE_ENABLED"
 
 #############################################
 # ENABLE SECURE EMBED (IDEMPOTENT)
 #############################################
 if [[ "$SECURE_ENABLED" != "true" ]]; then
-  echo "🔐 Enabling Secure Embed..."
+  echo "Enabling Secure Embed..."
 
   jq -n \
     --arg orchestrate_id "$ORCHESTRATE_ID" \
@@ -109,7 +109,7 @@ if [[ "$SECURE_ENABLED" != "true" ]]; then
       -H "IAM-API_KEY: ${IAM_API_KEY}" \
       -d @- | jq .
 else
-  echo "✅ Secure Embed already enabled — skipping"
+  echo "Secure Embed already enabled — skipping"
 fi
 
 #############################################
@@ -128,7 +128,7 @@ chmod 644 "$CLIENT_PUBLIC_SINGLE" "$IBM_PUBLIC_SINGLE"
 # DONE
 #############################################
 echo
-echo "✅ Secure Embed setup complete"
+echo "Secure Embed setup complete"
 echo
 echo "📂 MULTI_LINE:"
 ls -1 "$MULTI_DIR"
