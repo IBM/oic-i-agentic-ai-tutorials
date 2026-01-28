@@ -85,7 +85,6 @@ jq -r '.public_key' <<< "$GEN_RESPONSE" > "$IBM_PUBLIC_MULTI"
 
 chmod 644 "$IBM_PUBLIC_MULTI"
 
-echo "Orchestrate ID       : $ORCHESTRATE_ID"
 echo "🔎 Secure Embed enabled : $SECURE_ENABLED"
 
 #############################################
