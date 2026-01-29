@@ -90,26 +90,23 @@ echo "🔎 Secure Embed enabled : $SECURE_ENABLED"
 #############################################
 # ENABLE SECURE EMBED (IDEMPOTENT)
 #############################################
-if [[ "$SECURE_ENABLED" != "true" ]]; then
-  echo "Enabling Secure Embed..."
+echo "Applying Secure Embed configuration..."
 
-  jq -n \
-    --arg orchestrate_id "$ORCHESTRATE_ID" \
-    --arg client_public_key "$(cat "$CLIENT_PUBLIC_MULTI")" \
-    --arg ibm_public_key "$(cat "$IBM_PUBLIC_MULTI")" \
-    '{
-      orchestrate_id: $orchestrate_id,
-      client_public_key: $client_public_key,
-      public_key: $ibm_public_key,
-      is_security_enabled: true
-    }' | curl -sS -X POST \
-      "${SERVICE_INSTANCE_URL}/v1/embed/secure/config" \
-      -H "Content-Type: application/json" \
-      -H "IAM-API_KEY: ${IAM_API_KEY}" \
-      -d @- | jq .
-else
-  echo "Secure Embed already enabled — skipping"
-fi
+jq -n \
+  --arg orchestrate_id "$ORCHESTRATE_ID" \
+  --arg client_public_key "$(cat "$CLIENT_PUBLIC_MULTI")" \
+  --arg ibm_public_key "$(cat "$IBM_PUBLIC_MULTI")" \
+  '{
+    orchestrate_id: $orchestrate_id,
+    client_public_key: $client_public_key,
+    public_key: $ibm_public_key,
+    is_security_enabled: true
+  }' | curl -sS -X POST \
+    "${SERVICE_INSTANCE_URL}/v1/embed/secure/config" \
+    -H "Content-Type: application/json" \
+    -H "IAM-API_KEY: ${IAM_API_KEY}" \
+    -d @- | jq .
+
 
 #############################################
 # CREATE SINGLE-LINE KEYS
