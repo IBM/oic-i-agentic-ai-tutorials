@@ -1,6 +1,6 @@
 # Embed Chat WebApp -- Setup & Run Guide
 
-After setting up **Okta** and deploying the **MCP Server**, you can run
+After setting up [**Okta**](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md) and deploying the [**MCP Server**](mcp_server_code), you can run
 the full automation script or configure the web application manually.
 
 There are **two ways** to run the `embed_chat_webapp`.
