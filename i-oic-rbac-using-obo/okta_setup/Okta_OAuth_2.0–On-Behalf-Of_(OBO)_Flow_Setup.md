@@ -74,6 +74,7 @@ In this setup, you need to create **exactly two users**:
    - **Display name:** `is_manager`
    - **Variable name:** `is_manager`
 3. Click **Save**
+<img width="1382" height="1692" alt="image" src="https://github.com/user-attachments/assets/e2288e29-266f-4c92-83e6-baf56330fc7b" />
 
 ---
 
