@@ -227,6 +227,7 @@ This application is used for **token exchange (OBO)** and backend API access.
 ### Store Application Credentials
 
 After saving the application, copy and securely store the following values:
+<img width="754" height="621" alt="api_services" src="https://github.com/user-attachments/assets/1f0e0317-07ed-4667-8254-1dbbbdf683e5" />
 
 - **Client ID** → `API_SERVICES_CLIENT_ID`
 - **Client Secret** → `API_SERVICES_CLIENT_SECRET`
