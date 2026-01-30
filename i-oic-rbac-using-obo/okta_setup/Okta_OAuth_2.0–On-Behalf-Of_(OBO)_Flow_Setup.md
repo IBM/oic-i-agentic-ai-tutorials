@@ -18,12 +18,30 @@ This setup is typically used when:
    - **Country / Region**
    - **Phone Number**
 3. Click **Start Free Trial**.
-4. You will receive an **activation email**:
-   - Activate your account
-   - Set a password
-   - Complete **device setup** for verification
+4. Account Activation
 
-After setup, you will receive an Okta Admin URL similar to:
+You will receive an **activation email** with the following steps:
+
+- Activate your account  
+- Set a password  
+- Complete **device setup** for verification  
+
+### Example Activation Email
+
+You will see a line in the email similar to:
+
+<img width="1666" height="1312" alt="okta_activation" src="https://github.com/user-attachments/assets/cb263276-69d4-4ce5-a153-ecb960aa57b8" />
+
+**Organization's sign-in page is:**
+
+```
+https://trial-3546541.okta.com
+```
+
+
+You will see a line in the email similar to:
+After completing the setup, you will be redirected to an Okta Admin URL similar to the following:
+
 
 ```
 https://{okta_org}-admin.okta.com/admin/getting-started
@@ -35,31 +53,6 @@ https://trial-8712265-admin.okta.com/admin/getting-started
 ```
 Go to the above URL and complete the setup process.
 
----
-
-### Extract Okta Organization Details
-
-From the Admin URL, extract the `okta_org` value and derive the Okta base URL.
-
-**okta_org**
-
-```
-trial-8712265
-```
-
-**OKTA_BASE_URL**
-
-```
-https://{okta_org}.okta.com
-```
-
-**Example:**
-
-```
-https://trial-8712265.okta.com
-```
-
-🔐 **Important:** Store `OKTA_BASE_URL` securely.
 
 
 ---
