@@ -49,7 +49,7 @@ https://{okta_org}-admin.okta.com/admin/getting-started
 
 **Example:**
 ```
-https://trial-8712265-admin.okta.com/admin/getting-started
+https://trial-3546541-admin.okta.com/admin/getting-started
 ```
 Go to the above URL and complete the setup process.
 
