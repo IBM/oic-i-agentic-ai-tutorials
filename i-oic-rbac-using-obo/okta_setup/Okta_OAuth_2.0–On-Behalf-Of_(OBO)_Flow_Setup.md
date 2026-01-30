@@ -145,6 +145,7 @@ This application handles **user login and SSO**.
 Click **Save**.
 
 ### Store Application Details
+<img width="691" height="895" alt="Screenshot 2026-01-30 at 11 36 59 AM" src="https://github.com/user-attachments/assets/1ca93172-5d31-42f8-aeb4-c0a475d1bef0" />
 
 After saving the application, copy the **Client ID** and store it securely as:
 
