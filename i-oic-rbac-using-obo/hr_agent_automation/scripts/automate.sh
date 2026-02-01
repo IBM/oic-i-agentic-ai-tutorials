@@ -218,8 +218,8 @@ $ORCHESTRATE_CMD connections set-credentials \
 echo "📥 Importing agents..."
 
 $ORCHESTRATE_CMD tools import -f "$SCRIPT_DIR/../tools/rbac_plugin.py" -k python
-$ORCHESTRATE_CMD agents import -f "$SCRIPT_DIR/../agents/hr_admin_agent.yaml"
-$ORCHESTRATE_CMD agents import -f "$SCRIPT_DIR/../agents/hr_general_agent.yaml"
+$ORCHESTRATE_CMD agents import -f "$SCRIPT_DIR/../agents/manager_agent.yaml"
+$ORCHESTRATE_CMD agents import -f "$SCRIPT_DIR/../agents/general_agent.yaml"
 $ORCHESTRATE_CMD agents import -f "$SCRIPT_DIR/../agents/hr_main_agent.yaml"
 
 
