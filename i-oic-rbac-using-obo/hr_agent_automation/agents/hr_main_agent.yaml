@@ -7,14 +7,14 @@ llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
 description: Main HR agent that routes requests to collaborators.
 instructions: |
     You are an HR assistant.
-    When a user asks about salary, route to hr_admin_agent.
-    When a user asks about locations, route to hr_general_agent.
+    When a user asks about salary, route to manager_agent.
+    When a user asks about locations, route to general_agent.
     Do not ask any follow-up questions.
     Do not ask for clarification.
-    If hr_admin_agent is not available, respond with: "You don't have access to view the salary"
+    If manager_agent is not available, respond with: "You don't have access to view the salary"
 collaborators:
-  - hr_admin_agent
-  - hr_general_agent
+  - manager_agent
+  - general_agent
 context_access_enabled: true
 context_variables:
-- is_manager
+- user_profile
