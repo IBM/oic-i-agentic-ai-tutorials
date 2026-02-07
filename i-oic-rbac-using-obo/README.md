@@ -25,7 +25,7 @@ OKTA_ISSUER = os.getenv(
 
 ### 3️⃣ [hr_agent_automation](hr_agent_automation)
 
-This folder contains the complete code for ai agents, connections and tools, you will deploy them in orchestrate 
+This folder contains the complete code for agents, connections and tools, you will deploy them in orchestrate.
 
 ---
 
@@ -37,8 +37,7 @@ Contains the script to enable security in the Watsonx Orchestrate instance.
 
 ### 5️⃣ [embed_chat_webapp](embed_chat_webapp)
 
-Contains the web application code providing the final UI.
-
+This folder contains the code for the web application used to load the Orchestrate agent.
 
 After setting up [**Okta**](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md) and deploying the [**MCP Server**](mcp_server_code), you can run
 the full automation script or configure the web application manually.
