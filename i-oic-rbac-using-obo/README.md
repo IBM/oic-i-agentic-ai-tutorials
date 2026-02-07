@@ -4,32 +4,31 @@
 
 ### 1️⃣ [okta_setup](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md)
 
-Provides a detailed guide for setting up Okta, which is required for authentication in other components.
+This folder contains the instructions to set up the identity provider (IdP) for this tutorial.
 
 ---
 
 ### 2️⃣ [mcp_server_code](mcp_server_code)
 
-Contains the code to deploy the MCP server along with the deployment steps.
-
+This folder contains the MCP server code and the instructions to deploy it on IBM Code Engine.
 
 ---
 
 ### 3️⃣ [hr_agent_automation](hr_agent_automation)
 
-This folder contains the complete code for agents, connections and tools, you will deploy them in orchestrate.
+This folder contains all the code for agents, connections, and tools to be deployed in Orchestrate.
 
 ---
 
 ### 4️⃣ [enable_security_wxo](enable_security_wxo)
 
-Contains the script to enable security in the Watsonx Orchestrate instance.
+This folder contains the files needed to enable security for the watsonx Orchestrate chat.
 
 ---
 
 ### 5️⃣ [embed_chat_webapp](embed_chat_webapp)
 
-This folder contains the code for the web application used to load the Orchestrate agent.
+This folder contains the web application code used to load the Orchestrate agent.
 
 After setting up [**Okta**](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md) and deploying the [**MCP Server**](mcp_server_code), you can run
 the full automation script or configure the web application manually.
