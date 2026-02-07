@@ -30,13 +30,15 @@ You will receive an **activation email** with the following steps:
 
 You will see a line in the email similar to:
 
-<img width="1666" height="1312" alt="okta_activation" src="https://github.com/user-attachments/assets/cb263276-69d4-4ce5-a153-ecb960aa57b8" />
+<img width="986" height="1084" alt="image" src="https://github.com/user-attachments/assets/97e496e4-4e74-4378-803c-94c3a312f6af" />
+
 
 **Organization's sign-in page is:**
 
 ```
 https://trial-3546541.okta.com
 ```
+Use this value as your **OKTA_BASE_URL**
 
 
 You will see a line in the email similar to:
@@ -51,7 +53,8 @@ https://{okta_org}-admin.okta.com/admin/getting-started
 ```
 https://trial-3546541-admin.okta.com/admin/getting-started
 ```
-Go to the above URL and complete the setup process.
+Go to the above URL and complete the setup process below.
+
 
 
 
