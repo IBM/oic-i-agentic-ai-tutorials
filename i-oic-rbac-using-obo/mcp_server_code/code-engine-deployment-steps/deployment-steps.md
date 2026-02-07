@@ -121,8 +121,8 @@ Then, right-click on the **Application link** and select **Copy Link Address**.
 - After that, add `mcp` as a suffix to the URL you copied using **Copy Link Address**.
 
 **Example:**
-- **Original URL**: `www.mcp.com`
-- **Updated URL**: `www.mcp.com/mcp`
+- **Original URL**: `https://mcp.example.cloud/`
+- **Updated URL**: `https://mcp.example.cloud/mcp`
 
 
 
