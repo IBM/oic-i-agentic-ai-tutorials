@@ -12,14 +12,6 @@ Provides a detailed guide for setting up Okta, which is required for authenticat
 
 Contains the code to deploy the MCP server along with the deployment steps.
 
-Before deploying the MCP server, update the **OKTA_BASE_URL**:
-
-```
-OKTA_ISSUER = os.getenv(
-    "OIDC_ISSUER",
-    "<OKTA_BASE_URL>/oauth2/default"
-)
-```
 
 ---
 
