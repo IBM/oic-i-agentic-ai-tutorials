@@ -79,18 +79,19 @@ In this setup, you need to create **exactly two users**:
 
 ---
 
-### Create Two Users
+### Create a Second User
 
 **Directory → People**
 
+> **Note:** User 1 already exists and is the account you used to sign up for Okta. Follow the steps below to create **only the second user**.
+
 1. Click **Add Person**
-2. Enter the following details:
-   - **First name**
-   - **Last name**
-   - **Username**
-   - **Primary email**
+2. Enter the following sample details:
+   - **First name**: Demo  
+   - **Last name**: User  
+   - **Username**: demo.user  
+   - **Primary email**: demo.user@example.com
 3. Click **Save**
-4. Repeat the above steps to create a **second user**
 
 ---
 
