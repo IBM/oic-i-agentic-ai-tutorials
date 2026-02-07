@@ -18,6 +18,6 @@ tools:
   - update_billing_address
 plugins:
   agent_pre_invoke:
-      - plugin_name: redact_credit_card_preinvoke_plugin
+      - plugin_name: guardrail_cc_preinvoke
 
 # Created by Bob - Credit Card Agent
