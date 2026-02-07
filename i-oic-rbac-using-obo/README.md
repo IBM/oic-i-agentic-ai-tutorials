@@ -2,31 +2,31 @@
 
 ## 📂 Folder Structure
 
-### 1️⃣ [okta_setup](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md)
+### [okta_setup](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md)
 
 This folder contains the instructions to set up the identity provider (IdP) for this tutorial.
 
 ---
 
-### 2️⃣ [mcp_server_code](mcp_server_code)
+### [mcp_server_code](mcp_server_code)
 
 This folder contains the MCP server code and the instructions to deploy it on IBM Code Engine.
 
 ---
 
-### 3️⃣ [hr_agent_automation](hr_agent_automation)
+### [hr_agent_automation](hr_agent_automation)
 
 This folder contains all the code for agents, connections, and tools to be deployed in Orchestrate.
 
 ---
 
-### 4️⃣ [enable_security_wxo](enable_security_wxo)
+### [enable_security_wxo](enable_security_wxo)
 
 This folder contains the files needed to enable security for the watsonx Orchestrate chat.
 
 ---
 
-### 5️⃣ [embed_chat_webapp](embed_chat_webapp)
+### [embed_chat_webapp](embed_chat_webapp)
 
 This folder contains the web application code used to load the Orchestrate agent.
 
