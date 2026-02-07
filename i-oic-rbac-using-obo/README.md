@@ -30,10 +30,37 @@ This folder contains the files needed to enable security for the watsonx Orchest
 
 This folder contains the web application code used to load the Orchestrate agent.
 
-After setting up [**Okta**](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md) and deploying the [**MCP Server**](mcp_server_code), you can run
-the full automation script or configure the web application manually.
 
-There are **two ways** to run the `embed_chat_webapp`.
+After setting up Okta using the [**setup guide**](okta_setup/Okta_OAuth_2.0%E2%80%93On-Behalf-Of_%28OBO%29_Flow_Setup.md), you will obtain the following values:
+
+- `OKTA_BASE_URL`
+- `SPA_CLIENT_ID`
+- `API_SERVICES_CLIENT_ID`
+- `API_SERVICES_CLIENT_SECRET`
+
+## Update Okta Configuration
+
+Before deploying the MCP server, update the **OKTA_BASE_URL** in `server.py` with the value obtained during the Okta setup, as shown below:
+
+```python
+OKTA_ISSUER = os.getenv(
+    "OIDC_ISSUER",
+    "<OKTA_BASE_URL>/oauth2/default"
+)
+```
+
+## Deploy MCP Server
+
+After updating the configuration, follow the [**steps**](mcp_server_code/code-engine-deployment-steps) to deploy the MCP server on **IBM Code Engine**.
+
+Once the deployment is complete, you will obtain the following value:
+
+- `MCP_SERVER_URL`
+
+This URL is required for the web application to communicate with the MCP server.
+
+
+
 
 Before running the web app, ensure the `.env` file is updated inside:
 
@@ -45,7 +72,7 @@ Before running the web app, ensure the `.env` file is updated inside:
 
 ## Option 1: Manual Configuration
 
-If you prefer not to run the automation script, you can manually update the configuration by following the documentation.
+Follow the documentation to  update the `.env` file.
 
     embed_chat_webapp/.env
 
@@ -71,7 +98,7 @@ NEXT_PUBLIC_IBM_PUBLIC_KEY="ibm_public_key_dummy"
 
 ## Option 2: Run the Automation Script
 
-The automation script will populate the `.env` file automatically.
+The automation script will populate the `embed_chat_webapp/.env` file automatically.
 
 ### Step 1: Update Config File
 
