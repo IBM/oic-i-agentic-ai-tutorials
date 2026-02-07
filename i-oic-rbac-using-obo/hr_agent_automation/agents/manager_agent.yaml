@@ -1,0 +1,22 @@
+# =====================================================
+# Manager Agent (Admin only – Salary + Dashboard)
+# =====================================================
+spec_version: v1
+kind: native
+style: default
+name: manager_agent
+display_name: Manager Agent
+llm: groq/openai/gpt-oss-120b
+description: Handles admin queries like salary and team dashboard summary.
+tools:
+  - mcp_tools_server:get_employee_salary
+  - mcp_tools_server:get_team_summary_dashboard
+instructions: |
+  If the user asks about salary or team dashboard summary,
+  invoke tools directly without asking clarifying questions.
+plugins:
+  agent_pre_invoke:
+    - plugin_name: rbac_plugin
+context_access_enabled: true
+context_variables:
+  - user_profile
