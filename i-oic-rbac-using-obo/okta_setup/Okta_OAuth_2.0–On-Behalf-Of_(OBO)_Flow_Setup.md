@@ -155,13 +155,14 @@ After saving the application, copy the **Client ID** and store it securely as:
 
 
 ---
-
 ## Step 4. Assign Users to SPA Application
 
-1. Go to **Applications → Applications → SPA WEB APPLICATION**
+> **Note:** Usually, two users will already be present. If they are not listed, add them here.
+
+1. Go to **Applications → Applications → SPA Web Application**
 2. Open the **Assignments** tab.
 3. Click **Assign → Assign to People**.
-4. Add users who should access the webchat.
+4. Add the users who should have access to the webchat.
 
 ---
 
