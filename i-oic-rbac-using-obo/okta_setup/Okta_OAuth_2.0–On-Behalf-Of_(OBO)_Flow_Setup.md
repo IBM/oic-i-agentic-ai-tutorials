@@ -40,9 +40,7 @@ https://trial-3546541.okta.com
 ```
 Use this value as your **OKTA_BASE_URL**
 
-
-You will see a line in the email similar to:
-After completing the setup, you will be redirected to an Okta Admin URL similar to the following:
+After completing the device setup, you will be redirected to an Okta Admin URL similar to the following:
 
 
 ```
