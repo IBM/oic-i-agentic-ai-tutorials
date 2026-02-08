@@ -3,31 +3,61 @@
 This guide outlines how to deploy a FastAPI application to **IBM Code Engine** using source code from a **GitHub repository**. The deployment uses a Dockerfile-based strategy.
 
 ---
+
 ## 🧰 Prerequisites
 
 - IBM Cloud account with a Code Engine instance
-- GitHub repository with your project
-- [SSH Key Setup to Connect GitHub to IBM Code Engine](./ssh-key-setup.md)
+- Access to GitHub (IBM GitHub)
+- SSH key configured in GitHub and IBM Cloud  
+  👉 [SSH Key Setup to Connect GitHub to IBM Code Engine](./ssh-key-setup.md)
+- Container registry access (IBM Container Registry or other)
+
 ---
+> ⚠️ **Important**
+>
+> If you do **not** complete the  
+> [SSH Key Setup to Connect GitHub to IBM Code Engine](./ssh-key-setup.md),  
+> IBM Cloud Code Engine will **not be able to pull the source code from GitHub**, and the deployment will fail.
+
+
+## 📦 Prepare the GitHub Repository
+
+Clone the source repository using the command below:
+
+```bash
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+```
+
+After cloning, navigate to the **`i-oic-rbac-using-obo`** directory. All materials related to this use case are available there.
+
+Inside the **`mcp_server_code`** folder, you will find the following files:
+- `server.py`
+- `requirements.txt`
+- `Dockerfile`
+
+Next, create a new GitHub repository using:  
+https://github.ibm.com/new  
+
+While creating the repository:
+- Set the **repository name** to **`mcp_server_code`**
+- Upload the following files as the repository contents:
+  - `server.py`
+  - `requirements.txt`
+  - `Dockerfile`
+
+This repository will later be used by **IBM Cloud Code Engine** to pull the source code and deploy the MCP server.
+
+---
+
 ## 📁 Project Structure
 
 ```
-Main_Folder/
+mcp_server_code/
 ├── server.py
 ├── requirements.txt
 └── Dockerfile
 ```
-<img width="2656" height="1428" alt="image" src="https://github.com/user-attachments/assets/e8a514fc-6c0a-401a-b7e5-73efa91d2f75" />
-
-
----
-
-## 🧰 Prerequisites
-
-- IBM Cloud account with Code Engine enabled
-- GitHub repository with your project
-- SSH key configured in GitHub and IBM Cloud
-- Registry access (IBM Container Registry or other)
+<img width="2396" height="1256" alt="image (27)" src="https://github.com/user-attachments/assets/a2c3321e-eae7-4868-969a-de964eb3202f" />
 
 ---
 
@@ -44,6 +74,7 @@ Main_Folder/
 ---
 
 ### 2. **Configure Build Source**
+Give `Name` as `mcp_server`
 
 Choose “**Build container image from source code**” and click on “**Specify build details**”.
 <img width="1728" height="989" alt="Screenshot 2026-01-16 at 2 08 51 PM" src="https://github.com/user-attachments/assets/fd2bdbd6-dc8a-485e-9318-7d0acd8d886e" />
@@ -137,5 +168,3 @@ Store this value securely as:
 `MCP_SERVER_URL`
 
 🔐 This URL will be required for future configurations and integrations.
-
-
