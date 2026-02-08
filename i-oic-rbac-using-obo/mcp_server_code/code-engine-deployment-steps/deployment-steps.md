@@ -35,6 +35,19 @@ Inside the **`mcp_server_code`** folder, you will find the following files:
 - `requirements.txt`
 - `Dockerfile`
 
+  
+## 🧩 Update `server.py` – Okta Issuer Configuration
+
+Open the `server.py` file and locate the following code block:
+
+```python
+OKTA_ISSUER = os.getenv(
+    "OIDC_ISSUER",
+    "<OKTA_BASE_URL>/oauth2/default"
+)
+```
+Replace **<OKTA_BASE_URL>** with the Okta base URL obtained in Step 1.
+
 Next, create a new GitHub repository using:  
 https://github.ibm.com/new  
 
