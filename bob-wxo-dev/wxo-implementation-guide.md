@@ -89,7 +89,7 @@ from ibm_watsonx_orchestrate.flow_builder.flows import Flow, flow, START, END
     description="Flow description",
     input_schema=MyInputSchema
 )
-def build_my_flow(aflow: Flow = None) -> Flow:
+def build_my_flow(aflow: Flow) -> Flow:
     # Define flow nodes and sequence
     node1 = aflow.tool(my_tool_function)
     node2 = aflow.llm(prompt="Process this: {input}")
@@ -246,7 +246,7 @@ from ibm_watsonx_orchestrate.flow_builder.flows import Flow, flow, START, END
     description="Flow description",
     input_schema=InputSchema
 )
-def build_my_flow(aflow: Flow = None) -> Flow:
+def build_my_flow(aflow: Flow) -> Flow:
     # Build flow
     return aflow
 ```
@@ -350,7 +350,28 @@ example/
 2. **Document Processing Node**: Uses Watson Document Understanding
 3. **Flow**: Orchestrates schema retrieval and document processing
 
-**Example**: `extract_airline_invoice/`, `document_processing/`
+**IMPORTANT - Document Upload Handling**:
+When a flow expects a document as input (e.g., `DocProcInput`), the agent should invoke the flow tool directly without asking the user to upload the document first. The flow itself will handle the document upload prompt.
+
+- ✅ **Correct Agent Instructions**:
+  ```yaml
+  instructions: |
+    When the user wants to process a document, immediately invoke the
+    document_processing_flow tool. The flow will prompt the user to
+    upload the document.
+  ```
+
+- ❌ **Incorrect Agent Instructions**:
+  ```yaml
+  instructions: |
+    Ask the user to upload a document first, then pass it to the
+    document_processing_flow tool.
+    # This will NOT work - the agent cannot pass uploaded documents to flows
+  ```
+
+**Why**: Agents cannot directly pass user-uploaded documents to flow tools. The flow's document input nodes (like `docproc`) handle the upload interaction directly with the user. The agent should simply invoke the flow tool and let the flow manage the document upload process.
+
+**Example**: `extract_airline_invoice/`, `document_processing/`, `expense_report_agent/`
 
 ### Pattern 3: User Activity Flow
 
@@ -433,7 +454,7 @@ class MyFlowInput(BaseModel):
     description="Flow description",
     input_schema=MyFlowInput
 )
-def build_my_flow(aflow: Flow = None) -> Flow:
+def build_my_flow(aflow: Flow) -> Flow:
     tool_node = aflow.tool(my_tool)
     aflow.sequence(START, tool_node, END)
     return aflow
@@ -626,10 +647,25 @@ flowchart TD
 - Provide meaningful error messages
 - Use try-except blocks for external API calls
 
-### 4. **Type Hints**
+### 4. **Type Hints and Pydantic Models**
 - Use Pydantic models for input/output schemas
 - Include type hints in function signatures
 - Document expected types in docstrings
+- **IMPORTANT**: Always define Pydantic models explicitly as classes, never use dynamic type creation
+  - ✅ **Correct**: Define models as proper classes
+    ```python
+    class MyOutputSchema(BaseModel):
+        field_name: str = Field(description="Field description")
+    ```
+  - ❌ **Incorrect**: Do not use dynamic type creation
+    ```python
+    # This will cause Pydantic validation errors
+    output_schema=type('MySchema', (BaseModel,), {
+        'field_name': (str, Field(description="Field description"))
+    })
+    ```
+  - All model fields must have proper type annotations
+  - Dynamic type creation causes "non-annotated attribute" errors during model loading
 
 ### 5. **Testing**
 - Provide both CLI and programmatic testing methods
@@ -662,14 +698,15 @@ def get_kvp_schemas(placeholder: str) -> list:
 
 # 2. Create Document Processing Flow
 @flow(name="doc_flow", input_schema=DocumentProcessingCommonInput)
-def build_doc_flow(aflow: Flow = None) -> Flow:
+def build_doc_flow(aflow: Flow) -> Flow:
     schema_node = aflow.tool(get_kvp_schemas, output_schema=list)
     
     doc_node = aflow.docproc(
         name="extract_data",
         task="text_extraction",
         document_structure=True,
-        enable_hw=True
+        enable_hw=True,
+        output_format=DocProcOutputFormat.object  # Returns JSON object instead of file reference
     )
     doc_node.map_input(
         input_variable="kvp_schemas",
@@ -677,13 +714,44 @@ def build_doc_flow(aflow: Flow = None) -> Flow:
     )
     
     aflow.sequence(START, schema_node, doc_node, END)
+    
+    # IMPORTANT: When using output_format=object, kvps is returned as a LIST, not a dictionary
+    # Access KVP values using: flow['node_name'].output.kvps[0].get('field_name', 'default')
+    aflow.map_output(
+        output_variable="field_name",
+        expression="flow['extract_data'].output.kvps[0].get('field_name', '') if flow['extract_data'].output.kvps else ''"
+    )
+    
     return aflow
+```
+
+**CRITICAL: Document Processing Output Format**
+
+When using `output_format=DocProcOutputFormat.object` in docproc nodes:
+- The `kvps` field is returned as a **list** (array), not a dictionary
+- Each element in the list is a dictionary containing the extracted KVP fields
+- To access KVP values, use: `flow['node_name'].output.kvps[0].get('field_name', 'default')`
+- Always include a safety check: `if flow['node_name'].output.kvps else 'default'`
+
+Example of correct KVP access with `output_format=object`:
+```python
+# ✅ Correct - accessing kvps as a list
+aflow.map_output(
+    output_variable="merchant_name",
+    expression="flow['extract_data'].output.kvps[0].get('merchant_name', '') if flow['extract_data'].output.kvps else ''"
+)
+
+# ❌ Incorrect - treating kvps as a dictionary (will cause AttributeError)
+aflow.map_output(
+    output_variable="merchant_name",
+    expression="flow['extract_data'].output.kvps.get('merchant_name', '')"
+)
 ```
 
 ### User Activity Pattern
 ```python
 @flow(name="user_flow", input_schema=InputSchema)
-def build_user_flow(aflow: Flow = None) -> Flow:
+def build_user_flow(aflow: Flow) -> Flow:
     activity_node = aflow.user_activity(
         name="collect_input",
         display_name="Collect User Input",
@@ -699,7 +767,7 @@ def build_user_flow(aflow: Flow = None) -> Flow:
 ### Conditional Flow Pattern
 ```python
 @flow(name="conditional_flow", input_schema=InputSchema)
-def build_conditional_flow(aflow: Flow = None) -> Flow:
+def build_conditional_flow(aflow: Flow) -> Flow:
     check_node = aflow.tool(check_condition)
     
     true_branch = aflow.tool(handle_true)
