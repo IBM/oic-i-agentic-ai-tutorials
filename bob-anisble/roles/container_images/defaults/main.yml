@@ -1,0 +1,12 @@
+---
+# Default variables for container_images role
+
+docker_registry: "docker.io"
+backend_image_name: "retail-backend"
+backend_image_tag: "1.0.0"
+frontend_image_name: "retail-frontend"
+frontend_image_tag: "1.0.0"
+postgres_image_name: "retail-postgres"
+postgres_image_tag: "1.0.0"
+
+# Made with Bob

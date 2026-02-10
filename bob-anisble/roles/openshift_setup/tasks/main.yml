@@ -1,0 +1,128 @@
+---
+# OpenShift Authentication and Namespace Setup Tasks
+
+- name: Verify OpenShift token is provided
+  assert:
+    that:
+      - openshift_token is defined
+      - openshift_token | length > 0
+    fail_msg: "OpenShift token is required. Set OC_TOKEN environment variable."
+    success_msg: "OpenShift token is provided"
+
+- name: Verify OpenShift server is provided
+  assert:
+    that:
+      - openshift_server is defined
+      - openshift_server | length > 0
+    fail_msg: "OpenShift server URL is required"
+    success_msg: "OpenShift server URL is provided"
+
+- name: Login to OpenShift cluster
+  command: >
+    oc login {{ openshift_server }}
+    --token={{ openshift_token }}
+    --insecure-skip-tls-verify=true
+  no_log: true
+  register: oc_login
+  changed_when: "'Logged into' in oc_login.stdout"
+
+- name: Display OpenShift login status
+  debug:
+    msg: "Successfully logged in to OpenShift cluster"
+
+- name: Get current OpenShift user
+  command: oc whoami
+  register: oc_user
+  changed_when: false
+
+- name: Display current user
+  debug:
+    msg: "Logged in as: {{ oc_user.stdout }}"
+
+- name: Check if namespace exists
+  command: oc get namespace {{ namespace }}
+  register: namespace_check
+  failed_when: false
+  changed_when: false
+
+- name: Create namespace if it doesn't exist
+  command: oc create namespace {{ namespace }}
+  when: namespace_check.rc != 0
+  register: namespace_created
+
+- name: Display namespace status
+  debug:
+    msg: "{{ 'Namespace created' if namespace_created.changed else 'Namespace already exists' }}: {{ namespace }}"
+
+- name: Switch to target namespace
+  command: oc project {{ namespace }}
+  register: oc_project
+  changed_when: true
+
+- name: Display current project
+  debug:
+    msg: "Switched to namespace: {{ namespace }}"
+
+- name: Create Docker Hub secret for image pull
+  command: >
+    oc create secret docker-registry dockerhub-secret
+    --docker-server={{ docker_registry }}
+    --docker-username={{ docker_username }}
+    --docker-password={{ docker_password }}
+    --docker-email={{ docker_username }}@example.com
+    -n {{ namespace }}
+  register: secret_create
+  failed_when: false
+  changed_when: "'created' in secret_create.stdout"
+  no_log: true
+
+- name: Check if secret was created or already exists
+  debug:
+    msg: "{{ 'Docker Hub secret created' if secret_create.changed else 'Docker Hub secret already exists' }}"
+
+- name: Delete existing secret if it exists and recreate
+  block:
+    - name: Delete existing Docker Hub secret
+      command: oc delete secret dockerhub-secret -n {{ namespace }}
+      when: "'AlreadyExists' in secret_create.stderr"
+      
+    - name: Recreate Docker Hub secret
+      command: >
+        oc create secret docker-registry dockerhub-secret
+        --docker-server={{ docker_registry }}
+        --docker-username={{ docker_username }}
+        --docker-password={{ docker_password }}
+        --docker-email={{ docker_username }}@example.com
+        -n {{ namespace }}
+      when: "'AlreadyExists' in secret_create.stderr"
+      no_log: true
+  when: secret_create.rc != 0 and 'AlreadyExists' in secret_create.stderr
+
+- name: Verify namespace is ready
+  command: oc get namespace {{ namespace }} -o jsonpath='{.status.phase}'
+  register: namespace_status
+  changed_when: false
+
+- name: Assert namespace is active
+  assert:
+    that:
+      - namespace_status.stdout == "Active"
+    fail_msg: "Namespace {{ namespace }} is not active"
+    success_msg: "Namespace {{ namespace }} is active and ready"
+
+- name: Set OpenShift facts
+  set_fact:
+    openshift_ready: true
+    current_namespace: "{{ namespace }}"
+    current_user: "{{ oc_user.stdout }}"
+
+- name: Display OpenShift setup summary
+  debug:
+    msg:
+      - "OpenShift setup completed successfully"
+      - "Cluster: {{ openshift_server }}"
+      - "User: {{ current_user }}"
+      - "Namespace: {{ current_namespace }}"
+      - "Docker Hub secret: dockerhub-secret"
+
+# Made with Bob

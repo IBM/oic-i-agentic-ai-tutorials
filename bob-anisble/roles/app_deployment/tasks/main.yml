@@ -1,0 +1,226 @@
+---
+# Application Deployment Tasks
+
+- name: Ensure we're in the correct namespace
+  command: oc project {{ namespace }}
+  changed_when: false
+
+- name: Deploy namespace (if using separate namespace manifest)
+  command: oc apply -f {{ k8s_dir }}/namespace.yaml
+  register: namespace_deploy
+  failed_when: false
+  changed_when: "'created' in namespace_deploy.stdout or 'configured' in namespace_deploy.stdout"
+
+- name: Deploy service account
+  command: oc apply -f {{ k8s_dir }}/serviceaccount.yaml -n {{ namespace }}
+  register: sa_deploy
+  changed_when: "'created' in sa_deploy.stdout or 'configured' in sa_deploy.stdout"
+
+- name: Display service account deployment status
+  debug:
+    msg: "Service account deployed: {{ sa_deploy.stdout }}"
+
+- name: Deploy PostgreSQL PVC
+  command: oc apply -f {{ k8s_dir }}/postgres-pvc.yaml -n {{ namespace }}
+  register: pvc_deploy
+  changed_when: "'created' in pvc_deploy.stdout or 'configured' in pvc_deploy.stdout"
+
+- name: Display PVC deployment status
+  debug:
+    msg: "PostgreSQL PVC deployed: {{ pvc_deploy.stdout }}"
+
+- name: Deploy PostgreSQL deployment
+  command: oc apply -f {{ k8s_dir }}/postgres-deployment.yaml -n {{ namespace }}
+  register: postgres_deploy
+  changed_when: "'created' in postgres_deploy.stdout or 'configured' in postgres_deploy.stdout"
+
+- name: Display PostgreSQL deployment status
+  debug:
+    msg: "PostgreSQL deployment deployed: {{ postgres_deploy.stdout }}"
+
+- name: Deploy PostgreSQL service
+  command: oc apply -f {{ k8s_dir }}/postgres-service.yaml -n {{ namespace }}
+  register: postgres_svc_deploy
+  changed_when: "'created' in postgres_svc_deploy.stdout or 'configured' in postgres_svc_deploy.stdout"
+
+- name: Display PostgreSQL service status
+  debug:
+    msg: "PostgreSQL service deployed: {{ postgres_svc_deploy.stdout }}"
+
+- name: Wait for PostgreSQL pod to be ready
+  command: >
+    oc wait --for=condition=ready pod
+    -l app=retail-postgres
+    -n {{ namespace }}
+    --timeout=300s
+  register: postgres_ready
+  changed_when: false
+
+- name: Display PostgreSQL readiness status
+  debug:
+    msg: "PostgreSQL is ready"
+
+- name: Deploy backend deployment
+  command: oc apply -f {{ k8s_dir }}/backend-deployment.yaml -n {{ namespace }}
+  register: backend_deploy
+  changed_when: "'created' in backend_deploy.stdout or 'configured' in backend_deploy.stdout"
+
+- name: Display backend deployment status
+  debug:
+    msg: "Backend deployment deployed: {{ backend_deploy.stdout }}"
+
+- name: Deploy backend service
+  command: oc apply -f {{ k8s_dir }}/backend-service.yaml -n {{ namespace }}
+  register: backend_svc_deploy
+  changed_when: "'created' in backend_svc_deploy.stdout or 'configured' in backend_svc_deploy.stdout"
+
+- name: Display backend service status
+  debug:
+    msg: "Backend service deployed: {{ backend_svc_deploy.stdout }}"
+
+- name: Deploy backend route
+  command: oc apply -f {{ k8s_dir }}/backend-route.yaml -n {{ namespace }}
+  register: backend_route_deploy
+  changed_when: "'created' in backend_route_deploy.stdout or 'configured' in backend_route_deploy.stdout"
+
+- name: Display backend route status
+  debug:
+    msg: "Backend route deployed: {{ backend_route_deploy.stdout }}"
+
+- name: Deploy backend HPA
+  command: oc apply -f {{ k8s_dir }}/retail-backend-hpa.yaml -n {{ namespace }}
+  register: backend_hpa_deploy
+  changed_when: "'created' in backend_hpa_deploy.stdout or 'configured' in backend_hpa_deploy.stdout"
+
+- name: Display backend HPA status
+  debug:
+    msg: "Backend HPA deployed: {{ backend_hpa_deploy.stdout }}"
+
+- name: Wait for backend pods to be ready
+  command: >
+    oc wait --for=condition=ready pod
+    -l app=retail-backend
+    -n {{ namespace }}
+    --timeout=300s
+  register: backend_ready
+  changed_when: false
+
+- name: Display backend readiness status
+  debug:
+    msg: "Backend is ready"
+
+- name: Get backend route URL
+  command: oc get route retail-backend -n {{ namespace }} -o jsonpath='{.spec.host}'
+  register: backend_route_url
+  changed_when: false
+
+- name: Set backend route fact
+  set_fact:
+    backend_route: "https://{{ backend_route_url.stdout }}"
+
+- name: Display backend route
+  debug:
+    msg: "Backend route: {{ backend_route }}"
+
+- name: Deploy frontend deployment
+  command: oc apply -f {{ k8s_dir }}/frontend-deployment.yaml -n {{ namespace }}
+  register: frontend_deploy
+  changed_when: "'created' in frontend_deploy.stdout or 'configured' in frontend_deploy.stdout"
+
+- name: Display frontend deployment status
+  debug:
+    msg: "Frontend deployment deployed: {{ frontend_deploy.stdout }}"
+
+- name: Deploy frontend service
+  command: oc apply -f {{ k8s_dir }}/frontend-service.yaml -n {{ namespace }}
+  register: frontend_svc_deploy
+  changed_when: "'created' in frontend_svc_deploy.stdout or 'configured' in frontend_svc_deploy.stdout"
+
+- name: Display frontend service status
+  debug:
+    msg: "Frontend service deployed: {{ frontend_svc_deploy.stdout }}"
+
+- name: Deploy frontend route
+  command: oc apply -f {{ k8s_dir }}/frontend-route.yaml -n {{ namespace }}
+  register: frontend_route_deploy
+  changed_when: "'created' in frontend_route_deploy.stdout or 'configured' in frontend_route_deploy.stdout"
+
+- name: Display frontend route status
+  debug:
+    msg: "Frontend route deployed: {{ frontend_route_deploy.stdout }}"
+
+- name: Deploy frontend HPA
+  command: oc apply -f {{ k8s_dir }}/retail-frontend-hpa.yaml -n {{ namespace }}
+  register: frontend_hpa_deploy
+  changed_when: "'created' in frontend_hpa_deploy.stdout or 'configured' in frontend_hpa_deploy.stdout"
+
+- name: Display frontend HPA status
+  debug:
+    msg: "Frontend HPA deployed: {{ frontend_hpa_deploy.stdout }}"
+
+- name: Wait for frontend pods to be ready
+  command: >
+    oc wait --for=condition=ready pod
+    -l app=retail-frontend
+    -n {{ namespace }}
+    --timeout=300s
+  register: frontend_ready
+  changed_when: false
+
+- name: Display frontend readiness status
+  debug:
+    msg: "Frontend is ready"
+
+- name: Get frontend route URL
+  command: oc get route retail-frontend -n {{ namespace }} -o jsonpath='{.spec.host}'
+  register: frontend_route_url
+  changed_when: false
+
+- name: Set frontend route fact
+  set_fact:
+    frontend_route: "https://{{ frontend_route_url.stdout }}"
+
+- name: Get all pods status
+  command: oc get pods -n {{ namespace }}
+  register: pods_status
+  changed_when: false
+
+- name: Display pods status
+  debug:
+    msg: "{{ pods_status.stdout_lines }}"
+
+- name: Get all services
+  command: oc get svc -n {{ namespace }}
+  register: services_status
+  changed_when: false
+
+- name: Display services status
+  debug:
+    msg: "{{ services_status.stdout_lines }}"
+
+- name: Get all routes
+  command: oc get routes -n {{ namespace }}
+  register: routes_status
+  changed_when: false
+
+- name: Display routes status
+  debug:
+    msg: "{{ routes_status.stdout_lines }}"
+
+- name: Set deployment facts
+  set_fact:
+    deployment_complete: true
+    backend_url: "{{ backend_route }}"
+    frontend_url: "{{ frontend_route }}"
+
+- name: Display deployment summary
+  debug:
+    msg:
+      - "Application deployment completed successfully"
+      - "Namespace: {{ namespace }}"
+      - "Backend URL: {{ backend_url }}"
+      - "Frontend URL: {{ frontend_url }}"
+      - "PostgreSQL: Running"
+      - "All pods are ready"
+
+# Made with Bob

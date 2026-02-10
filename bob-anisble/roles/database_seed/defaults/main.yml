@@ -1,0 +1,9 @@
+---
+# Default variables for database_seed role
+
+db_name: "retaildb"
+db_user: "retail_user"
+db_password: "retail_password"
+db_seed_path: "/tmp/retailapp/postgresql/full_dump.sql"
+
+# Made with Bob

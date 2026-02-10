@@ -1,0 +1,172 @@
+---
+# System Dependencies Installation Tasks
+
+- name: Install required system packages
+  package:
+    name:
+      - unzip
+      - git
+      - curl
+      - wget
+    state: present
+  become: true
+
+- name: Check if Podman is installed
+  command: which podman
+  register: podman_check
+  failed_when: false
+  changed_when: false
+
+- name: Install Podman (RHEL/CentOS/Fedora)
+  package:
+    name: podman
+    state: present
+  become: true
+  when: 
+    - podman_check.rc != 0
+    - ansible_os_family == "RedHat"
+
+- name: Check if Java 11 is installed
+  shell: java -version 2>&1 | grep -q "11\."
+  register: java_check
+  failed_when: false
+  changed_when: false
+
+- name: Install Java 11 (RHEL/CentOS/Fedora)
+  package:
+    name: java-11-openjdk
+    state: present
+  become: true
+  when:
+    - java_check.rc != 0
+    - ansible_os_family == "RedHat"
+
+- name: Check if OpenShift CLI is installed
+  command: which oc
+  register: oc_check
+  failed_when: false
+  changed_when: false
+
+- name: Download and install OpenShift CLI
+  block:
+    - name: Create temporary directory for OC CLI
+      tempfile:
+        state: directory
+        suffix: oc_cli
+      register: oc_temp_dir
+
+    - name: Download OpenShift CLI
+      get_url:
+        url: "https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ openshift_cli_version }}/openshift-client-linux.tar.gz"
+        dest: "{{ oc_temp_dir.path }}/openshift-client-linux.tar.gz"
+        mode: '0644'
+
+    - name: Extract OpenShift CLI
+      unarchive:
+        src: "{{ oc_temp_dir.path }}/openshift-client-linux.tar.gz"
+        dest: "{{ oc_temp_dir.path }}"
+        remote_src: yes
+
+    - name: Install OpenShift CLI to /usr/local/bin
+      copy:
+        src: "{{ oc_temp_dir.path }}/oc"
+        dest: /usr/local/bin/oc
+        mode: '0755'
+        remote_src: yes
+      become: true
+
+    - name: Install kubectl to /usr/local/bin
+      copy:
+        src: "{{ oc_temp_dir.path }}/kubectl"
+        dest: /usr/local/bin/kubectl
+        mode: '0755'
+        remote_src: yes
+      become: true
+
+    - name: Clean up temporary directory
+      file:
+        path: "{{ oc_temp_dir.path }}"
+        state: absent
+  when: oc_check.rc != 0
+
+- name: Verify OpenShift CLI installation
+  command: oc version --client
+  register: oc_version
+  changed_when: false
+
+- name: Display OpenShift CLI version
+  debug:
+    msg: "{{ oc_version.stdout }}"
+
+- name: Check if JMeter is installed
+  stat:
+    path: "{{ jmeter_install_dir }}/apache-jmeter-{{ jmeter_version }}"
+  register: jmeter_check
+
+- name: Download and install Apache JMeter
+  block:
+    - name: Create JMeter installation directory
+      file:
+        path: "{{ jmeter_install_dir }}"
+        state: directory
+        mode: '0755'
+      become: true
+
+    - name: Download Apache JMeter
+      get_url:
+        url: "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-{{ jmeter_version }}.tgz"
+        dest: "/tmp/apache-jmeter-{{ jmeter_version }}.tgz"
+        mode: '0644'
+
+    - name: Extract Apache JMeter
+      unarchive:
+        src: "/tmp/apache-jmeter-{{ jmeter_version }}.tgz"
+        dest: "{{ jmeter_install_dir }}"
+        remote_src: yes
+      become: true
+
+    - name: Create JMeter symlink
+      file:
+        src: "{{ jmeter_install_dir }}/apache-jmeter-{{ jmeter_version }}"
+        dest: "{{ jmeter_install_dir }}/current"
+        state: link
+      become: true
+
+    - name: Clean up JMeter archive
+      file:
+        path: "/tmp/apache-jmeter-{{ jmeter_version }}.tgz"
+        state: absent
+  when: not jmeter_check.stat.exists
+
+- name: Check if JMeter symlink exists
+  stat:
+    path: "{{ jmeter_install_dir }}/current"
+  register: jmeter_symlink_check
+
+- name: Verify JMeter installation
+  command: "{{ jmeter_install_dir }}/current/bin/jmeter --version"
+  register: jmeter_version_output
+  changed_when: false
+  when: jmeter_symlink_check.stat.exists
+
+- name: Verify JMeter installation (direct path)
+  command: "{{ jmeter_install_dir }}/apache-jmeter-{{ jmeter_version }}/bin/jmeter --version"
+  register: jmeter_version_direct
+  changed_when: false
+  when: not jmeter_symlink_check.stat.exists and jmeter_check.stat.exists
+
+- name: Display JMeter version
+  debug:
+    msg: "{{ jmeter_version_output.stdout if jmeter_symlink_check.stat.exists else jmeter_version_direct.stdout }}"
+  when: jmeter_symlink_check.stat.exists or jmeter_check.stat.exists
+
+- name: Display installation summary
+  debug:
+    msg:
+      - "System dependencies installation completed"
+      - "Podman: Installed"
+      - "Java 11: Installed"
+      - "OpenShift CLI: {{ oc_version.stdout }}"
+      - "Apache JMeter: {{ jmeter_version }}"
+
+# Made with Bob

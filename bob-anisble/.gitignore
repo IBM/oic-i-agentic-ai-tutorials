@@ -1,0 +1,49 @@
+# Ansible
+*.retry
+*.log
+.ansible/
+/tmp/
+/ansible_facts/
+
+# Deployment info files
+deployment-info-*.txt
+
+# Environment variables
+.env
+.env.*
+
+# Secrets and credentials
+*secret*
+*password*
+*token*
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Logs
+*.log
+logs/
+
+# Application source (cloned during deployment)
+/retailapp/

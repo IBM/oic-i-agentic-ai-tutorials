@@ -1,0 +1,147 @@
+---
+# Main Deployment Playbook for Retail Application on OpenShift
+# This playbook orchestrates the complete deployment process
+
+- name: Deploy Retail Application to OpenShift
+  hosts: local
+  gather_facts: yes
+  vars_files:
+    - "../group_vars/{{ env_name | default('development') }}.yml"
+  vars:
+    environment: "{{ env_name | default('development') }}"
+  
+  pre_tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "=========================================="
+          - "Retail Application Deployment"
+          - "=========================================="
+          - "Environment: {{ environment }}"
+          - "Namespace: {{ namespace }}"
+          - "OpenShift Server: {{ openshift_server }}"
+          - "Docker Registry: {{ docker_registry }}"
+          - "Docker Username: {{ docker_username }}"
+          - "=========================================="
+
+    - name: Verify required environment variables
+      assert:
+        that:
+          - lookup('env', 'OC_TOKEN') | length > 0
+          - lookup('env', 'DOCKER_USERNAME') | length > 0
+          - lookup('env', 'DOCKER_PASSWORD') | length > 0
+        fail_msg: "Required environment variables are not set. Please set OC_TOKEN, DOCKER_USERNAME, and DOCKER_PASSWORD."
+        success_msg: "All required environment variables are set"
+
+  roles:
+    - role: system_dependencies
+      tags: ['dependencies', 'setup']
+      
+    - role: app_source
+      tags: ['source', 'setup']
+      
+    - role: container_images
+      tags: ['images', 'build']
+      
+    - role: openshift_setup
+      tags: ['openshift', 'setup']
+      
+    - role: k8s_manifests
+      tags: ['manifests', 'config']
+      
+    - role: app_deployment
+      tags: ['deploy', 'application']
+      
+    - role: database_seed
+      tags: ['database', 'seed']
+      
+    - role: frontend_rebuild
+      tags: ['frontend', 'rebuild']
+
+  post_tasks:
+    - name: Display deployment summary
+      debug:
+        msg:
+          - "=========================================="
+          - "Deployment Completed Successfully!"
+          - "=========================================="
+          - "Environment: {{ environment }}"
+          - "Namespace: {{ namespace }}"
+          - "Backend URL: {{ backend_url }}"
+          - "Frontend URL: {{ frontend_url }}"
+          - "=========================================="
+          - "Access your application at:"
+          - "{{ frontend_url }}"
+          - "=========================================="
+
+    - name: Save deployment information to file
+      copy:
+        content: |
+          Retail Application Deployment Information
+          ==========================================
+          
+          Deployment Date: {{ ansible_date_time.iso8601 }}
+          Environment: {{ environment }}
+          Namespace: {{ namespace }}
+          
+          Application URLs:
+          -----------------
+          Frontend: {{ frontend_url }}
+          Backend: {{ backend_url }}
+          
+          Container Images:
+          -----------------
+          Backend: {{ backend_full_image }}
+          Frontend: {{ frontend_full_image }}
+          PostgreSQL: {{ postgres_full_image }}
+          
+          OpenShift Cluster:
+          ------------------
+          Server: {{ openshift_server }}
+          User: {{ current_user }}
+          
+          Database:
+          ---------
+          Name: {{ db_name }}
+          User: {{ db_user }}
+          Host: {{ db_host }}
+          Port: {{ db_port }}
+          
+          Deployment Status:
+          ------------------
+          System Dependencies: Installed
+          Application Source: Cloned
+          Container Images: Built and Pushed
+          OpenShift Setup: Completed
+          Manifests: Updated
+          Application: Deployed
+          Database: Seeded
+          Frontend: Rebuilt with Backend URL
+          
+          Next Steps:
+          -----------
+          1. Access the frontend at: {{ frontend_url }}
+          2. Verify the application is working correctly
+          3. Run performance tests if needed
+          4. Monitor the application logs and metrics
+          
+        dest: "./deployment-info-{{ environment }}-{{ ansible_date_time.epoch }}.txt"
+        mode: '0644'
+      delegate_to: localhost
+
+    - name: Display next steps
+      debug:
+        msg:
+          - "=========================================="
+          - "Next Steps:"
+          - "=========================================="
+          - "1. Access the application at: {{ frontend_url }}"
+          - "2. Verify all services are running:"
+          - "   oc get pods -n {{ namespace }}"
+          - "3. Check application logs:"
+          - "   oc logs -f deployment/retail-backend -n {{ namespace }}"
+          - "   oc logs -f deployment/retail-frontend -n {{ namespace }}"
+          - "4. Monitor application metrics in OpenShift console"
+          - "=========================================="
+
+# Made with Bob

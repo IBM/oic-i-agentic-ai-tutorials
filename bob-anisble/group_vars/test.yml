@@ -1,0 +1,61 @@
+---
+# Test Environment Configuration
+
+# Environment name
+environment: test
+namespace: retail-test
+
+# OpenShift Configuration
+openshift_server: "https://api.your-cluster.example.com:6443"
+openshift_token: "{{ lookup('env', 'OC_TOKEN') }}"
+
+# Docker Hub Configuration
+docker_username: "{{ lookup('env', 'DOCKER_USERNAME') }}"
+docker_password: "{{ lookup('env', 'DOCKER_PASSWORD') }}"
+docker_registry: "docker.io"
+
+# Application Configuration
+app_repo_url: "https://github.com/SunilManika/retailapp.git"
+app_repo_branch: "main"
+app_source_dir: "/tmp/retailapp"
+
+# Image Configuration
+backend_image_name: "retail-backend"
+backend_image_tag: "1.0.0-test"
+frontend_image_name: "retail-frontend"
+frontend_image_tag: "1.0.0-test"
+postgres_image_name: "retail-postgres"
+postgres_image_tag: "1.0.0-test"
+
+# Database Configuration
+db_name: "retaildb"
+db_user: "retail_user"
+db_password: "retail_password"
+db_host: "retail-postgres"
+db_port: "5432"
+
+# Application Settings
+backend_replicas: 2
+frontend_replicas: 2
+jwt_secret: "test-secret-change-in-prod"
+node_env: "test"
+
+# Resource Limits (Test - Medium)
+backend_cpu_request: "100m"
+backend_memory_request: "128Mi"
+backend_cpu_limit: "500m"
+backend_memory_limit: "512Mi"
+
+frontend_cpu_request: "100m"
+frontend_memory_request: "128Mi"
+frontend_cpu_limit: "500m"
+frontend_memory_limit: "512Mi"
+
+# JMeter Configuration
+jmeter_version: "5.6.3"
+jmeter_install_dir: "/opt/jmeter"
+
+# OpenShift Version
+openshift_cli_version: "4.18.28"
+
+# Made with Bob

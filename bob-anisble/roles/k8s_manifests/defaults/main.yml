@@ -1,0 +1,8 @@
+---
+# Default variables for k8s_manifests role
+
+namespace: "retail-dev"
+backend_replicas: 2
+frontend_replicas: 2
+
+# Made with Bob

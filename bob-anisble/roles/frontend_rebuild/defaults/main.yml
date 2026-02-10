@@ -1,0 +1,6 @@
+---
+# Default variables for frontend_rebuild role
+
+node_env: "production"
+
+# Made with Bob

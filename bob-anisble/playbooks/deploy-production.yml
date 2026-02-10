@@ -1,0 +1,9 @@
+---
+# Production Environment Deployment Playbook
+
+- name: Deploy Retail Application to Production Environment
+  import_playbook: deploy.yml
+  vars:
+    env_name: production
+
+# Made with Bob

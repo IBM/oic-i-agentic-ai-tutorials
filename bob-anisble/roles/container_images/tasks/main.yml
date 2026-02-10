@@ -1,0 +1,103 @@
+---
+# Container Image Building and Pushing Tasks
+
+- name: Login to Docker Hub
+  command: >
+    podman login {{ docker_registry }}
+    --username {{ docker_username }}
+    --password {{ docker_password }}
+  no_log: true
+  register: docker_login
+  changed_when: "'Login Succeeded' in docker_login.stdout"
+
+- name: Display Docker Hub login status
+  debug:
+    msg: "Successfully logged in to Docker Hub"
+
+- name: Build PostgreSQL container image
+  command: >
+    podman build
+    -t {{ docker_registry }}/{{ docker_username }}/{{ postgres_image_name }}:{{ postgres_image_tag }}
+    {{ postgres_dir }}
+  args:
+    chdir: "{{ postgres_dir }}"
+  register: postgres_build
+  changed_when: true
+
+- name: Display PostgreSQL build status
+  debug:
+    msg: "PostgreSQL image built successfully"
+
+- name: Push PostgreSQL image to Docker Hub
+  command: >
+    podman push {{ docker_registry }}/{{ docker_username }}/{{ postgres_image_name }}:{{ postgres_image_tag }}
+  register: postgres_push
+  changed_when: true
+
+- name: Display PostgreSQL push status
+  debug:
+    msg: "PostgreSQL image pushed to {{ docker_registry }}/{{ docker_username }}/{{ postgres_image_name }}:{{ postgres_image_tag }}"
+
+- name: Build backend container image
+  command: >
+    podman build
+    -t {{ docker_registry }}/{{ docker_username }}/{{ backend_image_name }}:{{ backend_image_tag }}
+    {{ backend_dir }}
+  args:
+    chdir: "{{ backend_dir }}"
+  register: backend_build
+  changed_when: true
+
+- name: Display backend build status
+  debug:
+    msg: "Backend image built successfully"
+
+- name: Push backend image to Docker Hub
+  command: >
+    podman push {{ docker_registry }}/{{ docker_username }}/{{ backend_image_name }}:{{ backend_image_tag }}
+  register: backend_push
+  changed_when: true
+
+- name: Display backend push status
+  debug:
+    msg: "Backend image pushed to {{ docker_registry }}/{{ docker_username }}/{{ backend_image_name }}:{{ backend_image_tag }}"
+
+- name: Build frontend container image (initial build)
+  command: >
+    podman build
+    -t {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}
+    {{ frontend_dir }}
+  args:
+    chdir: "{{ frontend_dir }}"
+  register: frontend_build
+  changed_when: true
+
+- name: Display frontend build status
+  debug:
+    msg: "Frontend image built successfully"
+
+- name: Push frontend image to Docker Hub
+  command: >
+    podman push {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}
+  register: frontend_push
+  changed_when: true
+
+- name: Display frontend push status
+  debug:
+    msg: "Frontend image pushed to {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}"
+
+- name: Set container image facts
+  set_fact:
+    backend_full_image: "{{ docker_registry }}/{{ docker_username }}/{{ backend_image_name }}:{{ backend_image_tag }}"
+    frontend_full_image: "{{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}"
+    postgres_full_image: "{{ docker_registry }}/{{ docker_username }}/{{ postgres_image_name }}:{{ postgres_image_tag }}"
+
+- name: Display container images summary
+  debug:
+    msg:
+      - "Container images built and pushed successfully"
+      - "Backend: {{ backend_full_image }}"
+      - "Frontend: {{ frontend_full_image }}"
+      - "PostgreSQL: {{ postgres_full_image }}"
+
+# Made with Bob

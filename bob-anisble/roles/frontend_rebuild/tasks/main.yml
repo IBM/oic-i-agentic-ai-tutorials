@@ -1,0 +1,143 @@
+---
+# Frontend Rebuild with Backend Route Tasks
+
+- name: Ensure backend route is available
+  assert:
+    that:
+      - backend_url is defined
+      - backend_url | length > 0
+    fail_msg: "Backend URL is not available. Deploy backend first."
+    success_msg: "Backend URL is available: {{ backend_url }}"
+
+- name: Display backend URL for frontend configuration
+  debug:
+    msg: "Configuring frontend to use backend URL: {{ backend_url }}"
+
+- name: Check if frontend source has API configuration file
+  find:
+    paths: "{{ frontend_dir }}/src"
+    patterns: "*.js,*.jsx,*.ts,*.tsx"
+    contains: "API_URL|VITE_API_URL|REACT_APP_API_URL"
+    recurse: yes
+  register: api_config_files
+
+- name: Display API configuration files found
+  debug:
+    msg: "Found {{ api_config_files.matched }} files with API configuration"
+
+- name: Update API URL in frontend source files
+  replace:
+    path: "{{ item.path }}"
+    regexp: '(API_URL|VITE_API_URL|REACT_APP_API_URL)\s*=\s*["''].*["'']'
+    replace: 'VITE_API_URL = "{{ backend_url }}"'
+  loop: "{{ api_config_files.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+  when: api_config_files.matched > 0
+
+- name: Set backend API URL with /api path
+  set_fact:
+    backend_api_url: "{{ backend_url }}/api"
+
+- name: Display backend API URL
+  debug:
+    msg: "Backend API URL: {{ backend_api_url }}"
+
+- name: Create .env file for frontend build
+  copy:
+    content: |
+      VITE_API_BASE_URL={{ backend_api_url }}
+      NODE_ENV={{ node_env }}
+    dest: "{{ frontend_dir }}/.env"
+    mode: '0644'
+
+- name: Display .env file creation status
+  debug:
+    msg: "Created .env file with backend API URL: {{ backend_api_url }}"
+
+- name: Rebuild frontend container image with backend API URL
+  command: >
+    podman build
+    --build-arg VITE_API_BASE_URL={{ backend_api_url }}
+    -t {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}
+    {{ frontend_dir }}
+  args:
+    chdir: "{{ frontend_dir }}"
+  register: frontend_rebuild
+  changed_when: true
+
+- name: Display frontend rebuild status
+  debug:
+    msg: "Frontend image rebuilt successfully with backend URL"
+
+- name: Push rebuilt frontend image to Docker Hub
+  command: >
+    podman push {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}
+  register: frontend_repush
+  changed_when: true
+
+- name: Display frontend push status
+  debug:
+    msg: "Rebuilt frontend image pushed to Docker Hub"
+
+- name: Update frontend deployment image
+  command: >
+    oc set image deployment/retail-frontend
+    frontend={{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}
+    -n {{ namespace }}
+  register: frontend_image_update
+  changed_when: true
+
+- name: Display frontend deployment update status
+  debug:
+    msg: "Frontend deployment image updated"
+
+- name: Restart frontend deployment
+  command: oc rollout restart deployment/retail-frontend -n {{ namespace }}
+  register: frontend_restart
+  changed_when: true
+
+- name: Display frontend restart status
+  debug:
+    msg: "Frontend deployment restarted"
+
+- name: Wait for frontend rollout to complete
+  command: oc rollout status deployment/retail-frontend -n {{ namespace }} --timeout=300s
+  register: frontend_rollout
+  changed_when: false
+
+- name: Display frontend rollout status
+  debug:
+    msg: "Frontend rollout completed successfully"
+
+- name: Verify frontend is accessible
+  uri:
+    url: "{{ frontend_url }}"
+    method: GET
+    validate_certs: no
+    status_code: [200, 301, 302]
+  register: frontend_check
+  retries: 5
+  delay: 10
+  until: frontend_check.status in [200, 301, 302]
+  ignore_errors: yes
+
+- name: Display frontend accessibility status
+  debug:
+    msg: "Frontend is {{ 'accessible' if frontend_check.status in [200, 301, 302] else 'not accessible yet' }}"
+
+- name: Set frontend rebuild facts
+  set_fact:
+    frontend_rebuilt: true
+    frontend_configured_backend: "{{ backend_url }}"
+
+- name: Display frontend rebuild summary
+  debug:
+    msg:
+      - "Frontend rebuild completed successfully"
+      - "Backend URL configured: {{ backend_url }}"
+      - "Frontend URL: {{ frontend_url }}"
+      - "Frontend image: {{ docker_registry }}/{{ docker_username }}/{{ frontend_image_name }}:{{ frontend_image_tag }}"
+      - "Frontend pods are ready and running"
+
+# Made with Bob

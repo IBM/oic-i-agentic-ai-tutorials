@@ -1,0 +1,6 @@
+---
+# Default variables for app_deployment role
+
+namespace: "retail-dev"
+
+# Made with Bob

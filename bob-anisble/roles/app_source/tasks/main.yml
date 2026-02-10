@@ -1,0 +1,109 @@
+---
+# Application Source Code Management Tasks
+
+- name: Check if application source directory exists
+  stat:
+    path: "{{ app_source_dir }}"
+  register: app_dir_check
+
+- name: Remove existing application source directory if it exists
+  file:
+    path: "{{ app_source_dir }}"
+    state: absent
+  when: app_dir_check.stat.exists
+
+- name: Clone application repository
+  git:
+    repo: "{{ app_repo_url }}"
+    dest: "{{ app_source_dir }}"
+    version: "{{ app_repo_branch }}"
+    force: yes
+  register: git_clone_result
+
+- name: Display clone result
+  debug:
+    msg: "Application source code cloned successfully to {{ app_source_dir }}"
+
+- name: Verify repository structure
+  stat:
+    path: "{{ item }}"
+  register: repo_structure
+  loop:
+    - "{{ app_source_dir }}/backend"
+    - "{{ app_source_dir }}/frontend"
+    - "{{ app_source_dir }}/postgresql"
+    - "{{ app_source_dir }}/k8s"
+
+- name: Ensure all required directories exist
+  assert:
+    that:
+      - item.stat.exists
+    fail_msg: "Required directory {{ item.item }} does not exist in the repository"
+    success_msg: "Directory {{ item.item }} exists"
+  loop: "{{ repo_structure.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: List k8s manifests
+  find:
+    paths: "{{ app_source_dir }}/k8s"
+    patterns: "*.yaml,*.yml"
+  register: k8s_manifests
+
+- name: Display k8s manifests found
+  debug:
+    msg: "Found {{ k8s_manifests.matched }} Kubernetes manifests in k8s directory"
+
+- name: Check backend Dockerfile
+  stat:
+    path: "{{ app_source_dir }}/backend/Dockerfile"
+  register: backend_dockerfile
+
+- name: Check frontend Dockerfile
+  stat:
+    path: "{{ app_source_dir }}/frontend/Dockerfile"
+  register: frontend_dockerfile
+
+- name: Check postgresql Dockerfile
+  stat:
+    path: "{{ app_source_dir }}/postgresql/Dockerfile"
+  register: postgres_dockerfile
+
+- name: Verify Dockerfiles exist
+  assert:
+    that:
+      - backend_dockerfile.stat.exists
+      - frontend_dockerfile.stat.exists
+      - postgres_dockerfile.stat.exists
+    fail_msg: "One or more Dockerfiles are missing"
+    success_msg: "All required Dockerfiles are present"
+
+- name: Check for database seed data
+  stat:
+    path: "{{ app_source_dir }}/postgresql/full_dump.sql"
+  register: db_seed_file
+
+- name: Display database seed file status
+  debug:
+    msg: "Database seed file {{ 'found' if db_seed_file.stat.exists else 'not found' }}"
+
+- name: Set application source facts
+  set_fact:
+    app_source_ready: true
+    backend_dir: "{{ app_source_dir }}/backend"
+    frontend_dir: "{{ app_source_dir }}/frontend"
+    postgres_dir: "{{ app_source_dir }}/postgresql"
+    k8s_dir: "{{ app_source_dir }}/k8s"
+    db_seed_path: "{{ app_source_dir }}/postgresql/full_dump.sql"
+
+- name: Display application source summary
+  debug:
+    msg:
+      - "Application source code is ready"
+      - "Backend directory: {{ backend_dir }}"
+      - "Frontend directory: {{ frontend_dir }}"
+      - "PostgreSQL directory: {{ postgres_dir }}"
+      - "K8s manifests directory: {{ k8s_dir }}"
+      - "Database seed file: {{ db_seed_path }}"
+
+# Made with Bob

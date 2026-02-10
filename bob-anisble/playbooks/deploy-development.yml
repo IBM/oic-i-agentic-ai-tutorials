@@ -1,0 +1,9 @@
+---
+# Development Environment Deployment Playbook
+
+- name: Deploy Retail Application to Development Environment
+  import_playbook: deploy.yml
+  vars:
+    env_name: development
+
+# Made with Bob

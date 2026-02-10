@@ -1,0 +1,7 @@
+---
+# Default variables for openshift_setup role
+
+namespace: "retail-dev"
+docker_registry: "docker.io"
+
+# Made with Bob

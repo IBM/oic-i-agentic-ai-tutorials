@@ -1,0 +1,9 @@
+---
+# Test Environment Deployment Playbook
+
+- name: Deploy Retail Application to Test Environment
+  import_playbook: deploy.yml
+  vars:
+    env_name: test
+
+# Made with Bob

@@ -1,0 +1,133 @@
+---
+# Database Seed Data Loading Tasks
+
+- name: Verify database seed file exists
+  stat:
+    path: "{{ db_seed_path }}"
+  register: seed_file_check
+
+- name: Assert seed file exists
+  assert:
+    that:
+      - seed_file_check.stat.exists
+    fail_msg: "Database seed file not found at {{ db_seed_path }}"
+    success_msg: "Database seed file found"
+
+- name: Display seed file information
+  debug:
+    msg:
+      - "Database seed file: {{ db_seed_path }}"
+      - "File size: {{ seed_file_check.stat.size | human_readable }}"
+
+- name: Get PostgreSQL pod name
+  command: >
+    oc get pods -n {{ namespace }}
+    -l app=retail-postgres
+    -o jsonpath='{.items[0].metadata.name}'
+  register: postgres_pod
+  changed_when: false
+
+- name: Display PostgreSQL pod name
+  debug:
+    msg: "PostgreSQL pod: {{ postgres_pod.stdout }}"
+
+- name: Verify PostgreSQL pod is running
+  command: >
+    oc get pod {{ postgres_pod.stdout }} -n {{ namespace }}
+    -o jsonpath='{.status.phase}'
+  register: pod_status
+  changed_when: false
+
+- name: Assert PostgreSQL pod is running
+  assert:
+    that:
+      - pod_status.stdout == "Running"
+    fail_msg: "PostgreSQL pod is not running"
+    success_msg: "PostgreSQL pod is running"
+
+#- name: Copy seed data to PostgreSQL pod
+#  command: >
+#    oc cp {{ db_seed_path }}
+#    {{ namespace }}/{{ postgres_pod.stdout }}:/tmp/full_dump.sql
+#  register: copy_seed
+#  changed_when: true
+
+#- name: Display seed data copy status
+#  debug:
+#    msg: "Seed data copied to PostgreSQL pod"
+
+- name: Check if database already has data
+  command: >
+    oc exec {{ postgres_pod.stdout }} -n {{ namespace }} --
+    psql -U {{ db_user }} -d {{ db_name }}
+    -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';"
+  register: table_count
+  changed_when: false
+  failed_when: false
+
+- name: Display current database state
+  debug:
+    msg: "Database check: {{ table_count.stdout if table_count.rc == 0 else 'Database may not exist yet' }}"
+
+- name: Load seed data into PostgreSQL
+  command: >
+    oc exec {{ postgres_pod.stdout }} -n {{ namespace }} --
+    psql -U {{ db_user }} -d {{ db_name }} -f /tmp/full_dump.sql
+  register: seed_load
+  changed_when: true
+  environment:
+    PGPASSWORD: "{{ db_password }}"
+
+- name: Display seed data load status
+  debug:
+    msg: "Seed data loaded successfully"
+
+- name: Verify data was loaded
+  command: >
+    oc exec {{ postgres_pod.stdout }} -n {{ namespace }} --
+    psql -U {{ db_user }} -d {{ db_name }}
+    -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public';"
+  register: final_table_count
+  changed_when: false
+
+- name: Display final table count
+  debug:
+    msg: "Tables in database: {{ final_table_count.stdout_lines }}"
+
+- name: Clean up seed file from pod
+  command: >
+    oc exec {{ postgres_pod.stdout }} -n {{ namespace }} --
+    rm -f /tmp/full_dump.sql
+  register: cleanup
+  changed_when: true
+  failed_when: false
+
+- name: Restart backend deployment to refresh database connections
+  command: oc rollout restart deployment/retail-backend -n {{ namespace }}
+  register: backend_restart
+  changed_when: true
+
+- name: Wait for backend rollout to complete
+  command: oc rollout status deployment/retail-backend -n {{ namespace }} --timeout=300s
+  register: backend_rollout
+  changed_when: false
+
+- name: Display backend restart status
+  debug:
+    msg: "Backend deployment restarted and rollout completed successfully"
+
+- name: Set database seed facts
+  set_fact:
+    database_seeded: true
+    postgres_pod_name: "{{ postgres_pod.stdout }}"
+
+- name: Display database seed summary
+  debug:
+    msg:
+      - "Database seed data loaded successfully"
+      - "PostgreSQL pod: {{ postgres_pod_name }}"
+      - "Database: {{ db_name }}"
+      - "Seed file: {{ db_seed_path }}"
+      - "Backend restarted and ready"
+
+# Made with Bob

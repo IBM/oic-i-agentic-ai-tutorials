@@ -1,0 +1,156 @@
+---
+# Kubernetes Manifests Update Tasks
+
+- name: Create temporary directory for updated manifests
+  tempfile:
+    state: directory
+    suffix: k8s_manifests
+  register: manifests_temp_dir
+
+- name: Set manifests directory fact
+  set_fact:
+    updated_manifests_dir: "{{ manifests_temp_dir.path }}"
+
+- name: Find all YAML manifests in k8s directory
+  find:
+    paths: "{{ k8s_dir }}"
+    patterns: "*.yaml,*.yml"
+  register: k8s_manifest_files
+
+- name: Display number of manifests found
+  debug:
+    msg: "Found {{ k8s_manifest_files.matched }} Kubernetes manifests to process"
+
+- name: Update namespace in all manifests
+  replace:
+    path: "{{ item.path }}"
+    regexp: 'namespace:\s+tbb'
+    replace: "namespace: {{ namespace }}"
+  loop: "{{ k8s_manifest_files.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+
+- name: Update backend image reference
+  replace:
+    path: "{{ k8s_dir }}/backend-deployment.yaml"
+    regexp: "image:\\s+[\"']?docker\\.io/technologybuildingblocks/retail-backend:.*[\"']?"
+    replace: "image: {{ backend_full_image }}"
+
+- name: Update frontend image reference
+  replace:
+    path: "{{ k8s_dir }}/frontend-deployment.yaml"
+    regexp: "image:\\s+[\"']?docker\\.io/technologybuildingblocks/retail-frontend:.*[\"']?"
+    replace: "image: {{ frontend_full_image }}"
+
+- name: Update PostgreSQL image reference
+  replace:
+    path: "{{ k8s_dir }}/postgres-deployment.yaml"
+    regexp: "image:\\s+[\"']?docker\\.io/technologybuildingblocks/retail-postgres.*:.*[\"']?"
+    replace: "image: {{ postgres_full_image }}"
+
+- name: Update backend replicas
+  replace:
+    path: "{{ k8s_dir }}/backend-deployment.yaml"
+    regexp: 'replicas:\s+\d+'
+    replace: "replicas: {{ backend_replicas }}"
+
+- name: Update frontend replicas
+  replace:
+    path: "{{ k8s_dir }}/frontend-deployment.yaml"
+    regexp: 'replicas:\s+\d+'
+    replace: "replicas: {{ frontend_replicas }}"
+
+- name: Update backend resource requests and limits
+  block:
+    - name: Update backend CPU request
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'cpu:\s+"[^"]*"\s+#\s+Low guaranteed CPU'
+        replace: 'cpu: "{{ backend_cpu_request }}"           # Low guaranteed CPU'
+
+    - name: Update backend memory request
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'memory:\s+"[^"]*"\s+#\s+Small guaranteed memory'
+        replace: 'memory: "{{ backend_memory_request }}"      # Small guaranteed memory'
+
+    - name: Update backend CPU limit
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'cpu:\s+"[^"]*"\s+#\s+Not too high'
+        replace: 'cpu: "{{ backend_cpu_limit }}"          # Not too high'
+
+    - name: Update backend memory limit
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'memory:\s+"[^"]*"\s+#\s+Moderate upper bound'
+        replace: 'memory: "{{ backend_memory_limit }}"      # Moderate upper bound'
+
+- name: Update frontend resource requests and limits
+  block:
+    - name: Update frontend CPU request
+      replace:
+        path: "{{ k8s_dir }}/frontend-deployment.yaml"
+        regexp: 'cpu:\s+"[^"]*"'
+        replace: 'cpu: "{{ frontend_cpu_request }}"'
+      when: frontend_cpu_request is defined
+
+    - name: Update frontend memory request
+      replace:
+        path: "{{ k8s_dir }}/frontend-deployment.yaml"
+        regexp: 'memory:\s+"[^"]*"'
+        replace: 'memory: "{{ frontend_memory_request }}"'
+      when: frontend_memory_request is defined
+
+- name: Update database environment variables
+  block:
+    - name: Update DB_PASSWORD
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'value:\s+"retail_password"'
+        replace: 'value: "{{ db_password }}"'
+
+    - name: Update JWT_SECRET
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'value:\s+"super-secret-change-in-prod"'
+        replace: 'value: "{{ jwt_secret }}"'
+
+    - name: Update NODE_ENV
+      replace:
+        path: "{{ k8s_dir }}/backend-deployment.yaml"
+        regexp: 'value:\s+"production"'
+        replace: 'value: "{{ node_env }}"'
+
+- name: Copy updated manifests to temporary directory
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ updated_manifests_dir }}/{{ item.path | basename }}"
+    remote_src: yes
+  loop: "{{ k8s_manifest_files.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+
+- name: Verify updated manifests
+  find:
+    paths: "{{ updated_manifests_dir }}"
+    patterns: "*.yaml,*.yml"
+  register: updated_manifests
+
+- name: Display updated manifests summary
+  debug:
+    msg:
+      - "Kubernetes manifests updated successfully"
+      - "Total manifests: {{ updated_manifests.matched }}"
+      - "Updated manifests directory: {{ updated_manifests_dir }}"
+      - "Namespace: {{ namespace }}"
+      - "Backend image: {{ backend_full_image }}"
+      - "Frontend image: {{ frontend_full_image }}"
+      - "PostgreSQL image: {{ postgres_full_image }}"
+
+- name: Set manifests facts
+  set_fact:
+    manifests_updated: true
+    manifests_directory: "{{ updated_manifests_dir }}"
+
+# Made with Bob

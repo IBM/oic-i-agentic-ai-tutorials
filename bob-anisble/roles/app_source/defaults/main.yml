@@ -1,0 +1,8 @@
+---
+# Default variables for app_source role
+
+app_repo_url: "https://github.com/SunilManika/retailapp.git"
+app_repo_branch: "main"
+app_source_dir: "/tmp/retailapp"
+
+# Made with Bob
