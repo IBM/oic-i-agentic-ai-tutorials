@@ -56,3 +56,7 @@ htmlcov/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Secrets
+obo/automation_script/keys/*.pem
+**/*.pem
