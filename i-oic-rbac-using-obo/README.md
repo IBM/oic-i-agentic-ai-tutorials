@@ -1,7 +1,7 @@
 # Overview 
 In this tutorial, you will learn how to implement context-aware RBAC for agentic AI using watsonx Orchestrate and On-Behalf-Of (OBO) authorization to secure tool and data access end-to-end.
 
-# Technical SOlution 
+# Technical Solution 
 
 ## Secure Authentication & Authorization Flow
 
