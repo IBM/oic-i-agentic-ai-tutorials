@@ -1,0 +1,24 @@
+[project]
+name = "beeai-service"
+version = "1.0.0"
+description = "BeeAI Predictive Maintenance Service for WXO with IBM watsonx.ai"
+requires-python = ">=3.11"
+dependencies = [
+    "beeai-framework>=0.1.36,<0.2.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "ibm-watsonx-ai>=1.0.0"
+]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["beeai_service", "beeai_service.config", "beeai_service.core", "beeai_service.servers"]
+
+[tool.setuptools.package-data]
+beeai_service = ["py.typed"]

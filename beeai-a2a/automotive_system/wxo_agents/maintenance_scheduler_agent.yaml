@@ -1,6 +1,8 @@
 spec_version: v1
 kind: native
 name: maintenance_scheduler_agent
+llm: groq/openai/gpt-oss-120b
+style: default
 description: Agent to schedule and run predictive maintenance flows for fleet vehicles.
 
 instructions: |
@@ -33,9 +35,6 @@ instructions: |
   - Maintenance predictions
   - Scheduled jobs
   - Completed maintenance workflows
-
-llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
-style: react
 
 tools:
   - predictive_maintenance_flow

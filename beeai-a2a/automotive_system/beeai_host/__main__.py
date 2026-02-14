@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+## beeai_host/ __main__.py
 import asyncio
 import sys
 import traceback

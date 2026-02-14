@@ -1,10 +1,31 @@
-version: "3.8"
+# version: "3.8"
+# services:
+#   beeai_agent:
+#     build: ./beeai_agent
+#     ports:
+#       - "9999:9999"
+#   beeai_host:
+#     build: ./beeai_host
+#     depends_on:
+#       - beeai_agent
+
+#version: '3.8'
+
 services:
-  beeai_agent:
-    build: ./beeai_agent
+  beeai-service:
+    build:
+      context: .
+      dockerfile: beeai_service/Dockerfile
+    container_name: beeai_maintenance_service
     ports:
-      - "9999:9999"
-  beeai_host:
-    build: ./beeai_host
-    depends_on:
-      - beeai_agent
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -23,4 +23,4 @@ def book_service_slot(vehicle_id: str, component: str = None, failure_in_days: i
         "status": "confirmed",
         "slot": slot,
         "booking_ref": f"BOOK-{vehicle_id}-{slot.replace(':', '-')}"
-    }
+    } 
