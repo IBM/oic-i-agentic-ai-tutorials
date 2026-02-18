@@ -1,6 +1,6 @@
 # 🚗 Predictive Maintenance Automation
-
-**Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)**
+### A Production Grade Blueprint for Enterprise Agentic AI Demo - Multi-Agent, Observable and Framework-Agnostic
+#### BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)
 
 [![IBM watsonx](https://img.shields.io/badge/IBM-watsonx-blue)](https://www.ibm.com/watsonx)
 [![BeeAI Agentic Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
@@ -704,9 +704,9 @@ data: [DONE]
 
 ## 👥 Authors
 
-- **Ela Dixit** — ela.mishra@in.ibm.com  
-- **Aakriti Aggarwal** — aakriti.aggarwal13@ibm.com  
-- **Surya Deep Singh** — surya.deep.singh@ibm.com  
+- **Ela Dixit**: ela.mishra@in.ibm.com  
+- **Aakriti Aggarwal**: aakriti.aggarwal13@ibm.com  
+- **Surya Deep Singh**: surya.deep.singh@ibm.com  
 
 ---
 
