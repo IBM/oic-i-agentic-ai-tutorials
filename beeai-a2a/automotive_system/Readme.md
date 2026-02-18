@@ -2,8 +2,8 @@
 
 **Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)**
 
-[![IBM watsonx.ai](https://img.shields.io/badge/IBM-watsonx.ai-blue)](https://www.ibm.com/watsonx)
-[![BeeAI Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
+[![IBM watsonx](https://img.shields.io/badge/IBM-watsonx.ai-blue)](https://www.ibm.com/watsonx)
+[![BeeAI Agent Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
 [![Granite Models](https://img.shields.io/badge/Granite-4.0-orange)](https://www.ibm.com/granite)
 [![Watsonx Orchestrate](https://img.shields.io/badge/Watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
 
