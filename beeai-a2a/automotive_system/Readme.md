@@ -1,5 +1,5 @@
 # 🚗 Predictive Maintenance Automation
-### A Production Grade Blueprint for Enterprise Agentic AI Demo - Multi-Agent, Observable and Framework-Agnostic
+### A Production Grade Blueprint for Enterprise Agentic AI Demo - Multi-Agent, Observable, Framework-Agnostic and Scalable
 #### BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)
 
 [![IBM watsonx](https://img.shields.io/badge/IBM-watsonx-blue)](https://www.ibm.com/watsonx)
