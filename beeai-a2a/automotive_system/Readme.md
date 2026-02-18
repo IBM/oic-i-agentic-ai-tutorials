@@ -2,7 +2,7 @@
 
 **Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)**
 
-[![IBM watsonx](https://img.shields.io/badge/IBM-watsonx.ai-blue)](https://www.ibm.com/watsonx)
+[![IBM watsonx](https://img.shields.io/badge/IBM-watsonx-blue)](https://www.ibm.com/watsonx)
 [![BeeAI Agentic Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
 [![Granite Models](https://img.shields.io/badge/Granite-4.0-orange)](https://www.ibm.com/granite)
 [![Watsonx Orchestrate](https://img.shields.io/badge/Watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
@@ -100,7 +100,7 @@ User receives: Complete maintenance plan with booking details
 - 📝 **Trajectory Logging**: Complete execution tracking
 - 🌐 **WXO-Compatible API**: OpenAI-style `/chat/completions` endpoint
 
-### IBM watsonx.ai & Granite Models
+### IBM watsonx & Granite Models
 
 - 💎 **Granite Models**: High-performance instruction-following model optimized for enterprise workloads
 - ⚡ **Low Latency**: ~200ms inference time for typical requests
@@ -693,7 +693,7 @@ data: [DONE]
 ### Documentation
 
 - **BeeAI Framework**: https://github.com/i-am-bee/bee-agent-framework
-- **IBM watsonx.ai**: https://www.ibm.com/docs/en/watsonx
+- **IBM watsonx**: https://www.ibm.com/docs/en/watsonx
 - **Watsonx Orchestrate**: https://www.ibm.com/docs/en/watsonx/watson-orchestrate
 - **Langfuse**: https://langfuse.com/docs
 - **Granite Models**: https://www.ibm.com/granite
@@ -707,4 +707,4 @@ data: [DONE]
 
 **Built for enterprise AI integration**
 
-*Showcasing: BeeAI + watsonx.ai + Granite + Watsonx Orchestrate + Langfuse*
+*Showcasing: BeeAI + watsonx + Granite + Watsonx Orchestrate + Langfuse*
