@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     api_key: str = Field(default="beeai-maintenance-key-2024", description="API key for WXO")
     
     # LLM Configuration
-    llm_model: str = Field(default="watsonx:ibm/granite-3-8b-instruct", description="LLM model")
+    llm_model: str = Field(default="watsonx:ibm/granite-4-h-small", description="LLM model")
     
     # Logging
     log_level: str = Field(default="INFO", description="Logging level")
@@ -52,7 +52,7 @@ class WatsonxSettings(BaseSettings):
         description="IBM watsonx.ai Project ID"
     )
     model_id: str = Field(
-        default="ibm/granite-3-8b-instruct",
+        default="ibm/granite-4-h-small",
         description="Model ID to use"
     )
     max_tokens: int = Field(

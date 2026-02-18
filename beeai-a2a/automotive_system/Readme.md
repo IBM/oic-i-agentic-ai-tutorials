@@ -1,10 +1,10 @@
 # 🚗 Predictive Maintenance Automation
 
-**Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow) + Langfuse (Observability)**
+**Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)**
 
 [![IBM watsonx.ai](https://img.shields.io/badge/IBM-watsonx.ai-blue)](https://www.ibm.com/watsonx)
 [![BeeAI Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
-[![Granite Models](https://img.shields.io/badge/Granite-3.8B-orange)](https://www.ibm.com/granite)
+[![Granite Models](https://img.shields.io/badge/Granite-4.0-orange)](https://www.ibm.com/granite)
 [![Watsonx Orchestrate](https://img.shields.io/badge/Watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
 
 ---
@@ -33,7 +33,7 @@ This project demonstrates a **production-ready AI agent integration** for predic
 |------------|------|
 | **🤖 BeeAI Framework** | Agentic AI with tool orchestration |
 | **🧠 IBM watsonx.ai** | Enterprise LLM platform and infrastructure |
-| **💎 Granite 3.8B** | High-performance instruction-following model |
+| **💎 Granite Models** | High-performance instruction-following model |
 | **🔗 Watsonx Orchestrate** | Workflow automation and agent management |
 | **📊 Langfuse** | End-to-end AI observability and tracing |
 
@@ -64,7 +64,7 @@ Watsonx Orchestrate (maintenance_agent)
     │     ├─→ Tool 2: get_driver_schedule("driver-1") → Available 2025-11-22 14:00
     │     ├─→ Tool 3: get_dealership_slots("San Francisco") → Slot 2025-11-22 15:00
     │     ├─→ Tool 4: get_parts_inventory("Brake Pads") → Stock: 5 units
-    │     └─→ LLM Request → IBM watsonx.ai (Granite 3.8B)
+    │     └─→ LLM Request → IBM watsonx.ai (Granite)
     │           └─→ Synthesizes comprehensive response
     │
     └─→ May trigger: predictive_maintenance_flow
@@ -102,7 +102,7 @@ User receives: Complete maintenance plan with booking details
 
 ### IBM watsonx.ai & Granite Models
 
-- 💎 **Granite 3.8B Instruct**: High-performance instruction-following model optimized for enterprise workloads
+- 💎 **Granite Models**: High-performance instruction-following model optimized for enterprise workloads
 - ⚡ **Low Latency**: ~200ms inference time for typical requests
 - 🔧 **Tool Calling**: Native support for function/tool invocation
 - 📏 **Context Window**: 8,192 tokens for comprehensive context understanding
@@ -230,7 +230,7 @@ Create `.env` file in `beeai_service/` directory:
 BEEAI_WXO_PORT=8080
 BEEAI_WXO_HOST=0.0.0.0
 BEEAI_API_KEY=beeai-maintenance-key-2024
-BEEAI_LLM_MODEL=watsonx:ibm/granite-3-8b-instruct
+BEEAI_LLM_MODEL=watsonx:ibm/granite-4-h-small
 BEEAI_LOG_LEVEL=INFO
 BEEAI_LOG_INTERMEDIATE_STEPS=false
 
@@ -238,7 +238,7 @@ BEEAI_LOG_INTERMEDIATE_STEPS=false
 WATSONX_API_KEY=your_watsonx_api_key_here
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
 WATSONX_PROJECT_ID=your_project_id_here
-WATSONX_MODEL_ID=ibm/granite-3-8b-instruct
+WATSONX_MODEL_ID=ibm/granite-4-h-small
 WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
 ```
@@ -259,7 +259,7 @@ chmod +x setup_local.sh
 
 You should see:
 - ✅ Container built and started
-- ✅ Model loaded: `watsonx:ibm/granite-3-8b-instruct`
+- ✅ Model loaded: `watsonx:ibm/granite-4-h-small`
 - ✅ Tools loaded: 4
 - ✅ Agent initialized successfully
 - ✅ Server running at `http://localhost:8080`
@@ -277,7 +277,7 @@ curl http://localhost:8080/health
 {
   "status": "healthy",
   "service": "BeeAI Predictive Maintenance",
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "timestamp": 1708312800
 }
 ```
@@ -628,7 +628,7 @@ GET /health
 {
   "status": "healthy",
   "service": "BeeAI Predictive Maintenance",
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "timestamp": 1708312800
 }
 ```
@@ -675,7 +675,7 @@ X-API-Key: beeai-maintenance-key-2024
       "content": "Check maintenance for TRUCK-22"
     }
   ],
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "stream": true
 }
 ```
