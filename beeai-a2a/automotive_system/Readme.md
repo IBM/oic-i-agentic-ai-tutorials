@@ -32,7 +32,7 @@ This project demonstrates a **production-ready AI agent integration** for predic
 | Technology | Role |
 |------------|------|
 | **🤖 BeeAI Framework** | Agentic AI with tool orchestration |
-| **🧠 IBM watsonx.ai** | Enterprise LLM platform and infrastructure |
+| **🧠 IBM watsonx** | Enterprise LLM platform and infrastructure |
 | **💎 Granite Models** | High-performance instruction-following model |
 | **🔗 Watsonx Orchestrate** | Workflow automation and agent management |
 | **📊 Langfuse** | End-to-end AI observability and tracing |
@@ -199,13 +199,6 @@ User receives: Complete maintenance plan with booking details
 │   └── import_all.sh           # Import everything to WXO
 │
 ├── docs/                       # Screenshots and diagrams
-│   ├── architecture-diagram
-│   ├── beeai-code-engine
-│   ├── beeai-local-startup
-│   ├── beeai-wxo-agent-details
-│   ├── langfuse-trace
-│   ├── wxo-agent-preview
-│   └── wxo-import-agent-type
 │
 └── README.md                   # This file
 ```
