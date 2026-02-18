@@ -139,7 +139,6 @@ User receives: Complete maintenance plan with booking details
 2. **Watsonx Orchestrate**
    - Subscription active
    - ADK installed: `pip install ibm-watsonx-orchestrate`
-   - Authenticated: `orchestrate login`
 
 3. **Langfuse (Optional)**
    - Free account at [cloud.langfuse.com](https://cloud.langfuse.com)
