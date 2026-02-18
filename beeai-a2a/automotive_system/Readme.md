@@ -209,7 +209,8 @@ User receives: Complete maintenance plan with booking details
 ### Step 1: Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+cd beeai-a2a/automotive_system
 cd beeai_service
 ```
 
@@ -219,17 +220,22 @@ Create `.env` file in `beeai_service/` directory:
 
 ```bash
 # BeeAI Service Configuration
+# Server Configuration
 BEEAI_WXO_PORT=8080
 BEEAI_WXO_HOST=0.0.0.0
 BEEAI_API_KEY=beeai-maintenance-key-2024
+
+# LLM Configuration
 BEEAI_LLM_MODEL=watsonx:ibm/granite-4-h-small
+
+# Logging
 BEEAI_LOG_LEVEL=INFO
 BEEAI_LOG_INTERMEDIATE_STEPS=false
 
-# IBM watsonx.ai (REQUIRED)
-WATSONX_API_KEY=your_watsonx_api_key_here
+# IBM watsonx.ai Configuration
+WATSONX_API_KEY=your-watsonx-api-key
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
-WATSONX_PROJECT_ID=your_project_id_here
+WATSONX_PROJECT_ID=your-watsonx-project-id
 WATSONX_MODEL_ID=ibm/granite-4-h-small
 WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
@@ -317,14 +323,14 @@ podman compose logs -f
 Add these to your `.env` file:
 
 ```bash
-# IBM Cloud Configuration
-IBM_CLOUD_API_KEY=your_ibm_cloud_api_key
-NAMESPACE=your_container_registry_namespace
+# IBM Cloud Configuration for Deployment
+IBM_CLOUD_API_KEY=your-ibm-cloud-api-key
+NAMESPACE=your-container-registry-namespace
 IMAGE_NAME=beeai_maintenance_service
 IMAGE_TAG=v1
 APP_NAME=beeai-maintenance
-PROJECT_ID=your_code_engine_project_id
-RESOURCE_GROUP=your_resource_group
+PROJECT_ID=your-code-engine-project-id
+RESOURCE_GROUP=your-resource-group
 REGION=us-south
 ```
 
