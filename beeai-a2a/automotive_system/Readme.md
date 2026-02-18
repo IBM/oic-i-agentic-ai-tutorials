@@ -22,6 +22,8 @@
 - [Observability with Langfuse](#-observability-with-langfuse)
 - [Testing](#-testing)
 - [API Reference](#-api-reference)
+- [Support & Resources](#-support--resources)
+- [Authors](#-authors)
 
 ---
 
@@ -700,8 +702,11 @@ data: [DONE]
 
 ---
 
-## 📄 License
+## 👥 Authors
 
+- **Ela Dixit** — ela.mishra@in.ibm.com  
+- **Aakriti Aggarwal** — aakriti.aggarwal13@ibm.com  
+- **Surya Deep Singh** — surya.deep.singh@ibm.com  
 
 ---
 
