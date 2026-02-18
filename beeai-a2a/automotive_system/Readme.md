@@ -241,7 +241,7 @@ WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
 ```
 
-⚠️ **Important**: Replace `your_watsonx_api_key_here` and `your_project_id_here` with your actual credentials.
+⚠️ **Note**: Replace `your-watsonx-api-key` and `your-watsonx-project-id` with your actual credentials.
 
 ### Step 3: Start BeeAI Service
 
@@ -334,6 +334,8 @@ RESOURCE_GROUP=your-resource-group
 REGION=us-south
 ```
 
+⚠️ **Note**: Replace `=your-ibm-cloud-api-key`, `your-container-registry-namespace`, `your-code-engine-project-id` and `your-resource-group` with your actual credentials.
+
 ### Step 2: Deploy to Code Engine
 
 ```bash
@@ -415,7 +417,7 @@ First, activate your Watsonx Orchestrate environment:
 ```bash
 orchestrate env activate <your_environment_name> --api-key <your_api_key>
 ```
-⚠️ **Note**: Replace `<your_environment_name>` and `<your_api_key>` with your actual WXO environment credentials.
+⚠️ **Note**: Replace `your_environment_name` and `your_api_key` with your actual WXO environment credentials.
 
 ### Step 2: Import All Components
 ```bash
