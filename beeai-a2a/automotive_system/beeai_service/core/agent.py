@@ -58,8 +58,8 @@ Then provide a clear summary with:
                 enabled=app_settings.log_intermediate_steps
             )
         ],
-        memory=UnconstrainedMemory(),
-        role="Predictive Maintenance Specialist"
+        memory=UnconstrainedMemory()
+        #role="Predictive Maintenance Specialist"
     )
     
     print(f"  ✅ Agent initialized successfully\n")
