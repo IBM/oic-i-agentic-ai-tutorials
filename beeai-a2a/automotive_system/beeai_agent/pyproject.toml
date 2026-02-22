@@ -1,6 +1,0 @@
-[project]
-name = "beeai-agent"
-version = "0.0.1"
-dependencies = [
-  "beeai-framework[a2a,search]>=0.1.36,<0.2.0"
-]

@@ -1,10 +1,10 @@
 # 🚗 Predictive Maintenance Automation
+### A Production-Grade Enterprise Agentic AI Demo - Multi-Agent, Observable, Framework-Agnostic and Scalable
+#### BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)
 
-**Enterprise AI Integration Demo: BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow) + Langfuse (Observability)**
-
-[![IBM watsonx.ai](https://img.shields.io/badge/IBM-watsonx.ai-blue)](https://www.ibm.com/watsonx)
-[![BeeAI Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
-[![Granite Models](https://img.shields.io/badge/Granite-3.8B-orange)](https://www.ibm.com/granite)
+[![IBM watsonx](https://img.shields.io/badge/IBM-watsonx-blue)](https://www.ibm.com/watsonx)
+[![BeeAI Agentic Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
+[![Granite Models](https://img.shields.io/badge/Granite-4.0-orange)](https://www.ibm.com/granite)
 [![Watsonx Orchestrate](https://img.shields.io/badge/Watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
 
 ---
@@ -22,18 +22,20 @@
 - [Observability with Langfuse](#-observability-with-langfuse)
 - [Testing](#-testing)
 - [API Reference](#-api-reference)
+- [Support & Resources](#-support--resources)
+- [Authors](#-authors)
 
 ---
 
 ## 🎯 Overview
 
-This project demonstrates a **production-ready AI agent integration** for predictive vehicle maintenance, combining five enterprise technologies:
+This project demonstrates a **production-ready AI agent integration** for predictive vehicle maintenance, combining five enterprise technologies: 
 
 | Technology | Role |
 |------------|------|
 | **🤖 BeeAI Framework** | Agentic AI with tool orchestration |
-| **🧠 IBM watsonx.ai** | Enterprise LLM platform and infrastructure |
-| **💎 Granite 3.8B** | High-performance instruction-following model |
+| **🧠 IBM watsonx** | Enterprise LLM platform and infrastructure |
+| **💎 Granite Models** | High-performance instruction-following model |
 | **🔗 Watsonx Orchestrate** | Workflow automation and agent management |
 | **📊 Langfuse** | End-to-end AI observability and tracing |
 
@@ -64,7 +66,7 @@ Watsonx Orchestrate (maintenance_agent)
     │     ├─→ Tool 2: get_driver_schedule("driver-1") → Available 2025-11-22 14:00
     │     ├─→ Tool 3: get_dealership_slots("San Francisco") → Slot 2025-11-22 15:00
     │     ├─→ Tool 4: get_parts_inventory("Brake Pads") → Stock: 5 units
-    │     └─→ LLM Request → IBM watsonx.ai (Granite 3.8B)
+    │     └─→ LLM Request → IBM watsonx.ai (Granite)
     │           └─→ Synthesizes comprehensive response
     │
     └─→ May trigger: predictive_maintenance_flow
@@ -100,9 +102,9 @@ User receives: Complete maintenance plan with booking details
 - 📝 **Trajectory Logging**: Complete execution tracking
 - 🌐 **WXO-Compatible API**: OpenAI-style `/chat/completions` endpoint
 
-### IBM watsonx.ai & Granite Models
+### IBM watsonx & Granite Models
 
-- 💎 **Granite 3.8B Instruct**: High-performance instruction-following model optimized for enterprise workloads
+- 💎 **Granite Models**: High-performance instruction-following model optimized for enterprise workloads
 - ⚡ **Low Latency**: ~200ms inference time for typical requests
 - 🔧 **Tool Calling**: Native support for function/tool invocation
 - 📏 **Context Window**: 8,192 tokens for comprehensive context understanding
@@ -139,7 +141,6 @@ User receives: Complete maintenance plan with booking details
 2. **Watsonx Orchestrate**
    - Subscription active
    - ADK installed: `pip install ibm-watsonx-orchestrate`
-   - Authenticated: `orchestrate login`
 
 3. **Langfuse (Optional)**
    - Free account at [cloud.langfuse.com](https://cloud.langfuse.com)
@@ -199,13 +200,6 @@ User receives: Complete maintenance plan with booking details
 │   └── import_all.sh           # Import everything to WXO
 │
 ├── docs/                       # Screenshots and diagrams
-│   ├── architecture-diagram
-│   ├── beeai-code-engine
-│   ├── beeai-local-startup
-│   ├── beeai-wxo-agent-details
-│   ├── langfuse-trace
-│   ├── wxo-agent-preview
-│   └── wxo-import-agent-type
 │
 └── README.md                   # This file
 ```
@@ -217,7 +211,8 @@ User receives: Complete maintenance plan with booking details
 ### Step 1: Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+cd beeai-a2a/automotive_system
 cd beeai_service
 ```
 
@@ -227,23 +222,28 @@ Create `.env` file in `beeai_service/` directory:
 
 ```bash
 # BeeAI Service Configuration
+# Server Configuration
 BEEAI_WXO_PORT=8080
 BEEAI_WXO_HOST=0.0.0.0
 BEEAI_API_KEY=beeai-maintenance-key-2024
-BEEAI_LLM_MODEL=watsonx:ibm/granite-3-8b-instruct
+
+# LLM Configuration
+BEEAI_LLM_MODEL=watsonx:ibm/granite-4-h-small
+
+# Logging
 BEEAI_LOG_LEVEL=INFO
 BEEAI_LOG_INTERMEDIATE_STEPS=false
 
-# IBM watsonx.ai (REQUIRED)
-WATSONX_API_KEY=your_watsonx_api_key_here
+# IBM watsonx.ai Configuration
+WATSONX_API_KEY=your-watsonx-api-key
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
-WATSONX_PROJECT_ID=your_project_id_here
-WATSONX_MODEL_ID=ibm/granite-3-8b-instruct
+WATSONX_PROJECT_ID=your-watsonx-project-id
+WATSONX_MODEL_ID=ibm/granite-4-h-small
 WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
 ```
 
-⚠️ **Important**: Replace `your_watsonx_api_key_here` and `your_project_id_here` with your actual credentials.
+⚠️ **Note**: Replace `your-watsonx-api-key` and `your-watsonx-project-id` with your actual credentials.
 
 ### Step 3: Start BeeAI Service
 
@@ -259,7 +259,7 @@ chmod +x setup_local.sh
 
 You should see:
 - ✅ Container built and started
-- ✅ Model loaded: `watsonx:ibm/granite-3-8b-instruct`
+- ✅ Model loaded: `watsonx:ibm/granite-4-h-small`
 - ✅ Tools loaded: 4
 - ✅ Agent initialized successfully
 - ✅ Server running at `http://localhost:8080`
@@ -277,7 +277,7 @@ curl http://localhost:8080/health
 {
   "status": "healthy",
   "service": "BeeAI Predictive Maintenance",
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "timestamp": 1708312800
 }
 ```
@@ -325,16 +325,18 @@ podman compose logs -f
 Add these to your `.env` file:
 
 ```bash
-# IBM Cloud Configuration
-IBM_CLOUD_API_KEY=your_ibm_cloud_api_key
-NAMESPACE=your_container_registry_namespace
+# IBM Cloud Configuration for Deployment
+IBM_CLOUD_API_KEY=your-ibm-cloud-api-key
+NAMESPACE=your-container-registry-namespace
 IMAGE_NAME=beeai_maintenance_service
 IMAGE_TAG=v1
 APP_NAME=beeai-maintenance
-PROJECT_ID=your_code_engine_project_id
-RESOURCE_GROUP=your_resource_group
+PROJECT_ID=your-code-engine-project-id
+RESOURCE_GROUP=your-resource-group
 REGION=us-south
 ```
+
+⚠️ **Note**: Replace `=your-ibm-cloud-api-key`, `your-container-registry-namespace`, `your-code-engine-project-id` and `your-resource-group` with your actual credentials.
 
 ### Step 2: Deploy to Code Engine
 
@@ -417,7 +419,7 @@ First, activate your Watsonx Orchestrate environment:
 ```bash
 orchestrate env activate <your_environment_name> --api-key <your_api_key>
 ```
-⚠️ **Note**: Replace `<your_environment_name>` and `<your_api_key>` with your actual WXO environment credentials.
+⚠️ **Note**: Replace `your_environment_name` and `your_api_key` with your actual WXO environment credentials.
 
 ### Step 2: Import All Components
 ```bash
@@ -628,7 +630,7 @@ GET /health
 {
   "status": "healthy",
   "service": "BeeAI Predictive Maintenance",
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "timestamp": 1708312800
 }
 ```
@@ -675,7 +677,7 @@ X-API-Key: beeai-maintenance-key-2024
       "content": "Check maintenance for TRUCK-22"
     }
   ],
-  "model": "watsonx:ibm/granite-3-8b-instruct",
+  "model": "watsonx:ibm/granite-4-h-small",
   "stream": true
 }
 ```
@@ -693,18 +695,21 @@ data: [DONE]
 ### Documentation
 
 - **BeeAI Framework**: https://github.com/i-am-bee/bee-agent-framework
-- **IBM watsonx.ai**: https://www.ibm.com/docs/en/watsonx
+- **IBM watsonx**: https://www.ibm.com/docs/en/watsonx
 - **Watsonx Orchestrate**: https://www.ibm.com/docs/en/watsonx/watson-orchestrate
 - **Langfuse**: https://langfuse.com/docs
 - **Granite Models**: https://www.ibm.com/granite
 
 ---
 
-## 📄 License
+## 👥 Authors
 
+- **Ela Dixit**: ela.mishra@in.ibm.com  
+- **Aakriti Aggarwal**: aakriti.aggarwal13@ibm.com  
+- **Surya Deep Singh**: surya.deep.singh@ibm.com  
 
 ---
 
 **Built for enterprise AI integration**
 
-*Showcasing: BeeAI + watsonx.ai + Granite + Watsonx Orchestrate + Langfuse*
+*Showcasing: BeeAI + watsonx + Granite + Watsonx Orchestrate + Langfuse*
