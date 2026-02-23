@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: ariba_operational_procurement_synchronous_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          client_id: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][client_id]}"
+          client_secret: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][client_secret]}"
+          api_key: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][api_key]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          client_id: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][client_id]}"
+          client_secret: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][client_secret]}"
+          api_key: "{ARIBA[OPERATIONAL_PROCUREMENT_SYNCHRONOUS][api_key]}"

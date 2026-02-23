@@ -1,0 +1,63 @@
+python_requirements(
+    name = "repository",
+    module_mapping = {
+        "ibm-watsonx-orchestrate": [
+            "ibm_watsonx_orchestrate",
+            "wxo_agentic_evaluation",
+        ],
+        "ibm-cos-sdk": [
+            "ibm_boto3",
+            "ibm_botocore",
+        ],
+    },
+    overrides = {},
+    resolve = "python-repository",
+    source = "requirements.txt",
+)
+
+python_requirement(
+    name = "black",
+    requirements = [
+        "black==25.1.0",
+    ],
+    resolve = "tools-black",
+)
+
+python_requirement(
+    name = "pylint",
+    requirements = ["pylint==3.3.4"],
+    resolve = "tools-pylint",
+)
+
+python_requirement(
+    name = "flake8",
+    requirements = [
+        "flake8==7.3.0",
+        "flake8-annotations",
+        "flake8-docstrings",
+        "pydoclint[flake8]",
+    ],
+    resolve = "tools-flake8",
+)
+
+python_requirement(
+    name = "isort",
+    requirements = ["isort==6.0.0"],
+    resolve = "tools-isort",
+)
+
+python_requirement(
+    name = "mypy",
+    dependencies = [],
+    requirements = [
+        "mypy==1.15.0",
+        "types-requests",
+    ],
+    resolve = "tools-mypy",
+)
+
+python_requirement(
+    name = "autoflake",
+    requirements = ["autoflake"],
+    resolve = "tools-autoflake",
+)

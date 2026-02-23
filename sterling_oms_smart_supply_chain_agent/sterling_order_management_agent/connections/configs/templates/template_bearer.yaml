@@ -1,0 +1,18 @@
+spec_version: v1
+kind: connection
+app_id: "<APP_ID_NAME>"
+environments:
+    draft:
+        kind: bearer
+        type: team
+        sso: false
+        server_url: "{base_url}"
+        credentials:
+            token: "{bearer_token}"
+    live:
+        kind: bearer
+        type: team
+        sso: false
+        server_url: "{base_url}"
+        credentials:
+            token: "{bearer_token}"

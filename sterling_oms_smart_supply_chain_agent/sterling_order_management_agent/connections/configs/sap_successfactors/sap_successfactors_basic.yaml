@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: sap_successfactors_basic
+environments:
+    draft:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{SAP_SUCCESSFACTORS[base_url]}"
+        credentials:
+            username: "{SAP_SUCCESSFACTORS[username]}"
+            password: "{SAP_SUCCESSFACTORS[password]}"
+    live:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{SAP_SUCCESSFACTORS[base_url]}"
+        credentials:
+            username: "{SAP_SUCCESSFACTORS[username]}"
+            password: "{SAP_SUCCESSFACTORS[password]}"

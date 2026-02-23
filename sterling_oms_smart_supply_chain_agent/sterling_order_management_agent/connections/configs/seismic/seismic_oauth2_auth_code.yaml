@@ -1,0 +1,26 @@
+spec_version: v1
+kind: connection
+app_id: seismic_oauth2_auth_code
+environments:
+    draft:
+        kind: oauth_auth_code_flow
+        type: member
+        sso: false
+        server_url: "{SEISMIC[base_url]}"
+        credentials:
+            token_url: "{SEISMIC[token_url]}"
+            authorization_url: "{SEISMIC[auth_url]}"
+            client_id: "{SEISMIC[client_id]}"
+            client_secret: "{SEISMIC[client_secret]}"
+            scope": "{SEISMIC[scope]}"
+    live:
+        kind: oauth_auth_code_flow
+        type: member
+        sso: false
+        server_url: "{SEISMIC[base_url]}"
+        credentials:
+            token_url: "{SEISMIC[token_url]}"
+            authorization_url: "{SEISMIC[auth_url]}"
+            client_id: "{SEISMIC[client_id]}"
+            client_secret: "{SEISMIC[client_secret]}"
+            scope": "{SEISMIC[scope]}"

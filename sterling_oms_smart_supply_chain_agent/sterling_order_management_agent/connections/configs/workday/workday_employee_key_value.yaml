@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: workday_employee_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{WORKDAY[base_url]}"
+        credentials:
+            bearer_token: "{WORKDAY[EMPLOYEE][bearer_token]}"
+            refresh_token: "{WORKDAY[EMPLOYEE][refresh_token]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{WORKDAY[base_url]}"
+        credentials:
+            bearer_token: "{WORKDAY[EMPLOYEE][bearer_token]}"
+            refresh_token: "{WORKDAY[EMPLOYEE][refresh_token]}"

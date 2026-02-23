@@ -1,0 +1,32 @@
+resources(
+    name = "credentials",
+    sources = ["credentials.json"],
+)
+
+python_sources(
+    name = "utils",
+    overrides = {
+        "credentials.py": {
+            "dependencies": [
+                ":credentials",
+            ],
+        },
+    },
+    sources = [
+        "**/*.py",
+        "!**/*_test.py",
+        "!**/test_*.py",
+    ],
+)
+
+python_tests(
+    name = "tests",
+    sources = [
+        "**/*_test.py",
+        "**/test_*.py",
+    ],
+)
+
+shell_sources(
+    name = "utils0",
+)

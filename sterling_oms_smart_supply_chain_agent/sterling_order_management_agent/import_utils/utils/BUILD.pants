@@ -1,0 +1,17 @@
+python_sources(
+    overrides = {
+        "directory.py": {
+            "dependencies": [
+                "agent_ready_tools/tools:tools",
+                "collaborator_agents",
+            ],
+        },
+        "get_agent_yaml.py": {
+            "dependencies": [
+                "collaborator_agents",
+            ],
+        },
+    },
+)
+
+python_tests(name = "tests")

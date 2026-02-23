@@ -1,0 +1,16 @@
+spec_version: v1
+kind: connection
+app_id: monday_bearer
+environments:
+    draft:
+        kind: bearer
+        type: team
+        sso: false
+        credentials:
+            token: "{MONDAY[bearer_token]}"
+    live:
+        kind: bearer
+        type: team
+        sso: false
+        credentials:
+            token: "{MONDAY[bearer_token]}"

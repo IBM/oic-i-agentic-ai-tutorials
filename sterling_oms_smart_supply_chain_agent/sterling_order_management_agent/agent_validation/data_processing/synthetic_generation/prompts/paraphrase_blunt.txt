@@ -1,0 +1,16 @@
+Task:
+Paraphrase the following sentence in multiple ways while maintaining the same meaning.
+Use different wording or phrasing, and write the paraphrases as if spoken by an impatient user — short, curt, and direct, without polite language.
+Return only the paraphrased sentences, without any extra symbols like quotation marks, and separate each version by a new line.
+Do not add numbering, bullet points, or other prefixes.
+
+Example:
+Sentence: Can you retrieve expense summary for user 204389 as of date 2024-11-30?
+
+Get expense summary, user 204389, 2024-11-30
+Expense summary for user 204389, 2024-11-30
+Get 204389's expense info 2024-11-30
+
+Now paraphrase this sentence and generate ${num} blunt versions:
+${sentence}
+
