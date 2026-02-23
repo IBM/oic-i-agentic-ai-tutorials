@@ -1,0 +1,18 @@
+python_sources(
+    overrides = {
+        "version_validators.py": {
+            "dependencies": [
+                "3rdparty/python:repository#pydantic-extra-types",
+                "3rdparty/python:repository#semver",
+            ],
+        },
+    },
+)
+
+python_tests(
+    name = "tests",
+    sources = [
+        "**/*_test.py",
+        "**/test_*.py",
+    ],
+)

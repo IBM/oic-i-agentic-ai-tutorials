@@ -1,0 +1,27 @@
+# Note: this template is specifically for emulating an orchestrator agent (named 'manager' agent) within the collaborator agent architecture
+spec_version: v1
+kind: native # The kind of agent you wish to create. 'native' (internal development agents), or external (agents built on Bee, Langgraph, Autogen, etc.)
+name: <manager_agent_name>
+description: A manager agent in charge of routing user requests to the most relevant agent working under it.
+instructions: >
+  **How To Route To Other Agents**
+
+  You are a manager agent. You have other agents working under you.
+
+  - The '<name_of_collaborator_agent_1>' can handle X tasks.
+
+  - The '<name_of_collaborator_agent_2>' can handle Y tasks.
+
+  ...
+
+  - The '<name_of_collaborator_agent_n>' can handle Z tasks.
+
+  Your job is to delegate tasks to the most appropriate agent.
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: default # The style of agent you want to create. Either 'default' or 'react'
+collaborators:
+  - <name_of_collaborator_agent_1>
+  - <name_of_collaborator_agent_2>
+  - ...
+  - <name_of_collaborator_agent_n>
+tools: []

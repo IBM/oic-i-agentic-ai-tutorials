@@ -1,0 +1,221 @@
+test_paths:
+    # - agent_validation/adk_test_cases/hr/oracle/employee_support
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_phone_types_oracle.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_address_types_oracle.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_phones.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_user_legislative_id.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_contact_types.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_user_oracle_ids.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_current_compensation_details_oracle.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_request_compensation_change_oracle.json
+    - agent_validation/adk_test_cases/hr/oracle/employee_support/test_get_marital_status_lookup_values.json
+
+    # - agent_validation/adk_test_cases/hr/oracle/talent_acquisition
+    - agent_validation/adk_test_cases/hr/oracle/talent_acquisition/test_get_external_job_description.json
+    - agent_validation/adk_test_cases/hr/oracle/talent_acquisition/test_get_job_applicants.json
+    - agent_validation/adk_test_cases/hr/oracle/talent_acquisition/test_get_candidates.json
+    - agent_validation/adk_test_cases/hr/oracle/talent_acquisition/test_get_external_job_short_description.json
+    - agent_validation/adk_test_cases/hr/oracle/talent_acquisition/test_get_job_requisitions.json
+
+    # - agent_validation/adk_test_cases/hr/sap/employee_support
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_address_types.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_benefits_plan.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_upcoming_time_off.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_compensation_details.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_user_successfactors_ids.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_direct_reports_email.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_visa_details_email.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_update_phone_existing_record.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_visa_details.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_update_phone_successful.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_holiday_calendar_sap.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_search_cities_by_country.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_update_preferred_name_email.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_payslip_datails_not_found.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_search_states_by_country.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_update_preferred_name.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_terminate_employee.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_get_payslip_details.json
+    - agent_validation/adk_test_cases/hr/sap/employee_support/test_update_address.json
+
+    # - agent_validation/adk_test_cases/hr/workday/employee_support
+    - agent_validation/adk_test_cases/hr/workday/employee_support/test_get_holiday_calendar.json
+    - agent_validation/adk_test_cases/hr/workday/employee_support/test_get_payslips.json
+    - agent_validation/adk_test_cases/hr/workday/employee_support/test_get_time_off_types.json
+    - agent_validation/adk_test_cases/hr/workday/employee_support/test_get_user_workday_ids.json
+    - agent_validation/adk_test_cases/hr/workday/employee_support/test_get_disabilities.json
+
+    # - agent_validation/adk_test_cases/procurement/coupa
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_add_address_to_requisition_with_state.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_add_comment_to_purchase_order copy.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_purchase_order_comments.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_add_comment_to_purchase_order.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_add_comment_to_requisition.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_requisition_alias_valid_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_complete_contract.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_requisition_by_valid_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_requisition_with_no_comments.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_supplier_by_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_supplier_items_by_supplier_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_create_requisition_valid_alias.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_supplier_remit_to_addresses.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_create_requsition.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_search_item_by_name_exact_match.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_create_supplier_all_optional_fields.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_search_item_by_name_no_match.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_search_item_by_name_partial_match.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_submit_contract_for_approval.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_account_no_filter.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_submit_requisition_for_approval_already_submitted.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_address_by_requisition_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_submit_requisition_for_approval_with_missing_info.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_contacts_no_matching.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_contracts_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_contract_department.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_contract_multiple_payment_details.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_contracts_pagination.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_contract_multiple_renewal_details.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_purchase_orders_filter_status.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_contract_payment_details.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_purchase_orders_filter.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_contract_single_details.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_purchase_orders_pagination.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_entire_requisition_address.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_requisitions_date_range.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_requisitions_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_requisitions_filter_department.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_purchase_order_general_info_by_id_multiple_fields.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_requisitions_no_filter.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_purchase_order_general_info_by_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_requisitions_no_matching.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_suppliers_exact_match.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_requisition_address.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_all_suppliers_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_contract_details.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_requisition_no_new_address.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_item_by_id.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_supplier_details_multiple_field.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_get_item_with_known_supplier.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_coupa_update_supplier_details_single_field.json
+    - agent_validation/adk_test_cases/procurement/coupa/test_submit_requisition_for_approval_coupa_valid_req.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_catalog_management
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_catalog_management/sap_s4_hana_create_material.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_catalog_management/sap_s4_hana_get_materials_filter_by_id.json
+  
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_contract_management
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_contract_management/sap_s4_hana_add_contract_item_missing_required_fields.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_contract_management/sap_s4_hana_add_contract_item.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_contract_management/sap_s4_hana_get_contract_by_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_contract_management/sap_s4_hana_get_contracts_filter_by_invalid_supplier_id.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_goods_receipt
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_goods_receipt/sap_s4_hana_get_a_goods_receipt_details_invalid_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_goods_receipt/sap_s4_hana_get_a_goods_receipt_details_invalid_year.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_goods_receipt/sap_s4_hana_get_a_goods_receipt_details.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_invoice_management
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_invoice_management/sap_s4_hana_get_an_invoice_missing_required_field.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_invoice_management/sap_s4_hana_get_an_invoice_read_existing_invoice.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_invoice_management/sap_s4_hana_get_invoices_pagination.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_by_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_item_texts_filter_by_pagination.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_item_texts_invalid_purchase_order_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_item_texts_with_item_texts.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_items_invalid_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_with_item.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_order_with_no_item.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_order/sap_s4_hana_get_purchase_orders_filter_by_pagination.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_add_requisition_item_text_invalid_purchase_requisition_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_add_requisition_item_text.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_get_purchase_requisition_items_by_invalid_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_get_purchase_requisition_items.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_get_purchase_requisitions_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_get_purchase_requisitions_no_filter.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_get_requisition_item_texts_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_update_purchase_requisition_with_invalid_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_purchase_requisition/sap_s4_hana_update_purchase_requisition.json
+
+    # - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_create_purchasing_info_record_successful_creation_all_fields.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_create_supplier.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_create_supplier_address_successful_creation_minimal.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_get_supplier_address_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_get_supplier_address_invalid_supplier.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_get_supplier_contacts_filter_by_status.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_get_supplier_contacts_invalid_supplier_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_update_supplier_invalid_id.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_update_supplier_multiple_fields.json
+    - agent_validation/adk_test_cases/procurement/sap_s4_hana/sap_s4_hana_supplier_management/sap_s4_hana_update_supplier_single_field.json
+
+    # - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_and_search_contacts_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_and_search_contacts_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_and_search_contacts_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_financials_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_info_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_info_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_get_company_info_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_by_criteria_and_get_company_financials_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_by_criteria_and_get_company_financials_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_criteria_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_criteria_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_criteria_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_typeahead_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_typeahead_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_dnb_client_search_enrich/test_search_company_by_typeahead_paraphrase_3.json
+
+    # - agent_validation/adk_test_cases/sales/alternative_sales_research_agent
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_and_get_news_and_media_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_and_get_news_and_media_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_industry_peers_by_name_and_get_news_and_media_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_news_and_media_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_news_and_media_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_get_news_and_media_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_search_company_by_typeahead_for_sales_research_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_search_company_by_typeahead_for_sales_research_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_sales_research_agent/test_search_company_by_typeahead_for_sales_research_paraphrase_4.json
+
+    # - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_sources_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_sources_paraphrase_2.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_sources_paraphrase_3.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_updated_paraphrase_1.json
+    - agent_validation/adk_test_cases/sales/alternative_seismic_product_enablement/test_get_generative_search_updated_paraphrase_2.json
+
+    # # - agent_validation/adk_test_cases/sales/dnb_client_search_enrich
+    - agent_validation/adk_test_cases/sales/dnb_client_search_enrich/test_get_company_financials_new.json
+    - agent_validation/adk_test_cases/sales/dnb_client_search_enrich/test_get_company_info.json
+    - agent_validation/adk_test_cases/sales/dnb_client_search_enrich/test_search_company_by_typeahead.json
+
+    # - agent_validation/adk_test_cases/sales/sales_research_agent
+    - agent_validation/adk_test_cases/sales/sales_research_agent/test_get_industry_peers_by_name_new.json
+    - agent_validation/adk_test_cases/sales/sales_research_agent/test_get_news_and_media_new.json
+    - agent_validation/adk_test_cases/sales/sales_research_agent/test_search_company_by_typeahead_for_sales_research.json
+
+    # - agent_validation/adk_test_cases/sales/seismic_product_enablement
+    - agent_validation/adk_test_cases/sales/seismic_product_enablement/test_get_generative_search_new.json
+    - agent_validation/adk_test_cases/sales/seismic_product_enablement/test_get_generative_search_persona2.json
+    - agent_validation/adk_test_cases/sales/seismic_product_enablement/test_get_generative_search_sources_new.json
+    - agent_validation/adk_test_cases/sales/seismic_product_enablement/test_get_generative_sources_persona.json
+
+auth_config:
+  url: http://localhost:4321
+  tenant_name: local
+output_dir: "agent_validation/benchmarks/results"
+enable_verbose_logging: true
+llm_user_config:
+  user_response_style:
+  - "Be concise in messages and confirmations"

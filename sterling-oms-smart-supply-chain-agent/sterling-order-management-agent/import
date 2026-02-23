@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e # Set the bash script to exit on any failures
+
+CLI_ORCHESTRATE_VER=$(python -c 'import ibm_watsonx_orchestrate; print(ibm_watsonx_orchestrate.__version__)')
+pants run "import_utils/utils/orchestrate_validation.py" -- "${CLI_ORCHESTRATE_VER}"
+
+COMMAND="python"
+if [[ ! $1 == "--"* ]]; then
+    COMMAND=$1
+    shift
+fi
+
+# Ensure Python dependencies are installed
+# TODO: remove when bootstrap.sh has merged
+pip install -r "lite-requirements.txt"
+
+# Activate Orchestrate env
+orchestrate env activate scenv
+
+# Call the import command with fixed and forwarded args
+pants run "import_utils/import_command.py" -- "${COMMAND}" "$@"
