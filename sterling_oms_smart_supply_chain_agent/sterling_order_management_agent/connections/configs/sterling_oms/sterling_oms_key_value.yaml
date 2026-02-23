@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: sterling_oms_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{STERLING_OMS[base_url]}"
+        credentials:
+            client_cert: "{STERLING_OMS[client_cert]}"
+            client_key: "{STERLING_OMS[client_key]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{STERLING_OMS[base_url]}"
+        credentials:
+            client_cert: "{STERLING_OMS[client_cert]}"
+            client_key: "{STERLING_OMS[client_key]}"

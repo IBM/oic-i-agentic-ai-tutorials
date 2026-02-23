@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: ibm_planning_analytics_basic
+environments:
+    draft:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{IBM_PLANNING_ANALYTICS[base_url]}"
+        credentials:
+            username: "{IBM_PLANNING_ANALYTICS[username]}"
+            password: "{IBM_PLANNING_ANALYTICS[password]}"
+    live:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{IBM_PLANNING_ANALYTICS[base_url]}"
+        credentials:
+            username: "{IBM_PLANNING_ANALYTICS[username]}"
+            password: "{IBM_PLANNING_ANALYTICS[password]}"

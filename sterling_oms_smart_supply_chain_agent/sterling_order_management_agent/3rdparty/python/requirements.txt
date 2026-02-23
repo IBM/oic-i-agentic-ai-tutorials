@@ -1,0 +1,49 @@
+rapidfuzz==3.14.1
+ibm-watsonx-orchestrate==1.14.1
+msal==1.32.3
+pytest==8.4.0
+pytest-asyncio==1.0.0
+pytest-cov==6.1.1
+types-requests==2.32.0.20250602
+xsdata==25.4
+simple-salesforce==1.12.6
+python-dateutil==2.9.0.post0
+pyjwt==2.10.1
+pyopenssl==25.1.0
+certifi==2025.07.14
+tabulate==0.9.0
+pyyaml==6.0.2
+pydantic>=2.7.0
+types-PyYAML>=6.0.12.20240311
+types-tabulate>=0.9.0.0
+typer==0.16.0
+typing_extensions==4.14.0
+numpy==2.2.6
+diff-cover==9.3.2
+ibm-watsonx-ai==1.3.24
+pydantic-extra-types==2.10.5
+requests>=2.32.5
+pandas>=2.2.3
+jinja2>=3.1.6
+ibm-cos-sdk==2.14.3
+twilio==9.8.0
+selenium==4.35.0
+webdriver-manager==4.0.2
+rich>=13.9.4,<14.0.0
+svgelements==1.9.6
+
+# Stay at bottom of file, these packages will be pulled as a dep from above.
+# Used to resolve pants deps inference warnings
+packaging==24.2 # From ibm-watsonx-orchestrate
+more-itertools==10.7.0 # From simple-salesforce
+pycountry==24.6.1 # From pydantic-extra-types
+semver==3.0.4 # From pydantic-extra-types
+openpyxl==3.1.3 # From pandas
+
+# Note: we had 1.1.0 pinned for python-dotenv, but must pin 1.0.1 due to an orchestrate library update:
+# TODO: update to 1.1.0+ when ADK is compatible
+# pip:      The user requested python-dotenv==1.1.0
+# pip:      ibm-watsonx-orchestrate 1.6.2 depends on python-dotenv>=1.0.0
+# pip:      ibm-watsonx-orchestrate-evaluation-framework 1.0.6 depends on python-dotenv~=1.0.1
+
+python-dotenv==1.0.1  # From ibm-watsonx-orchestrate

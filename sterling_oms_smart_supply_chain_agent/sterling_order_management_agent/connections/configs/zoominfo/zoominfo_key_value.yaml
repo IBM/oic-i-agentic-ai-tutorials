@@ -1,0 +1,24 @@
+spec_version: v1
+kind: connection
+app_id: zoominfo_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{ZOOMINFO[base_url]}"
+        credentials:
+            base_url: "{ZOOMINFO[base_url]}"
+            token_url: "{ZOOMINFO[token_url]}"
+            username: "{ZOOMINFO[username]}"
+            password: "{ZOOMINFO[password]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{ZOOMINFO[base_url]}"
+        credentials:
+            base_url: "{ZOOMINFO[base_url]}"
+            token_url: "{ZOOMINFO[token_url]}"
+            username: "{ZOOMINFO[username]}"
+            password: "{ZOOMINFO[password]}"

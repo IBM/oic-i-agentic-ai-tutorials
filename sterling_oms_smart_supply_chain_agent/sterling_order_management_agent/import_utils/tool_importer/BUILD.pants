@@ -1,0 +1,11 @@
+python_sources(
+    overrides = {
+        "tag_to_manager_mapper.py": {
+            "dependencies": [
+                "collaborator_agents",
+            ],
+        },
+    },
+)
+
+python_tests(name = "tests")

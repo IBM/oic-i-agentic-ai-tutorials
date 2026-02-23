@@ -1,0 +1,24 @@
+spec_version: v1
+kind: connection
+app_id: ariba_soap_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          username: "{ARIBA_SOAP[username]}"
+          password: "{ARIBA_SOAP[password]}"
+          realm: "{ARIBA_SOAP[realm]}"
+          base_url: "{ARIBA_SOAP[base_url]}"
+          requester_password: "{ARIBA_SOAP[requester_password]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          username: "{ARIBA_SOAP[username]}"
+          password: "{ARIBA_SOAP[password]}"
+          realm: "{ARIBA_SOAP[realm]}"
+          base_url: "{ARIBA_SOAP[base_url]}"
+          requester_password: "{ARIBA_SOAP[requester_password]}"

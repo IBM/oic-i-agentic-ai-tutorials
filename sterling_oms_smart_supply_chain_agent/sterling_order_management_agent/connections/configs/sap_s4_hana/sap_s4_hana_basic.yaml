@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: sap_s4_hana_basic
+environments:
+    draft:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{SAP_S4_HANA[base_url]}"
+        credentials:
+            username: "{SAP_S4_HANA[username]}"
+            password: "{SAP_S4_HANA[password]}"
+    live:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{SAP_S4_HANA[base_url]}"
+        credentials:
+            username: "{SAP_S4_HANA[username]}"
+            password: "{SAP_S4_HANA[password]}"

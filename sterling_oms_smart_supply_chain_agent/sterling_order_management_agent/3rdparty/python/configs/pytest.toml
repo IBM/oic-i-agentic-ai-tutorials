@@ -1,0 +1,8 @@
+[tool.pytest.ini_options]
+filterwarnings = "ignore::DeprecationWarning"
+addopts = "--strict-markers"
+markers = [
+  "slow: Marks test as slow (>1s).",
+  "integration: Marks test as requiring special integration environments (implies 'manunal').",
+  "asyncio",
+]

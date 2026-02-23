@@ -1,0 +1,19 @@
+python_sources()
+
+resources(
+    name = "yaml_test_data",
+    sources = ["test_data/collaborator_agents/hr/employee_support/*.yaml"],
+)
+
+python_tests(
+    name = "tests",
+    overrides = {
+        "config_data_test.py": {
+            "dependencies": [
+                "import_utils/catalog:yaml_test_data",
+                "3rdparty/python:repository#pydantic-extra-types",
+                "3rdparty/python:repository#semver",
+            ],
+        },
+    },
+)

@@ -1,0 +1,18 @@
+{
+  "name": "<agent_name>",
+  "display_name": "<agent_display_name>",
+  "category": "agent",
+  "kind": "<kind>",
+  "description": "<description>",
+  "instructions": "<instructions>",
+  "tools": ["<tool_name_1>", "<tool_name_2>", "<tool_name_3>"],
+  "collaborators": ["<collaborator_agent_name_1>", "<collaborator_agent_name_2>", "<collaborator_agent_name_3>"],
+  "llm": "<llm>",
+  "style": "<style>",
+  "supported_apps": [],
+  "glossary": [],
+  "knowledge_base": [],
+  "guidelines": [],
+  "hidden": false,
+  "tags": ["<domain_name>"]
+}
