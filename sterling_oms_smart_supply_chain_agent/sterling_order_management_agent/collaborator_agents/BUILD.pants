@@ -1,9 +1,0 @@
-resources(
-    name = "collaborator_agents",
-    sources = [
-        "**/*.yaml",
-        "**/*.yml",
-        "!**/agent_template.yaml",
-        "!**/manager_agent_template.yml",
-    ],
-)

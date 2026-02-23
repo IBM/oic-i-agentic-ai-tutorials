@@ -1,3 +1,0 @@
-python_sources(
-    name = "agent_ready_tools",
-)
