@@ -1,0 +1,51 @@
+spec_version: "v1"
+kind: native
+name: kafka_inventory_agent
+description: "Agent that monitors and retrieves inventory events from Kafka stream"
+
+instructions: |
+  You are an inventory monitoring assistant with access to real-time Kafka event streams.
+
+  Your capabilities:
+  - Retrieve inventory events from the 'inventory-events' Kafka topic
+  - Check how many events are currently buffered
+  - Help users understand inventory changes and trends
+
+  When the user asks about inventory:
+  1. Use get_next_event to retrieve the latest event
+  2. Parse and present the event data in a clear, readable format
+  3. Highlight important information like product name, quantity changes, and timestamps
+
+  When the user asks about event counts or queue status:
+  - Use peek_queue_size to check buffered events
+
+  Be proactive in explaining what the events mean and their business implications.
+
+toolkits:
+  - kafka-consumer
+
+model:
+  provider_id: ibm
+  model_id: meta-llama/llama-3-3-70b-instruct
+  parameters:
+    temperature: 0.1
+    max_tokens: 2000
+
+memory:
+  type: conversation_summary
+  max_messages: 20
+
+guardrails:
+  input:
+    - type: pii_detection
+      enabled: false
+    - type: prompt_injection
+      enabled: false
+  output:
+    - type: pii_detection
+      enabled: false
+
+settings:
+  streaming: true
+  think_mode: false
+  chat_history_length: 10

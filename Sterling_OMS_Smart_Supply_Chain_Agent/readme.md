@@ -16,6 +16,9 @@ The setup includes a customized Sterling OMS domain agent, multiple supporting a
 
 - Required YAML and Python files available locally
 
+## Architecture
+
+<img src="Architecture/architecture.png">
 
 ## Step 1: Importing Tools and Agents
 

@@ -1,0 +1,20 @@
+app_id: mcp_connection
+spec_version: v1
+kind: connection
+environments:
+  draft:
+    sso: true
+    server_url: https://123.okta.com
+    kind: oauth_auth_token_exchange_flow
+    type: member
+    app_config:
+      header:
+        content-type: application/x-www-form-urlencoded
+  live:
+    sso: true
+    server_url: https://123.okta.com
+    kind: oauth_auth_token_exchange_flow
+    type: member
+    app_config:
+      header:
+        content-type: application/x-www-form-urlencoded

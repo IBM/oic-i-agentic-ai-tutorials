@@ -1,0 +1,5 @@
+gitignore
+.DS_Store
+**/.env
+**/__pycache__
+!.env_template

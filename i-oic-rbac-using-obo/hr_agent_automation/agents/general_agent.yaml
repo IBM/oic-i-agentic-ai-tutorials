@@ -1,0 +1,17 @@
+# =====================================================
+# General Agent (Employee level access)
+# =====================================================
+spec_version: v1
+kind: native
+style: default
+name: general_agent
+display_name: General Agent
+llm: groq/openai/gpt-oss-120b
+description: Handles general HR queries like locations, leaves, and holidays.
+tools:
+  - mcp_tools_server:get_office_locations
+  - mcp_tools_server:get_leave_balance
+  - mcp_tools_server:get_holidays
+instructions: |
+  If the user asks about office locations, leave balance, or holidays,
+  invoke tools directly without asking follow-up questions.
