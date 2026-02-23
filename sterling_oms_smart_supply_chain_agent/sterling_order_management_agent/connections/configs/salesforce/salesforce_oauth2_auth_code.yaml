@@ -1,0 +1,34 @@
+spec_version: v1
+kind: connection
+app_id: salesforce_oauth2_auth_code
+environments:
+    draft:
+        kind: oauth_auth_code_flow
+        type: member
+        sso: false
+        server_url: "{SALESFORCE[base_url]}"
+        credentials:
+            token_url: "{SALESFORCE[token_url]}"
+            authorization_url: "{SALESFORCE[auth_url]}"
+            client_id: "{SALESFORCE[client_id]}"
+            client_secret: "{SALESFORCE[client_secret]}"
+            scope: "{SALESFORCE[scope]}"
+            custom_token_query:
+                code_verifier: "{SALESFORCE[custom_token_query][code_verifier]}"
+            custom_auth_query:
+                code_challenge: "{SALESFORCE[custom_auth_query][code_challenge]}"
+    live:
+        kind: oauth_auth_code_flow
+        type: member
+        sso: false
+        server_url: "{SALESFORCE[base_url]}"
+        credentials:
+            token_url: "{SALESFORCE[token_url]}"
+            authorization_url: "{SALESFORCE[auth_url]}"
+            client_id: "{SALESFORCE[client_id]}"
+            client_secret: "{SALESFORCE[client_secret]}"
+            scope: "{SALESFORCE[scope]}"
+            custom_token_query:
+                code_verifier: "{SALESFORCE[custom_token_query][code_verifier]}"
+            custom_auth_query:
+                code_challenge: "{SALESFORCE[custom_auth_query][code_challenge]}"

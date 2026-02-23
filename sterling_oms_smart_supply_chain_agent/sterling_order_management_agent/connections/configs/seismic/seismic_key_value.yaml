@@ -1,0 +1,26 @@
+spec_version: v1
+kind: connection
+app_id: seismic_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{SEISMIC[base_url]}"
+        credentials:
+            token_url: "{SEISMIC[token_url]}"
+            client_id: "{SEISMIC[client_id]}"
+            client_secret: "{SEISMIC[client_secret]}"
+            user_id: "{SEISMIC[user_id]}"
+            base_url: "{SEISMIC[base_url]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{SEISMIC[base_url]}"
+        credentials:
+            token_url: "{SEISMIC[token_url]}"
+            client_id: "{SEISMIC[client_id]}"
+            client_secret: "{SEISMIC[client_secret]}"
+            user_id: "{SEISMIC[user_id]}"
+            base_url: "{SEISMIC[base_url]}"

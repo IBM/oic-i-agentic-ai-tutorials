@@ -1,0 +1,18 @@
+spec_version: v1
+kind: connection
+app_id: "<APP_ID_NAME>"
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{base_url}" # optional
+        credentials:
+            key1: "{key in credentials.json}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        server_url: "{base_url}" # optional
+        credentials:
+            key1: "{key in credentials.json}"

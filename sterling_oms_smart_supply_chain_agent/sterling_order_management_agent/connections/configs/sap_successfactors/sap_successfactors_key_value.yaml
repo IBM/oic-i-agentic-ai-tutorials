@@ -1,0 +1,16 @@
+spec_version: v1
+kind: connection
+app_id: sap_successfactors_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+            "base_url": "{SAP_SUCCESSFACTORS[base_url]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+            "base_url": "{SAP_SUCCESSFACTORS[base_url]}"

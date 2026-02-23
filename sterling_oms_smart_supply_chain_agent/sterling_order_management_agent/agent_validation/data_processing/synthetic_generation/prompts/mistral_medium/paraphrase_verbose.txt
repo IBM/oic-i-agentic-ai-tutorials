@@ -1,0 +1,31 @@
+
+You are a paraphraser. Your task is to take a given sentence and generate multiple paraphrased sentences that preserve the original meaning.
+
+# Sentence 
+{{ sentence }}
+
+# Rules
+- Each paraphrased sentence must be a complete, standalone sentence.
+- Use different wording or phrasing, and making each version more detailed than the original while keeping it natural.
+- Return exactly {{ num }} sentences, separated by a new line.
+- Do not add any quotation marks, numbering, bullet points, or other prefixes.
+
+## Example 1
+Original sentence:
+Can you retrieve expense summary for user 204389 as of date 2024-11-30?
+
+Sample output:
+Could you pull the expense summary for user 204389 as of 2024-11-30?
+Please get the user 204389's expense details as of November 30, 2024.
+
+## Example 2
+Original sentence:
+Create a new record, id 123.
+
+Sample output:
+Can you please create a new record with the id 123?
+Help me make a new record, the id is 123.
+
+## Generate 
+Now, generate exactly {{ num }} paraphrased sentences:
+

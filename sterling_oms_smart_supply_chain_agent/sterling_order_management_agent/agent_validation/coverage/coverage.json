@@ -1,0 +1,236 @@
+{
+  "oracle_employee_support_manager": {
+    "collaborator_reports": [
+      {
+        "name": "oracle_compensation_information_agent",
+        "test_count": 5,
+        "tool_coverage": 0.7142857142857143
+      },
+      {
+        "name": "oracle_compensation_management_agent",
+        "test_count": 1,
+        "tool_coverage": 0.8
+      },
+      {
+        "name": "oracle_employee_emergency_contact_agent",
+        "test_count": 4,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "oracle_employee_personal_information_agent",
+        "test_count": 7,
+        "tool_coverage": 0.5714285714285714
+      },
+      {
+        "name": "oracle_employee_professional_identity_agent",
+        "test_count": 1,
+        "tool_coverage": 0.42857142857142855
+      },
+      {
+        "name": "oracle_leave_manager_agent",
+        "test_count": 1,
+        "tool_coverage": 0.4
+      },
+      {
+        "name": "oracle_marital_status_agent",
+        "test_count": 3,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "oracle_org_structure_agent",
+        "test_count": 2,
+        "tool_coverage": 0.5555555555555556
+      },
+      {
+        "name": "oracle_worker_agent",
+        "test_count": 4,
+        "tool_coverage": 0.3333333333333333
+      }
+    ],
+    "report": {
+      "name": "oracle_employee_support_manager",
+      "test_count": 30,
+      "tool_coverage": 0.5869565217391305
+    },
+    "tools_not_covered": [
+      "oracle_create_a_worker",
+      "oracle_create_worker_home_email",
+      "get_absence_types",
+      "get_business_title_oracle",
+      "get_emails_ids",
+      "get_legal_employer",
+      "get_phones",
+      "get_positions_oracle",
+      "get_salary_bases",
+      "oracle_get_user_names_id",
+      "oracle_get_user_service_id",
+      "oracle_get_reporting_line",
+      "request_time_off_oracle",
+      "update_display_name_oracle",
+      "update_email_address",
+      "update_employee_position",
+      "view_benefit_plans",
+      "view_upcoming_time_off"
+    ]
+  },
+  "sales_manager": {
+    "collaborator_reports": [
+      {
+        "name": "dnb_client_search_enrich_agent",
+        "test_count": 10,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "seismic_product_enablement",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "salesforce_crm_management",
+        "test_count": 14,
+        "tool_coverage": 0.6666666666666666
+      },
+      {
+        "name": "sales_research",
+        "test_count": 5,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "client_outreach",
+        "test_count": 1,
+        "tool_coverage": 0.5
+      }
+    ],
+    "report": {
+      "name": "sales_manager",
+      "test_count": 32,
+      "tool_coverage": 0.8235294117647058
+    },
+    "tools_not_covered": ["list_leads", "send_email", "update_lead"]
+  },
+  "sap_employee_support_manager": {
+    "collaborator_reports": [
+      {
+        "name": "sap_compensation_agent",
+        "test_count": 8,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_employee_physical_address_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_employee_phone_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_employee_email_agent",
+        "test_count": 1,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_employee_immigration_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_internal_mobility_agent",
+        "test_count": 6,
+        "tool_coverage": 0.9090909090909091
+      },
+      {
+        "name": "sap_leave_manager_agent",
+        "test_count": 4,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_org_structure_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_world_data_agent",
+        "test_count": 4,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_termination_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "sap_personal_info_editor_agent",
+        "test_count": 4,
+        "tool_coverage": 0.6
+      }
+    ],
+    "report": {
+      "name": "sap_employee_support_manager",
+      "test_count": 38,
+      "tool_coverage": 0.918918918918919
+    },
+    "tools_not_covered": ["get_employee_location", "get_relationship_types", "upsert_emergency_contact_sap"]
+  },
+  "workday_employee_support_manager": {
+    "collaborator_reports": [
+      {
+        "name": "workday_compensation_agent",
+        "test_count": 4,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_disability_status_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_employee_immigration_agent",
+        "test_count": 1,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_employee_professional_identity_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_employee_contact_agent",
+        "test_count": 4,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_leave_manager_agent",
+        "test_count": 5,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_managerial_duty_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_org_structure_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_employee_phone_agent",
+        "test_count": 2,
+        "tool_coverage": 1.0
+      },
+      {
+        "name": "workday_employee_emergency_contact_agent",
+        "test_count": 0,
+        "tool_coverage": 0.25
+      }
+    ],
+    "report": {
+      "name": "workday_employee_support_manager",
+      "test_count": 25,
+      "tool_coverage": 0.9117647058823529
+    },
+    "tools_not_covered": ["change_emergency_contact_info", "get_relationship_id", "get_workers_emergency_contacts"]
+  }
+}

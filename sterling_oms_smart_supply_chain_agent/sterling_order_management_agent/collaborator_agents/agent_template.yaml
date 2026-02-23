@@ -1,0 +1,31 @@
+spec_version: v1
+kind: native # The kind of agent you wish to create. 'native' (internal development agents), or external (agents built on Bee, Langgraph, Autogen, etc.)
+name: <agent_name>
+description: <description> # A description of what the agent does and how it should carry out its objectives
+instructions: >
+  # If necessary, include a **Tool Usage Guidelines** section here to guide overall tool usage behavior
+  # (i.e. call tool only once for each unique set of parameters, etc)
+  **How To Use Tools**
+
+  - <instruction_1> # i.e. When user ... use <tool_1>
+    # NOTE: in addition to instructions for how to use a tool, it is also helpful to add instructions
+    # about response formatting, if relevant (i.e. "format the output of the sample_tool as a markdown table",
+    # "return results as a bulleted list")
+
+  - <instruction_2> # i.e. When user ... use <tool_2>
+
+  ...
+
+  - <instruction_n> # i.e. When user ... use <tool_n>
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: default # The style of agent you want to create. Either 'default' or 'react'
+collaborators:
+  - <name_of_collaborator_agent_1>
+  - <name_of_collaborator_agent_2>
+  - ...
+  - <name_of_collaborator_agent_n>
+tools:
+  - <tool_1>
+  - <tool_2>
+  - ...
+  - <tool_n>

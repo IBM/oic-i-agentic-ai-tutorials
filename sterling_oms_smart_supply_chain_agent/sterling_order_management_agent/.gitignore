@@ -1,0 +1,63 @@
+.idea
+.mypy_cache/
+__pycache__/
+.ipynb_checkpoints/
+.cache/
+.pyc
+/data/
+/ve
+*.pkl
+/opencv*
+*.so
+*.so.*
+.vscode/
+.idea/
+.pytest_cache/
+*htmlcov*/*
+.DS_Store
+.pyre
+.pyre_configuration
+*credentials.dat
+.coverage*
+!.coveragerc
+*codedeploy.onpremises.yml
+agent_ready_tools/utils/*.yaml
+
+# Pants files
+.pants.d/
+dist/
+.pids
+.pants.workdir.file_lock*
+.pants.rc
+
+# venv
+.venv/
+venv/
+venv_090/
+
+# pyenv
+.python-version
+
+# agent ready tools
+agent_ready_tools_flat.py
+**/tmp_export_tools/*
+!**/tmp_export_tools/README.md
+.vscode
+**/.env
+*.venv/
+**/credentials.yaml*
+**/credentials.json*
+**/hubspot_auth.json*
+.python-version
+/pyenv_*
+**/.DS_Store
+agent_generator/generated_agents/*
+!agent_generator/generated_agents/.gitkeep
+
+# toolkit dev files
+debug_flat_unpacked/
+**/node_modules/
+
+# validation results
+**/agent_validation/test_run
+**/agent_validation/test_run_*

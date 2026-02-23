@@ -1,0 +1,16 @@
+Task:
+Paraphrase the following sentence in multiple ways while maintaining the same meaning.
+Use different wording or phrasing, and break the paraphrases into multiple turns (usually two to three). Separate the sentences of each turn with a tab character.
+Return only the paraphrased sentences, without any extra symbols like quotation marks, and separate each version by a new line.
+Do not add any numbering, bullet points, or other prefixes to the sentences.
+
+Example:
+Sentence: Can you retrieve expense summary for user 204389 as of date 2024-11-30?
+
+Can you help me get the expense summary?	The user is 204389.	The date is 2024-11-30.
+Could you pull the expense summary?	User ID is 204389.	The date to consider is 2024-11-30.
+Please fetch the expense summary.	The user number is 204389.	For the date 2024-11-30.
+
+Now paraphrase this sentence and generate ${num} versions:
+${sentence}
+

@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: ariba_buyer_key_value
+environments:
+    draft:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          client_id: "{ARIBA[BUYER][client_id]}"
+          client_secret: "{ARIBA[BUYER][client_secret]}"
+          api_key: "{ARIBA[BUYER][api_key]}"
+    live:
+        kind: key_value
+        type: team
+        sso: false
+        credentials:
+          client_id: "{ARIBA[BUYER][client_id]}"
+          client_secret: "{ARIBA[BUYER][client_secret]}"
+          api_key: "{ARIBA[BUYER][api_key]}"
