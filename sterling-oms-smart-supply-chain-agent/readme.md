@@ -18,7 +18,7 @@ The setup includes a customized Sterling OMS domain agent, multiple supporting a
 
 ## Architecture
 
-<img src="Architecture/architecture.png">
+<img src="Architecture/image.png">
 
 ## Step 1: Importing Tools and Agents
 
