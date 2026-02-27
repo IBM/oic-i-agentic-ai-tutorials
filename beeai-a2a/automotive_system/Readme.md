@@ -175,7 +175,7 @@ User receives: Complete maintenance plan with booking details
 │   ├── __main__.py             # Entry point
 │   ├── Dockerfile
 │   ├── docker-compose.yml
-│   ├── pyproject.toml
+│   ├── pyproject.toml          # Package dependencies and version pins
 │   ├── setup_local.sh          # Local development setup
 │   └── deploy_to_code_engine.sh # IBM Code Engine deployment
 │
