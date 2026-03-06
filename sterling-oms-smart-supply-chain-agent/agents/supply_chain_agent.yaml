@@ -80,7 +80,7 @@ instructions: >
 
 knowledge_base: []
 collaborators:
-  - sterling_order_management_agent
+  - sterling_order_management_agent1
   - weather_agent
   - news_agent
   - disruption_detector_agent
