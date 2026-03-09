@@ -218,7 +218,11 @@ cd beeai_service
 
 ### Step 2: Configure Environment
 
-Create `.env` file in `beeai_service/` directory:
+Copy the provided template and update with your credentials:
+```bash
+cp env.example .env
+```
+The template `.env` file is available in the repository. Only the values wrapped inside `< >` need to be replaced:
 
 ```bash
 # BeeAI Service Configuration
@@ -235,21 +239,28 @@ BEEAI_LOG_LEVEL=INFO
 BEEAI_LOG_INTERMEDIATE_STEPS=false
 
 # IBM watsonx.ai Configuration
-WATSONX_API_KEY=your-watsonx-api-key
-WATSONX_URL=https://us-south.ml.cloud.ibm.com
-WATSONX_PROJECT_ID=your-watsonx-project-id
+WATSONX_API_KEY=<your-watsonx-api-key>
+WATSONX_URL=<your-watsonx-url>
+WATSONX_PROJECT_ID=<your-watsonx-project-id>
 WATSONX_MODEL_ID=ibm/granite-4-h-small
 WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
 ```
 
-⚠️ **Note**: Replace `your-watsonx-api-key` and `your-watsonx-project-id` with your actual credentials.
+⚠️ **Note**: Replace `your-watsonx-api-key`, `your-watsonx-url` and `your-watsonx-project-id` with your actual credentials.
 
-### Step 3: Start BeeAI Service
-
+	
+### Step 3: Install Podman (Prerequisite)
+The setup script uses Podman and Podman Compose to build and run the container. On macOS, install using Homebrew:
 ```bash
 cd beeai_service
+brew install podman podman-compose
+```
+
+### Step 4: Start BeeAI Service
+```bash
 chmod +x setup_local.sh
+
 ./setup_local.sh
 ```
 
@@ -264,7 +275,7 @@ You should see:
 - ✅ Agent initialized successfully
 - ✅ Server running at `http://localhost:8080`
 
-### Step 4: Test Local Deployment
+### Step 5: Test Local Deployment
 
 #### Health Check
 
@@ -306,7 +317,7 @@ data: {"id":"chatcmpl-beeai-xxx","choices":[{"delta":{"content":"Vehicle TRUCK-2
 data: [DONE]
 ```
 
-### Step 5: View Logs
+### Step 6: View Logs
 
 ```bash
 # Docker
