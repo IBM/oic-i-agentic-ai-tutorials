@@ -40,25 +40,26 @@ This project provides an automated employee appraisal system with:
 ### Import Tools
 
 ```bash
-# Import Python tools
 orchestrate tools import -f appraisal_tools.py -k python -r requirements-tools.txt
 ```
 
 ### Import Workflow
 
 ```bash
-# Import workflow
 orchestrate tools import -f employee_appraisal_workflow.py -k python -r requirements-workflow.txt
 ```
 
 ### Import Agent
 
 ```bash
-# Import agent
 orchestrate agents import -f appraisal_agent.yaml
 ```
 
 ### Sample Data
 
 See `sample_data` folder for example input files.
+
+### Agent Flow
+<img width="689" height="494" alt="Screenshot 2026-03-11 at 10 31 53 PM" src="https://github.com/user-attachments/assets/62d3a3f5-7b1d-4162-9b6b-9e0217548731" />
+<img width="689" height="609" alt="Screenshot 2026-03-11 at 10 33 43 PM" src="https://github.com/user-attachments/assets/59f43363-9b37-4597-b784-97b1430cd36f" />
 
