@@ -51,19 +51,19 @@ orchestrate env activate <env-name> -a <WO_API_KEY>
 ### Import Tools
 
 ```bash
-orchestrate tools import -f appraisal_tools.py -k python -r requirements-tools.txt
+orchestrate tools import -f tools/appraisal_tools.py -k python -r tools/requirements-tools.txt
 ```
 
 ### Import Workflow
 
 ```bash
-orchestrate tools import -f employee_appraisal_workflow.py -k python -r requirements-workflow.txt
+orchestrate tools import -f workflows/employee_appraisal_workflow.py -k python -r workflows/requirements-workflow.txt
 ```
 
 ### Import Agent
 
 ```bash
-orchestrate agents import -f appraisal_agent.yaml
+orchestrate agents import -f agents/appraisal_agent.yaml
 ```
 
 ### Sample Data
