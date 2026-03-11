@@ -36,7 +36,18 @@ This project provides an automated employee appraisal system with:
 
 - watsonx Orchestrate platform access
 - IBM watsonx Orchestrate ADK installed (`pip install ibm-watsonx-orchestrate`)
+- [WXO Service Instance URL](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-getting-endpoint)
+- [IBM Cloud API Key](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-generating-key-cloud)
 
+### Add Orchestrate environment
+
+```bash
+orchestrate env add -n <env-name> -u <WO_INSTANCE_URL>
+```
+### Activate environment
+```
+orchestrate env activate <env-name> -a <WO_API_KEY>
+```
 ### Import Tools
 
 ```bash
