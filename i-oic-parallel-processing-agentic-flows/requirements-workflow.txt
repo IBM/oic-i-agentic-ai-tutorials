@@ -1,0 +1,5 @@
+# Requirements for employee_appraisal_workflow.py
+# These are the dependencies needed by the workflow
+
+pydantic>=2.0.0
+ibm-watsonx-orchestrate==2.5.1
