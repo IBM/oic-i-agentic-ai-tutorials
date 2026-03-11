@@ -338,6 +338,3 @@ def generate_appraisal_excel(results: List[Any]) -> bytes:
         print(f"[DEBUG]   - {rating}: {count} employees")
     
     return excel_bytes
-
-
-# Made with Bob
