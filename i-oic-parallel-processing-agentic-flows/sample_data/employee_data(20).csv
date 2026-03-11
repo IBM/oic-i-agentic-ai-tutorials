@@ -1,0 +1,21 @@
+﻿employee_id,employee_name,department,role,current_salary,years_of_experience,years_in_company,target_revenue,achieved_revenue
+E0001,Mark Miller,HR,Manager,118000,6.3,1.8,410000,405000
+E0002,Michael Gomez,HR,Director,179000,8.6,3.8,790000,928000
+E0003,Sharon Gray,Sales,Rep,70000,8,3.2,730000,727000
+E0004,Patrick Roberts,HR,Coordinator,57000,3,1.1,250000,283000
+E0005,Carolyn Adams,Marketing,Senior Specialist,77000,5.8,2.1,750000,658000
+E0006,Carl Cruz,HR,Manager,164000,16.4,10.5,680000,699000
+E0007,Benjamin Diaz,HR,Senior Manager,127000,8.2,6.4,670000,663000
+E0008,Patrick Cruz,Engineering,Architect,155000,9.6,6,1130000,1228000
+E0009,Ruth Graham,Finance,Manager,186000,21.3,15.2,570000,546000
+E0010,Kenneth Patterson,Sales,VP Sales,262000,17.4,5.9,3010000,3328000
+E0011,Andrea Gomez,Engineering,Senior Developer,104000,14.5,7,720000,716000
+E0012,Brandon Morris,Sales,Senior Rep,94000,17.5,14.4,810000,1078000
+E0013,Joan Nelson,Marketing,Manager,168000,17.3,7.3,1020000,780000
+E0014,Roger Jordan,Sales,Senior Rep,65000,6,2.4,790000,689000
+E0015,Sarah Rodriguez,Customer Success,Manager,106000,3.6,1.3,1340000,1364000
+E0016,Matthew Harris,HR,Senior Manager,125000,7.7,3.3,910000,934000
+E0017,Gregory Ramirez,Engineering,Developer,77000,5.6,2.5,390000,382000
+E0018,Sean Brown,Sales,Senior Rep,63000,5.2,2.5,600000,591000
+E0019,Peter Kelly,Operations,Director,253000,20.5,19.4,1460000,1435000
+E0020,Benjamin Anderson,Sales,Director,184000,9.4,7.4,2160000,2046000
