@@ -5,32 +5,37 @@ A comprehensive employee appraisal system that processes employee data in parall
 ## 📋 Overview
 
 This project provides an automated employee appraisal system with:
+- **Form-Based File Upload** - User-friendly form interface for uploading employee data
+- **Editable Data Review** - Interactive table to review and edit employee data before processing
 - **Parallel Processing** - Processes multiple employees simultaneously for fast results
-- **Comprehensive Scoring** - Evaluates revenue achievement, experience, and loyalty
-- **Automated Ratings** - Assigns performance ratings from Outstanding to Unsatisfactory
-- **Salary Recommendations** - Calculates increment percentages and new salaries
 - **Excel Reports** - Generates downloadable Excel files with complete results
 
 ## 🏗️ Architecture
 
 ### Components
 
-1. **appraisal_tools.py** - Python tools for data processing
+1. **tools/appraisal_tools.py** - Python tools for data processing
    - `read_employee_data` - Reads Excel/CSV from S3 URLs
    - `calculate_employee_appraisal` - Calculates appraisal for one employee
    - `generate_appraisal_excel` - Generates downloadable Excel file
 
-2. **employee_appraisal_workflow.py** - Workflow orchestration
-   - File upload handling
-   - Parallel foreach processing
-   - Excel generation
-   - Result output with download link
+2. **workflows/employee_appraisal_workflow.py** - Workflow orchestration
+   - Form-based file upload with validation
+   - Editable data table for review and corrections
+   - Parallel foreach processing for efficiency
+   - Excel generation with comprehensive results
 
-3. **appraisal_agent.yaml** - Agent configuration
-   - HR Appraisal Agent definition
-   - Instructions for result presentation
-   - Tool/workflow bindings
+3. **agents/appraisal_agent.yaml** - Agent configuration
 
+
+## 🔄 Workflow Steps
+
+1. **File Upload Form** - User uploads employee data file (Excel or CSV) through a form interface
+2. **Read Employee Data** - System reads and parses the uploaded file
+3. **Data Review & Edit** - Interactive table displays all employee data for review and editing
+4. **Parallel Processing** - Each employee's appraisal is calculated simultaneously
+5. **Excel Generation** - Comprehensive Excel report is generated automatically
+6. **Results Delivery** - Agent presents summary and provides download link
 
 ### Prerequisites
 
@@ -57,7 +62,7 @@ orchestrate tools import -f tools/appraisal_tools.py -k python -r tools/requirem
 ### Import Workflow
 
 ```bash
-orchestrate tools import -f workflows/employee_appraisal_workflow.py -k python -r workflows/requirements-workflow.txt
+orchestrate tools import -f workflows/employee_appraisal_workflow.py -k flow -r workflows/requirements-workflow.txt
 ```
 
 ### Import Agent
@@ -66,11 +71,14 @@ orchestrate tools import -f workflows/employee_appraisal_workflow.py -k python -
 orchestrate agents import -f agents/appraisal_agent.yaml
 ```
 
-### Sample Data
+## Sample Data
 
-See `sample_data` folder for example input files.
+The `sample_data` folder contains example input files:
+- **employee_data(20).xlsx/csv** - Small dataset for testing (20 employees)
+- **employee_data(500).xlsx/csv** - Large dataset for performance testing (500 employees)
 
-### Agent Flow
-<img width="689" height="494" alt="Screenshot 2026-03-11 at 10 31 53 PM" src="https://github.com/user-attachments/assets/62d3a3f5-7b1d-4162-9b6b-9e0217548731" />
-<img width="689" height="609" alt="Screenshot 2026-03-11 at 10 33 43 PM" src="https://github.com/user-attachments/assets/59f43363-9b37-4597-b784-97b1430cd36f" />
+## Agent Flow
 
+<img width="846" height="540" alt="Screenshot 2026-03-13 at 7 15 54 PM" src="https://github.com/user-attachments/assets/0543570e-b7f2-4010-a1a8-4a742bd1d554" />
+<img width="846" height="669" alt="Screenshot 2026-03-13 at 7 16 41 PM" src="https://github.com/user-attachments/assets/b1d49056-fe71-46a3-9c8d-c9caa4ea6783" />
+<img width="846" height="623" alt="Screenshot 2026-03-13 at 7 17 14 PM" src="https://github.com/user-attachments/assets/5d5d5beb-b40e-4128-8689-135752b56617" />
