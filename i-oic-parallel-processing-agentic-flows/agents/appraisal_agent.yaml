@@ -13,3 +13,18 @@ instructions: |
 
 tools:
   - employee_appraisal_parallel_workflow
+
+welcome_content:
+  welcome_message: Hi! I'm your Employee Appraisal Assistant. How can I help you today?
+  description: I can help you process employee appraisals efficiently. Upload your employee data file (Excel or CSV), and I'll calculate performance-based appraisals, generate ratings, and provide salary recommendations.
+
+starter_prompts:
+  is_default_prompts: false
+  prompts:
+  - id: '1'
+    title: Process employee appraisals
+    subtitle: Upload employee data and calculate appraisals
+    prompt: I need to process employee appraisals
+    state: active
+ 
+
