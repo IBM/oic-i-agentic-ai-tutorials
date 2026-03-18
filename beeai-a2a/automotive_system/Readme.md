@@ -16,6 +16,7 @@
 - [Key Features](#-key-features)
 - [Prerequisites](#-prerequisites)
 - [Project Structure](#-project-structure)
+- [Understanding the Code](#-understanding-the-code)
 - [Local Setup](#-local-setup)
 - [IBM Code Engine Deployment](#-ibm-code-engine-deployment)
 - [watsonx Orchestrate Integration](#-watsonx-orchestrate-integration)
@@ -203,6 +204,52 @@ User receives: Complete maintenance plan with booking details
 │
 └── README.md                   # This file
 ```
+
+---
+
+## 🔍 Understanding the Code
+
+### 3. BeeAI Tools
+
+The BeeAI agent uses four predictive maintenance tools defined in [beeai_service/core/tools.py](beeai_service/core/tools.py). These tools provide real-time situational awareness:
+
+| Tool | Purpose |
+|------|---------|
+| `get_vehicle_location` | Returns the current city for a given vehicle ID |
+| `get_driver_schedule` | Returns driver availability windows |
+| `get_dealership_slots` | Returns available service slots in a given city |
+| `get_parts_inventory` | Checks inventory count for a specific component |
+
+Each tool is decorated with `@tool` from the BeeAI framework and returns a structured dictionary. All four tools are exported as `ALL_TOOLS` for the agent to use.
+
+> **Note:** For this tutorial, the tools return simulated data to demonstrate the integration end-to-end. For example, `get_vehicle_location` always returns San Francisco, and `get_parts_inventory` always returns a stock of 5. In a production system, you would replace these with real API calls to your fleet management, scheduling, and inventory systems.
+
+### 4. BeeAI Agent
+
+The core agent logic lives in [beeai_service/core/agent.py](beeai_service/core/agent.py). It creates a `RequirementAgent` from the BeeAI framework that:
+
+- Connects to IBM watsonx.ai using the Granite 4 model (`ibm/granite-4-h-small`)
+- Enforces a strict tool execution order using `ConditionalRequirement` — ensuring `get_vehicle_location` is always called first
+- Uses `GlobalTrajectoryMiddleware` for complete execution tracking
+- Maintains full conversation context with `UnconstrainedMemory`
+
+The agent instructions define a clear workflow: locate the vehicle → check driver availability → find dealership slots → verify parts inventory → synthesize a recommendation.
+
+### 5. WXO-Compatible Server
+
+The FastAPI server in [beeai_service/servers/wxo_server.py](beeai_service/servers/wxo_server.py) is what makes BeeAI accessible to watsonx Orchestrate. It exposes the following endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/chat/completions` | POST | Main endpoint — receives chat messages, runs the agent, returns SSE stream |
+| `/health` | GET | Health check returning service status, model name, and timestamp |
+| `/.well-known/agent-card.json` | GET | A2A protocol discovery card with agent metadata |
+
+The server authenticates requests via the `x-api-key` header and returns results as Server-Sent Events (SSE) — the format WXO expects for streaming responses.
+
+The agent card (`/.well-known/agent-card.json`) advertises the agent's capabilities to WXO, including `"streaming": true` and `"function_calling": false`. The `function_calling: false` flag is important — BeeAI handles all tool orchestration internally via the `RequirementAgent`, rather than exposing tools as OpenAI-style function calls.
+
+The entry point that wires everything together is [beeai_service/__main__.py](beeai_service/__main__.py) — it creates the agent, wraps it in the WXO server, and starts serving.
 
 ---
 
