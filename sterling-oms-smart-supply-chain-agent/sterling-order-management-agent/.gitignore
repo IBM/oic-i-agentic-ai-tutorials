@@ -34,6 +34,7 @@ dist/
 .venv/
 venv/
 venv_090/
+myvenv/
 
 # pyenv
 .python-version
