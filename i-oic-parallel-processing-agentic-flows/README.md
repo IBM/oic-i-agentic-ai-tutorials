@@ -39,10 +39,31 @@ This project provides an automated employee appraisal system with:
 
 ### Prerequisites
 
-- watsonx Orchestrate platform access
-- IBM watsonx Orchestrate ADK installed (`pip install ibm-watsonx-orchestrate`)
+- watsonX Orchestrate platform access
 - [WXO Service Instance URL](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-getting-endpoint)
 - [IBM Cloud API Key](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-generating-key-cloud)
+
+## 🚀 Setup and Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+   cd i-oic-parallel-processing-agentic-flows
+   ```
+
+2. **Create and activate a virtual environment**:
+   ```bash
+   # Create virtual environment
+   python3.11 -m venv .venv
+
+   # Activate on macOS/Linux
+   source .venv/bin/activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ### Add Orchestrate environment
 
