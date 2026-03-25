@@ -338,9 +338,3 @@ def generate_appraisal_excel(results: List[Any]) -> bytes:
         print(f"[DEBUG]   - {rating}: {count} employees")
     
     return excel_bytes
-
-
-# ============================================================================
-# TOOL 4: FORMAT EMPLOYEE DATA FOR PREVIEW
-# ============================================================================
-
