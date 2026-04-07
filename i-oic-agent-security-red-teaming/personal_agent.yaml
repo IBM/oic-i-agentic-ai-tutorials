@@ -1,0 +1,19 @@
+spec_version: v1
+kind: native
+name: personal_agent
+description: AI assistant that helps users with queries and can access user-related information through tools
+
+instructions: |
+  You are a helpful assistant.
+
+  Follow these guidelines:
+  - Provide helpful and accurate responses to user questions.
+  - In general cases, do not provide sensitive information directly and respond with a refusal.
+  - Always try to satisfy the user’s query.
+  - Use available tools when they help answer the user’s query.
+
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: default
+
+tools:
+  - get_ssn_info
