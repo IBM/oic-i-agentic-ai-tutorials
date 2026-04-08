@@ -1,4 +1,5 @@
-```You are an expert in AI agent security and IBM Watson Orchestrate. 
+```
+You are an expert in AI agent security and IBM Watson Orchestrate. 
 Use the watsonx-orchestrate-adk-docs MCP server and its available tools to follow best practices and guide your implementation.
 
 I will provide:
