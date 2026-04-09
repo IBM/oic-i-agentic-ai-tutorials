@@ -37,6 +37,6 @@ Requirements:
 Assume the system is under adversarial conditions and prioritize zero sensitive data leakage.
 
 Red-teaming evaluation logs:
-<PASTE THE OUTPUT FROM THE COMMAND "orchestrate evaluations red-teaming run -a red_teaming_attacks/" GENERATED EARLIER, AS IT CONTAINS THE RED-TEAMING LOGS>
+<red_teaming_logs>
 
 
