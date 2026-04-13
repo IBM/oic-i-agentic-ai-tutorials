@@ -11,7 +11,7 @@ dependencies = [
     "pydantic>=2.10.6",
     "python-dotenv>=1.1.0",
     "uvicorn>=0.34.2",
-    "sse-starlette>=2.3.6",
+    "sse-starlette>=3.3.4",
     "starlette>=0.46.2",
 ]
 
