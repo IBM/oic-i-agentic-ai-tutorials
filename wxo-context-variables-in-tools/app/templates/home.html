@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        /* Login overlay styles */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        #loginOverlay.hidden {
+            display: none;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-container h1 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .login-form button {
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .login-form button:hover {
+            background: #0056b3;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .error-message.hidden {
+            display: none;
+        }
+
+        .logout-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .logout-container.hidden {
+            display: none;
+        }
+
+        .logout-button {
+            padding: 10px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .logout-button:hover {
+            background: #0056b3;
+        }
+    </style>
+
+    <script>
+        // Login overlay functionality
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const userid = document.getElementById('loginUserid').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorMsg = document.getElementById('loginError');
+            
+            errorMsg.classList.add('hidden');
+            
+            // Simple password validation (dummy check for UI)
+            if (!userid || !password) {
+                errorMsg.textContent = 'Please enter both userid and password.';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                // Store userid
+                localStorage.setItem('userid', userid);
+                
+                // Call the /token endpoint (RSA-based) for authentication
+                const response = await fetch('/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({userid: userid, password: password})
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+                
+                const token = await response.text();
+                
+                // Store token in localStorage
+                localStorage.setItem('token', token);
+                
+                // Hide login overlay
+                document.getElementById('loginOverlay').classList.add('hidden');
+                
+                // Show logout button
+                document.getElementById('logoutButton').parentElement.classList.remove('hidden');
+                
+                // Initialize watsonx Orchestrate
+                initializeWatsonxOrchestrate(token);
+                
+            } catch (error) {
+                errorMsg.textContent = 'Login failed. Please try again.';
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        // Get user ID from localStorage
+        function getUserId() {
+            const userId = localStorage.getItem('userid');
+            console.log("userId", userId);
+            return userId;
+        }
+
+        function onChatLoad(instance) {
+            window.wxoChatInstance = instance;
+        }
+
+        // Update below placeholders with your watsonx Orchestrate details
+        window.wxOConfiguration = {
+            orchestrationID: "<update-orchestration-id>",
+            hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+            rootElementID: "root",
+            deploymentPlatform: "ibmcloud",
+            crn: "<update-crn-id>",
+            chatOptions: {
+                agentId: "<update-agent-id>", 
+                agentEnvironmentId: "<update-environment-id>",
+                onLoad: onChatLoad
+            },
+            layout: {
+                form: "fullscreen-overlay",
+                showOrchestrateHeader: true
+            }
+        };
+
+        function initializeWatsonxOrchestrate(_token) {
+            window.wxOConfiguration.token = _token;
+            const script = document.createElement("script");
+            script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+            script.addEventListener("load", function () {
+                wxoLoader.init();
+            });
+            document.head.appendChild(script);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userid');
+            window.location.reload();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Check if user is already authenticated
+            const token = localStorage.getItem('token');
+            const userid = localStorage.getItem('userid');
+            
+            if (token && userid) {
+                // User already logged in, hide overlay and initialize watsonx Orchestrate
+                document.getElementById('loginOverlay').classList.add('hidden');
+                document.getElementById('logoutButton').parentElement.classList.remove('hidden');
+                initializeWatsonxOrchestrate(token);
+            } else {
+                // Show login overlay and hide logout button
+                document.getElementById('loginOverlay').classList.remove('hidden');
+                document.getElementById('logoutButton').parentElement.classList.add('hidden');
+            }
+            
+            // Attach login form handler
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('logoutButton').addEventListener('click', handleLogout);
+        });
+    </script>
+</head>
+
+<body>
+    <!-- Login Overlay -->
+    <div id="loginOverlay">
+        <div class="login-container">
+            <h1>Login</h1>
+            <form id="loginForm" class="login-form">
+                <input type="text" id="loginUserid" placeholder="User ID" required />
+                <input type="password" id="loginPassword" placeholder="Password" required />
+                <button type="submit">Login</button>
+                <div id="loginError" class="error-message hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="logout-container hidden">
+        <button id="logoutButton" class="logout-button" type="button">Logout</button>
+    </div>
+
+    <!-- watsonx Orchestrate will be loaded here -->
+    <div id="root"></div>
+</body>
+
+</html>
