@@ -1,0 +1,7 @@
+deepagents
+langchain-anthropic
+langchain-openai
+langgraph
+langchain-mcp-adapters
+langchain-ibm
+python-dotenv
