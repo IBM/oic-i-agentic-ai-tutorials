@@ -2,10 +2,10 @@ config==0.5.1
 crewai==0.193.2
 eland==9.0.1
 elasticsearch==9.3.0
-fastapi==0.129.0
+fastapi==0.136.1
 langchain_community==0.4.1
 langchain_huggingface==1.2.0
 nltk==3.9.1
-pydantic==2.12.5
+pydantic==2.13.3
 python-dotenv==1.2.1
-sentence_transformers==5.2.0
+sentence_transformers==5.4.1
