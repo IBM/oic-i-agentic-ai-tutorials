@@ -1,8 +1,8 @@
 # Run Your Custom LangGraph Agents Within watsonx Orchestrate Runtime Environment  
 
-As an Enterprise AI Architect, one of your core goals is to industrialize agentic AI without creating a fragmented runtime landscape. Many organizations already have custom LangGraph agents developed by innovation teams, line-of-business developers, or partner ecosystems. The challenge is not whether these agents exist—it is how to operationalize them within a governed, scalable, enterprise-grade runtime.
+As an Enterprise AI Architect, one of our core goals is to industrialize agentic AI without creating a fragmented runtime landscape. Many organizations already have custom LangGraph agents developed by innovation teams, line-of-business developers, or partner ecosystems. The challenge is not whether these agents exist—it is how to operationalize them within a governed, scalable, enterprise-grade runtime.
 
-watsonx Orchestrate addresses this need by allowing you to import custom LangGraph agents and run them inside the WXO agent runtime. This gives you a strong value proposition: you can preserve prior investments in custom agent logic while consolidating execution, security, model access, governance, and operations within a single enterprise platform. Instead of maintaining separate hosting stacks for bespoke LangGraph agents, you can bring them into WXO and manage them as part of your broader AI architecture.
+watsonx Orchestrate addresses this need by allowing us to import custom LangGraph agents and run them inside the WXO agent runtime. This provides a strong value proposition: We can preserve prior investments in custom agent logic while consolidating execution, security, model access, governance, and operations within a single enterprise platform. Instead of maintaining separate hosting stacks for bespoke LangGraph agents, we can bring them into WXO and manage them as part of our broader AI architecture.
 
 This capability is especially valuable when designing enterprise agent ecosystems because it helps you:
 - Reuse existing LangGraph assets rather than rebuilding them from scratch
@@ -114,6 +114,51 @@ Understanding the architecture is key to successfully deploying LangGraph agents
 - **Enterprise Ready**: Built-in scaling, monitoring, and governance
 - **Cost Optimization**: Shared infrastructure reduces operational costs
 
+## File Structure Guide
+
+Before diving into the tutorial, let's understand the file structure and what each file achieves:
+
+### Project File Tree
+
+```
+langraph-wxo-demo/
+├── .env                          # Environment variables (create this)
+├── agent.py                      # Standalone agent implementation
+├── main.py                       # Interactive CLI for standalone agent
+├── tools.py                      # Investment calculation tool
+├── requirements.txt              # Python dependencies
+├── import_to_wxo.sh             # WXO deployment automation script
+└── my_langraph_agent/           # WXO-compatible agent directory
+    ├── agent.py                 # WXO-adapted agent implementation
+    ├── tools.py                 # Same tool (WXO compatible)
+    ├── requirements.txt         # WXO deployment dependencies
+    └── agent.yaml               # WXO agent configuration
+```
+
+### Standalone Agent Files (Root Directory)
+
+| File | Purpose | Key Features |
+|------|---------|--------------|
+| **[tools.py](tools.py)** | Defines the investment calculation tool | - Uses LangChain's `@tool` decorator<br>- Implements `calculate_annualized_return` function<br>- Validates inputs and calculates annualized returns, total returns, and profit/loss<br>- Returns structured dictionary with financial metrics |
+| **[agent.py](agent.py)** | Creates standalone LangGraph ReAct agent | - Uses OpenAI's `ChatOpenAI` with GPT-4o-mini model<br>- Implements StateGraph with agent and tool nodes<br>- Includes MemorySaver for conversation persistence<br>- Defines routing logic between agent and tools<br>- Returns compiled LangGraph application |
+| **[main.py](main.py)** | Interactive CLI interface for the agent | - Loads environment variables from `.env` file<br>- Provides interactive conversation loop<br>- Handles user input and agent responses<br>- Includes example mode for quick testing<br>- Manages thread configuration for conversation state |
+| **[requirements.txt](requirements.txt)** | Python dependencies | - Lists all required packages for both standalone and WXO versions<br>- Includes langgraph, langchain, langchain-openai, python-dotenv, and ibm-watsonx-orchestrate |
+
+### WXO-Compatible Agent Files (`my_langraph_agent/` directory)
+
+| File | Purpose | Key Differences from Standalone |
+|------|---------|--------------------------------|
+| **[my_langraph_agent/tools.py](my_langraph_agent/tools.py)** | Same calculation tool | - Identical to root `tools.py`<br>- No modifications needed for WXO compatibility |
+| **[my_langraph_agent/agent.py](my_langraph_agent/agent.py)** | WXO-compatible agent implementation | - Accepts `RunnableConfig` parameter to receive WXO credentials<br>- Uses `ChatWxO` instead of `ChatOpenAI` to access WXO's model gateway<br>- Retrieves credentials from `config.get("configurable", {}).get("credentials", {})`<br>- Adds comprehensive logging for debugging in WXO environment<br>- Returns workflow graph (not compiled app) - WXO handles compilation<br>- No MemorySaver - WXO manages conversation state |
+| **[my_langraph_agent/agent.yaml](my_langraph_agent/agent.yaml)** | Agent configuration for WXO | - Defines agent metadata (name, title, description)<br>- Specifies framework type as `langgraph`<br>- Sets entrypoint to `agent:create_react_agent`<br>- Configures memory checkpointer type |
+| **[my_langraph_agent/requirements.txt](my_langraph_agent/requirements.txt)** | WXO deployment dependencies | - Similar to root requirements.txt<br>- Excludes `ibm-watsonx-orchestrate` (provided by WXO runtime)<br>- Includes version constraints for compatibility |
+
+### Deployment Script
+
+| File | Purpose | What It Does |
+|------|---------|--------------|
+| **[import_to_wxo.sh](import_to_wxo.sh)** | Automated WXO deployment script | - Prompts for WXO instance URL and API key<br>- Creates `wxo_langgraph` connection<br>- Configures connection for draft and live environments<br>- Sets credentials securely<br>- Imports agent into WXO<br>- Connects agent to the connection |
+
 ## Prerequisites
 
 - An active watsonx Orchestrate instance (local developer edition or IBM Cloud hosted instance)
@@ -147,281 +192,107 @@ OPENAI_API_KEY=your-openai-api-key-here
 
 ### Step 3: Create the Tools Module
 
-Create a `tools.py` file that defines the calculation tool:
+Create a `tools.py` file that defines the calculation tool.
 
-```python
-"""
-Tools for calculating annualized rate of return
-"""
-from langchain_core.tools import tool
+**📄 File Reference:** See [tools.py](tools.py) for the complete implementation.
 
-
-@tool
-def calculate_annualized_return(
-    initial_investment: float,
-    current_value: float,
-    months_invested: int
-) -> dict:
-    """
-    Calculate the annualized rate of return for an investment.
-    
-    Args:
-        initial_investment: The initial investment amount in dollars
-        current_value: The current value of the investment in dollars
-        months_invested: The number of months the money has been invested
-        
-    Returns:
-        A dictionary containing the calculation results including:
-        - annualized_return: The annualized rate of return as a percentage
-        - total_return: The total return as a percentage
-        - profit_loss: The profit or loss amount in dollars
-    """
-    if initial_investment <= 0:
-        return {
-            "error": "Initial investment must be greater than 0",
-            "annualized_return": None,
-            "total_return": None,
-            "profit_loss": None
-        }
-    
-    if months_invested <= 0:
-        return {
-            "error": "Months invested must be greater than 0",
-            "annualized_return": None,
-            "total_return": None,
-            "profit_loss": None
-        }
-    
-    # Calculate total return
-    total_return = ((current_value - initial_investment) / initial_investment) * 100
-    
-    # Calculate profit/loss
-    profit_loss = current_value - initial_investment
-    
-    # Calculate annualized return
-    # Formula: ((Current Value / Initial Investment) ^ (12 / months)) - 1
-    years = months_invested / 12
-    annualized_return = (((current_value / initial_investment) ** (1 / years)) - 1) * 100
-    
-    return {
-        "annualized_return": round(annualized_return, 2),
-        "total_return": round(total_return, 2),
-        "profit_loss": round(profit_loss, 2),
-        "initial_investment": initial_investment,
-        "current_value": current_value,
-        "months_invested": months_invested,
-        "years_invested": round(years, 2)
-    }
-```
+**What this file does:**
+- Uses LangChain's `@tool` decorator to create a tool that the agent can call
+- Implements the `calculate_annualized_return` function that takes three parameters:
+  - `initial_investment`: The starting investment amount in dollars
+  - `current_value`: The current value of the investment in dollars
+  - `months_invested`: The number of months the money has been invested
+- Validates inputs to ensure positive values for investment and time period
+- Calculates three key financial metrics:
+  - **Annualized Return**: The yearly rate of return using the formula `((Current Value / Initial Investment) ^ (1 / years)) - 1`
+  - **Total Return**: The overall percentage gain or loss
+  - **Profit/Loss**: The absolute dollar amount gained or lost
+- Returns a structured dictionary with all calculated metrics, making it easy for the LLM to interpret and present results
 
 ### Step 4: Create the Agent Module
 
-Create an `agent.py` file that defines the LangGraph agent:
+Create an `agent.py` file that defines the LangGraph agent.
 
-```python
-"""
-LangGraph React Agent for Annualized Rate of Return Calculations
-"""
-from typing import Literal
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import AIMessage
-from langgraph.graph import StateGraph, MessagesState, START, END
-from langgraph.prebuilt import ToolNode
-from langgraph.checkpoint.memory import MemorySaver
-from tools import calculate_annualized_return
+**📄 File Reference:** See [agent.py](agent.py) for the complete implementation.
 
+**What this file does:**
 
-# Define the agent state
-class AgentState(MessagesState):
-    """State for the agent including message history"""
-    pass
+**1. Defines the Agent State:**
+- Creates `AgentState` class extending `MessagesState` to maintain conversation history
+- This state is passed between nodes in the graph
 
+**2. Implements the `create_react_agent()` function:**
+- **Initializes the LLM**: Uses OpenAI's `ChatOpenAI` with the `gpt-4o-mini` model at temperature 0 for consistent responses
+- **Binds Tools**: Attaches the `calculate_annualized_return` tool to the LLM using `llm.bind_tools()`
+- **Creates Agent Node**: Defines `agent_node()` function that:
+  - Takes the current state with message history
+  - Invokes the LLM with tools to generate a response
+  - Returns updated state with the LLM's response
+- **Implements Routing Logic**: Defines `should_continue()` function that:
+  - Checks if the last message contains tool calls
+  - Routes to "tools" node if tool calls are present
+  - Routes to "end" if no tool calls (conversation complete)
+- **Builds the State Graph**:
+  - Creates a `StateGraph` with two nodes: "agent" and "tools"
+  - Connects START → agent
+  - Adds conditional edge from agent → tools or end
+  - Connects tools → agent (for iterative tool use)
+- **Adds Memory**: Uses `MemorySaver` to persist conversation state across turns
+- **Compiles and Returns**: Returns the compiled LangGraph application ready for execution
 
-# Create the agent
-def create_react_agent():
-    """
-    Create a LangGraph React agent that can calculate annualized rate of return.
-    
-    Returns:
-        A compiled LangGraph agent
-    """
-    # Initialize the LLM
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    
-    # Bind tools to the LLM
-    tools = [calculate_annualized_return]
-    llm_with_tools = llm.bind_tools(tools)
-    
-    # Define the agent node
-    def agent_node(state: AgentState):
-        """
-        The agent node that processes messages and decides whether to use tools.
-        """
-        messages = state["messages"]
-        response = llm_with_tools.invoke(messages)
-        return {"messages": [response]}
-    
-    # Define the routing function
-    def should_continue(state: AgentState) -> Literal["tools", "end"]:
-        """
-        Determine whether to continue to tools or end the conversation.
-        """
-        messages = state["messages"]
-        last_message = messages[-1]
-        
-        # If there are tool calls, continue to tools
-        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
-            return "tools"
-        # Otherwise, end
-        return "end"
-    
-    # Create the tool node
-    tool_node = ToolNode(tools)
-    
-    # Build the graph
-    workflow = StateGraph(AgentState)
-    
-    # Add nodes
-    workflow.add_node("agent", agent_node)
-    workflow.add_node("tools", tool_node)
-    
-    # Add edges
-    workflow.add_edge(START, "agent")
-    workflow.add_conditional_edges(
-        "agent",
-        should_continue,
-        {
-            "tools": "tools",
-            "end": END
-        }
-    )
-    workflow.add_edge("tools", "agent")
-    
-    # Add memory
-    memory = MemorySaver()
-    
-    # Compile the graph
-    app = workflow.compile(checkpointer=memory)
-    
-    return app
+**3. Provides Response Formatting:**
+- `format_response()` function extracts and formats the agent's final response for display
+- Handles different message types (AIMessage, etc.)
 
-
-def format_response(response):
-    """
-    Format the agent's response for display.
-    
-    Args:
-        response: The response from the agent
-        
-    Returns:
-        Formatted string response
-    """
-    messages = response["messages"]
-    last_message = messages[-1]
-    
-    if isinstance(last_message, AIMessage):
-        return last_message.content
-    return str(last_message)
-```
+This creates a ReAct (Reasoning + Acting) agent that can reason about when to use tools and iterate until the task is complete.
 
 ### Step 5: Create the Main Script
 
-Create a `main.py` file to run the agent interactively:
+Create a `main.py` file to run the agent interactively.
 
-```python
-"""
-Main script to run the Annualized Rate of Return Agent
-"""
-import os
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage
-from agent import create_react_agent, format_response
+**📄 File Reference:** See [main.py](main.py) for the complete implementation.
 
+**What this file does:**
 
-def main():
-    """
-    Main function to run the agent interactively.
-    """
-    # Load environment variables
-    load_dotenv()
-    
-    # Check for OpenAI API key
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
-        print("Please create a .env file with your OpenAI API key:")
-        print("OPENAI_API_KEY=your-api-key-here")
-        return
-    
-    # Create the agent
-    print("Initializing Annualized Rate of Return Agent...")
-    agent = create_react_agent()
-    print("Agent ready!\n")
-    
-    # Configuration for thread
-    config = {"configurable": {"thread_id": "1"}}
-    
-    print("=" * 70)
-    print("Annualized Rate of Return Calculator Agent")
-    print("=" * 70)
-    print("\nThis agent can help you calculate the annualized rate of return")
-    print("for your investments. Just provide:")
-    print("  - Initial investment amount")
-    print("  - Current value")
-    print("  - Number of months invested")
-    print("\nType 'quit' or 'exit' to end the conversation.\n")
-    print("=" * 70)
-    
-    # Interactive loop
-    while True:
-        try:
-            # Get user input
-            user_input = input("\nYou: ").strip()
-            
-            # Check for exit commands
-            if user_input.lower() in ['quit', 'exit', 'q']:
-                print("\nThank you for using the Annualized Rate of Return Agent!")
-                break
-            
-            if not user_input:
-                continue
-            
-            # Create message
-            message = HumanMessage(content=user_input)
-            
-            # Invoke the agent
-            print("\nAgent: ", end="", flush=True)
-            response = agent.invoke(
-                {"messages": [message]},
-                config=config
-            )
-            
-            # Format and print response
-            formatted_response = format_response(response)
-            print(formatted_response)
-            
-        except KeyboardInterrupt:
-            print("\n\nInterrupted by user. Exiting...")
-            break
-        except Exception as e:
-            print(f"\nError: {str(e)}")
-            print("Please try again or type 'quit' to exit.")
+**1. Environment Setup:**
+- Loads environment variables from `.env` file using `python-dotenv`
+- Validates that `OPENAI_API_KEY` is present before proceeding
+- Provides helpful error messages if configuration is missing
 
+**2. Agent Initialization:**
+- Creates the LangGraph agent by calling `create_react_agent()`
+- Sets up thread configuration for conversation state management
+- Uses thread_id "1" to maintain conversation context across multiple turns
 
-if __name__ == "__main__":
-    main()
-```
+**3. Interactive CLI Interface:**
+- Displays a welcome banner with instructions
+- Implements a continuous loop that:
+  - Prompts user for input
+  - Handles exit commands ('quit', 'exit', 'q')
+  - Creates `HumanMessage` objects from user input
+  - Invokes the agent with the message and configuration
+  - Formats and displays the agent's response
+- Includes error handling for:
+  - Keyboard interrupts (Ctrl+C)
+  - Runtime exceptions with helpful error messages
+
+**4. Example Mode (Bonus):**
+- Includes a `run_example()` function for quick testing
+- Can be run with `python main.py --example` to see a sample calculation
+- Demonstrates the agent's capabilities without manual interaction
+
+This provides a complete, user-friendly interface for testing the standalone agent locally before deploying to WXO.
 
 ### Step 6: Set Up Python Virtual Environment and Install Dependencies
 
-Create a `requirements.txt` file:
+**📄 File Reference:** See [requirements.txt](requirements.txt) for the complete dependency list.
 
-```
-langgraph
-langchain
-langchain-openai
-python-dotenv
-ibm-watsonx-orchestrate
-```
+**What this file contains:**
+- `langgraph` - The LangGraph framework for building stateful, multi-actor applications
+- `langchain` - Core LangChain library for building LLM applications
+- `langchain-openai` - OpenAI integration for LangChain (used in standalone version)
+- `python-dotenv` - For loading environment variables from `.env` file
+- `ibm-watsonx-orchestrate>=2.10.0` - WXO ADK for deploying agents (used in Part 2)
 
 **Note:** We're including `ibm-watsonx-orchestrate` in the requirements file because we'll use the same virtual environment to run WXO ADK commands later in Part 2.
 
@@ -485,265 +356,123 @@ The tools file doesn't need any modifications for WXO.
 
 ### Step 3: Modify the Agent for WXO
 
-Create a modified `agent.py` in the `my_langraph_agent` directory with the following key changes:
+Create a modified `agent.py` in the `my_langraph_agent` directory.
 
-```python
-"""
-LangGraph React Agent for Annualized Rate of Return Calculations
-Adapted for watsonx Orchestrate runtime
-"""
-import logging
-from typing import Literal
-from langchain_core.messages import AIMessage
-from langgraph.graph import StateGraph, MessagesState, START, END
-from langgraph.prebuilt import ToolNode
-from langchain_core.runnables.config import RunnableConfig
-from ibm_watsonx_orchestrate_sdk.langchain import ChatWxO
-from tools import calculate_annualized_return
+**📄 File Reference:** See [my_langraph_agent/agent.py](my_langraph_agent/agent.py) for the complete WXO-compatible implementation.
 
-# Configure logger
-logger = logging.getLogger(__name__)
+**What this file does differently from the standalone version:**
 
+**Key Changes for WXO Compatibility:**
 
-# Define the agent state
-class AgentState(MessagesState):
-    """State for the agent including message history"""
-    pass
+1. **Function Signature Change:**
+   - Now accepts `config: RunnableConfig` parameter
+   - This config object is provided by WXO runtime and contains credentials and instructions
 
+2. **Credentials Management:**
+   - Retrieves credentials from `config.get("configurable", {}).get("credentials", {})`
+   - Extracts `wxo_langgraph_api_key` and `wxo_langgraph_base_url` from the connection
+   - No need for environment variables or `.env` files
 
-# Create the agent
-def create_react_agent(config: RunnableConfig):
-    """
-    Create a LangGraph React agent that can calculate annualized rate of return.
-    
-    Args:
-        config: RunnableConfig containing credentials and instructions from WXO
-    
-    Returns:
-        A compiled LangGraph workflow
-    """
-    logger.info("Creating React agent...")
-    
-    # Access system instructions from WXO
-    instructions = config.get("configurable", {}).get("instructions", "")
-    logger.info(f"System instructions: {instructions}")
-    
-    # Get credentials from WXO connection
-    credentials = config.get("configurable", {}).get("credentials", {})
-    
-    # Extract WXO connection credentials
-    wxo_api_key = credentials.get("wxo_langgraph_api_key")
-    instance_url = credentials.get("wxo_langgraph_base_url")
-    
-    # Initialize ChatWxO LLM
-    llm = ChatWxO(
-        instance_url=instance_url,
-        api_key=wxo_api_key,
-        model="groq/openai/gpt-oss-120b",  # Use WXO model
-        temperature=0.7,
-        streaming=False,
-        max_tokens=20000,
-    )
-    
-    # Bind tools to the LLM
-    tools = [calculate_annualized_return]
-    logger.info(f"Binding {len(tools)} tools to LLM")
-    llm_with_tools = llm.bind_tools(tools)
-    
-    # Define the agent node
-    def agent_node(state: AgentState):
-        """
-        The agent node that processes messages and decides whether to use tools.
-        """
-        logger.info("Agent node invoked")
-        messages = state["messages"]
-        logger.debug(f"Processing {len(messages)} messages")
-        response = llm_with_tools.invoke(messages)
-        logger.info(f"Agent response generated: {type(response).__name__}")
-        return {"messages": [response]}
-    
-    # Define the routing function
-    def should_continue(state: AgentState) -> Literal["tools", "end"]:
-        """
-        Determine whether to continue to tools or end the conversation.
-        """
-        messages = state["messages"]
-        last_message = messages[-1]
-        
-        # If there are tool calls, continue to tools
-        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
-            logger.info(f"Tool calls detected: {len(last_message.tool_calls)} tool(s)")
-            return "tools"
-        # Otherwise, end
-        logger.info("No tool calls detected, ending conversation")
-        return "end"
-    
-    # Create the tool node
-    tool_node = ToolNode(tools)
-    logger.info("Tool node created")
-    
-    # Build the graph
-    workflow = StateGraph(AgentState)
-    logger.info("Building workflow graph...")
-    
-    # Add nodes
-    workflow.add_node("agent", agent_node)
-    workflow.add_node("tools", tool_node)
-    logger.info("Nodes added to workflow")
-    
-    # Add edges
-    workflow.add_edge(START, "agent")
-    workflow.add_conditional_edges(
-        "agent",
-        should_continue,
-        {
-            "tools": "tools",
-            "end": END
-        }
-    )
-    workflow.add_edge("tools", "agent")
-    logger.info("Edges added to workflow")
-    
-    logger.info("React agent created successfully")
-    return workflow
-```
+3. **LLM Initialization - ChatWxO:**
+   - Uses `ChatWxO` from `ibm_watsonx_orchestrate_sdk.langchain` instead of `ChatOpenAI`
+   - Connects to WXO's internal model gateway
+   - Accesses models like `groq/openai/gpt-oss-120b` hosted within WXO
+   - Benefits from WXO's model management, rate limiting, and failover
 
-**Key Changes from Standalone Version:**
+4. **System Instructions:**
+   - Can access custom instructions from `config.get("configurable", {}).get("instructions", "")`
+   - Allows dynamic behavior based on WXO agent configuration
 
-1. **Function Signature**: The `create_react_agent` function now accepts a `config: RunnableConfig` parameter
-2. **Credentials Access**: Credentials are retrieved from the config object provided by WXO
-3. **LLM Initialization**: Uses `ChatWxO` instead of `ChatOpenAI` to leverage WXO's model infrastructure
-4. **Logging**: Added comprehensive logging for debugging in the WXO environment
-5. **Memory Removal**: Removed `MemorySaver` as WXO manages conversation state
-6. **Return Value**: Returns the workflow graph instead of a compiled app
+5. **Comprehensive Logging:**
+   - Added `logging` throughout for debugging in WXO environment
+   - Logs agent initialization, tool binding, node invocations, and routing decisions
+   - Helps troubleshoot issues in production
+
+6. **Memory Management:**
+   - Removed `MemorySaver` - WXO runtime manages conversation state
+   - No need to handle checkpointing manually
+
+7. **Return Value:**
+   - Returns the `workflow` graph (not compiled app)
+   - WXO runtime handles compilation and execution
+
+**Why These Changes Matter:**
+- **Security**: Credentials managed centrally by WXO, not in code or env files
+- **Scalability**: WXO handles agent lifecycle, scaling, and resource management
+- **Governance**: Centralized model access, monitoring, and compliance
+- **Flexibility**: Easy to switch models or update configurations without code changes
 
 ### Step 4: Create Requirements File
 
-Create a `requirements.txt` in the `my_langraph_agent` directory:
+**📄 File Reference:** See [my_langraph_agent/requirements.txt](my_langraph_agent/requirements.txt) for the WXO deployment dependencies.
 
-```
-langgraph>=0.2.0
-langchain>=0.3.0
-langchain-openai>=0.2.0
-python-dotenv>=1.0.0
-ibm-watsonx-orchestrate-sdk
-```
+**What this file contains:**
+- `langgraph>=0.2.0` - LangGraph framework with version constraint
+- `langchain>=0.3.0` - Core LangChain library
+- `langchain-openai>=0.2.0` - OpenAI integration (for potential external model calls)
+- `python-dotenv>=1.0.0` - Environment variable management
+- `ibm-watsonx-orchestrate-sdk` - SDK for ChatWxO and WXO integrations
 
-**Note:** Do NOT include `ibm-watsonx-orchestrate` in your requirements.txt as it's provided by the WXO runtime.
+**Important Note:** Do NOT include `ibm-watsonx-orchestrate` (the ADK CLI tool) in this requirements.txt as it's provided by the WXO runtime. Only include `ibm-watsonx-orchestrate-sdk` which provides the Python SDK for agent development.
 
 ### Step 5: Create Agent Configuration
 
-Create an `agent.yaml` file in the `my_langraph_agent` directory:
+**📄 File Reference:** See [my_langraph_agent/agent.yaml](my_langraph_agent/agent.yaml) for the complete agent configuration.
 
-```yaml
-spec_version: v1
-kind: agent
-name: my_langraph_agent
-title: My LangGraph Agent
-framework: langgraph
-description: This agent can return annualized rate of return when provided with initial investment ammount, current value and number of months the ammount has been invested.
-deployment:
-  code_bundle:
-    entrypoint: agent:create_react_agent
-checkpointer:
-  type: memory
-```
+**What this YAML file defines:**
 
-This YAML file tells WXO:
-- The agent's name and description
-- The entrypoint function to call (module:function format)
+- **`spec_version: v1`** - Configuration schema version
+- **`kind: agent`** - Declares this as an agent resource
+- **`name: my_langraph_agent`** - Unique identifier for the agent
+- **`title: My LangGraph Agent`** - Display name in WXO UI
+- **`framework: langgraph`** - Specifies the agent framework type
+- **`description`** - Explains what the agent does (shown in WXO UI)
+- **`deployment.code_bundle.entrypoint`** - Points to `agent:create_react_agent`
+  - Format: `module:function`
+  - WXO will import the `agent` module and call `create_react_agent(config)`
+- **`checkpointer.type: memory`** - Configures conversation state persistence
+
+This configuration tells WXO how to load, initialize, and run your custom LangGraph agent within its runtime environment.
 
 ### Step 6: Create WXO Setup Script
 
-Create a `import_to_wxo.sh` script in the root directory:
+**📄 File Reference:** See [import_to_wxo.sh](import_to_wxo.sh) for the complete deployment automation script.
 
-```bash
-#!/bin/bash
+**What this script automates:**
 
-# Script to create and configure WatsonX Orchestrate connection for LangGraph agent
-# This script will prompt for required credentials
+**1. User Input Collection:**
+- Prompts for WXO instance URL
+- Securely prompts for WXO API key
+- Validates that both values are provided
 
-echo "=========================================="
-echo "WatsonX Orchestrate Connection Setup"
-echo "=========================================="
-echo ""
+**2. Connection Creation (`orchestrate connections add`):**
+- Creates a new connection with app-id `wxo_langgraph`
+- This connection will store credentials for accessing WXO's model gateway
 
-# Prompt for WatsonX Orchestrate URL
-read -p "Enter your WatsonX Orchestrate instance URL: " WXO_LANGGRAPH_URL
-if [ -z "$WXO_LANGGRAPH_URL" ]; then
-    echo "Error: WatsonX Orchestrate URL is required"
-    exit 1
-fi
+**3. Connection Configuration:**
+- Configures the connection for both `draft` and `live` environments
+- Sets connection type as `team` (shared across team members)
+- Sets kind as `key_value` (simple key-value credential storage)
 
-# Prompt for WatsonX Orchestrate API Key
-read -sp "Enter your WatsonX Orchestrate API Key: " WXO_LANGGRAPH_API_KEY
-echo ""
-if [ -z "$WXO_LANGGRAPH_API_KEY" ]; then
-    echo "Error: WatsonX Orchestrate API Key is required"
-    exit 1
-fi
+**4. Credential Storage:**
+- Stores `base_url` and `api_key` for both draft and live environments
+- These credentials are securely managed by WXO
+- Agent retrieves them at runtime via `RunnableConfig`
 
-echo ""
-echo "Creating connection with provided credentials..."
-echo ""
+**5. Agent Import:**
+- Imports the agent using `orchestrate agents import`
+- Specifies `--experimental-package-root my_langraph_agent` (agent code directory)
+- Specifies `--experimental-config-file my_langraph_agent/agent.yaml` (configuration)
 
-# Create connection
-orchestrate connections add --app-id wxo_langgraph 
-
-# Configure connection for draft environment
-orchestrate connections configure \
-    --app-id wxo_langgraph \
-    --env draft \
-    --type team \
-    --kind key_value 
-
-# Configure connection for live environment
-orchestrate connections configure \
-    --app-id wxo_langgraph \
-    --env live \
-    --type team \
-    --kind key_value 
-
-# Set credentials for draft environment
-orchestrate connections set-credentials \
-    --app-id wxo_langgraph \
-    --env draft \
-    -e base_url="$WXO_LANGGRAPH_URL" \
-    -e api_key="$WXO_LANGGRAPH_API_KEY"
-
-# Set credentials for live environment
-orchestrate connections set-credentials \
-    --app-id wxo_langgraph \
-    --env live \
-    -e base_url="$WXO_LANGGRAPH_URL" \
-    -e api_key="$WXO_LANGGRAPH_API_KEY"
-
-echo ""
-echo "Importing agent..."
-echo ""
-
-# Import the agent
-orchestrate agents import --experimental-package-root my_langraph_agent --experimental-config-file my_langraph_agent/agent.yaml
-
-echo ""
-echo "Connecting agent to connection..."
-echo ""
-
-# Connect agent to connection
-orchestrate agents experimental-connect -n my_langraph_agent -c wxo_langgraph
-
-echo ""
-echo "=========================================="
-echo "Setup Complete!"
-echo "=========================================="
-echo "Agent 'my_langraph_agent' has been created and connected to the 'wxo_langgraph' connection."
-echo ""
-```
+**6. Agent-Connection Linking:**
+- Connects the agent to the connection using `orchestrate agents experimental-connect`
+- Links agent name `my_langraph_agent` to connection `wxo_langgraph`
+- This allows the agent to access the stored credentials
 
 Make the script executable:
 
 ```bash
-chmod +x import_to_wxo.sh.sh
+chmod +x import_to_wxo.sh
 ```
 
 ### Step 7: Import the Agent into WXO
@@ -751,16 +480,28 @@ chmod +x import_to_wxo.sh.sh
 Run the setup script:
 
 ```bash
-./import_to_wxo.sh.sh
+./import_to_wxo.sh
 ```
 
-The script will:
-1. Prompt you for your WXO instance URL and API key
-2. Create a connection named `wxo_langgraph`
-3. Configure the connection for both draft and live environments
-4. Set the credentials
-5. Import your agent into WXO
-6. Connect the agent to the connection
+**What happens when you run this script:**
+
+1. **Interactive Prompts**: You'll be asked to enter:
+   - Your WXO instance URL (e.g., `https://your-instance.watsonx.orchestrate.ibm.com`)
+   - Your WXO API key (input will be hidden for security)
+
+2. **Connection Creation**: Creates a connection named `wxo_langgraph` that stores your WXO credentials
+
+3. **Environment Configuration**: Sets up the connection for both:
+   - **Draft environment**: For development and testing
+   - **Live environment**: For production deployment
+
+4. **Credential Storage**: Securely stores your credentials in WXO's connection manager
+
+5. **Agent Import**: Uploads your agent code and configuration to WXO
+
+6. **Connection Linking**: Associates your agent with the connection so it can access credentials at runtime
+
+After successful execution, your agent will be ready to use in the WXO platform!
 
 ### Step 8: Test the Agent in WXO
 
