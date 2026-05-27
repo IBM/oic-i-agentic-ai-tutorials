@@ -114,9 +114,34 @@ Understanding the architecture is key to successfully deploying LangGraph agents
 - **Enterprise Ready**: Built-in scaling, monitoring, and governance
 - **Cost Optimization**: Shared infrastructure reduces operational costs
 
+## Getting Started  
+
+### Prerequisites
+
+- An active watsonx Orchestrate instance (local developer edition or IBM Cloud hosted instance)
+- A running local environment of the watsonx Agent Development Kit (ADK) to configure connections and agents using the CLI. If you do not have an active ADK instance, review the [getting started with ADK tutorial](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=started-getting-adk). This tutorial has been tested and validated with ADK version 2.2.0.
+- Python version between 3.11.x to 3.13.x installed on your local machine
+- An OpenAI API key (for the standalone version)
+
+### Clone the Repository
+
+To follow this tutorial, clone the repository and navigate to the tutorial folder:
+
+```bash
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+cd oic-i-agentic-ai-tutorials/i-oic-langgraph-agent
+```
+
+**Repository:** [IBM/oic-i-agentic-ai-tutorials](https://github.com/IBM/oic-i-agentic-ai-tutorials)
+
+All the files referenced in this tutorial are available in the `i-oic-langgraph-agent` folder. You can either:
+- Use the provided files as reference while building your own implementation
+- Copy and modify them directly for your use case
+- Study the complete working examples to understand the patterns
+
 ## File Structure Guide
 
-Before diving into the tutorial, let's understand the file structure and what each file achieves:
+The file structure below shows how your project folder should look as you implement this tutorial. All these files are already available in the cloned repository for your reference:
 
 ### Project File Tree
 
@@ -159,12 +184,7 @@ langraph-wxo-demo/
 |------|---------|--------------|
 | **[import_to_wxo.sh](import_to_wxo.sh)** | Automated WXO deployment script | - Prompts for WXO instance URL and API key<br>- Creates `wxo_langgraph` connection<br>- Configures connection for draft and live environments<br>- Sets credentials securely<br>- Imports agent into WXO<br>- Connects agent to the connection |
 
-## Prerequisites
 
-- An active watsonx Orchestrate instance (local developer edition or IBM Cloud hosted instance)
-- A running local environment of the watsonx Agent Development Kit (ADK) to configure connections and agents using the CLI. If you do not have an active ADK instance, review the [getting started with ADK tutorial](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=started-getting-adk). This tutorial has been tested and validated with ADK version 2.2.0.
-- Python version between 3.11.x to 3.13.x installed on your local machine
-- An OpenAI API key (for the standalone version)
 
 ## Part 1: Creating and Running a Standalone LangGraph Agent
 
