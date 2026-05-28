@@ -116,7 +116,7 @@ Understanding the architecture is key to successfully deploying LangGraph agents
 
 ## Getting Started  
 
-### Prerequisites
+## Prerequisites
 
 - An active watsonx Orchestrate instance (local developer edition or IBM Cloud hosted instance)
 - A running local environment of the watsonx Agent Development Kit (ADK) to configure connections and agents using the CLI. If you do not have an active ADK instance, review the [getting started with ADK tutorial](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=started-getting-adk). This tutorial has been tested and validated with ADK version 2.2.0.
@@ -338,7 +338,32 @@ pip install -r requirements.txt
 
 You should see output indicating that all packages are being installed, including the watsonx Orchestrate ADK.
 
-### Step 7: Test the Standalone Agent
+### Step 7: Understanding the LangGraph Agent Flow
+
+Before testing the agent, let's visualize how it works. The diagram below shows the agent's execution flow as implemented in the code:
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd','primaryTextColor':'#000','primaryBorderColor':'#1976d2','lineColor':'#1976d2','secondaryColor':'#fff3e0','tertiaryColor':'#f3e5f5'}}}%%
+graph TD
+    Start([__start__]) -->|User Message| Agent[agent]
+    
+    Agent -->|Process with<br/>LLM + Tools| Decision{should_continue}
+    
+    Decision -->|tool_calls present| Tools[tools]
+    Decision -->|no tool_calls| End([__end__])
+    
+    Tools -->|Execute<br/>calculate_annualized_return| Agent
+    
+    style Start fill:#90EE90,stroke:#2e7d32,stroke-width:3px
+    style End fill:#FFB6C1,stroke:#c62828,stroke-width:3px
+    style Agent fill:#87CEEB,stroke:#1976d2,stroke-width:2px
+    style Tools fill:#FFD700,stroke:#f57c00,stroke-width:2px
+    style Decision fill:#DDA0DD,stroke:#7b1fa2,stroke-width:2px
+```
+
+This ReAct (Reasoning + Acting) pattern allows the agent to iteratively reason about problems and take actions (tool calls) until it has enough information to provide a complete answer.
+
+### Step 8: Test the Standalone Agent
 
 Run the agent:
 
@@ -497,7 +522,9 @@ chmod +x import_to_wxo.sh
 
 ### Step 7: Import the Agent into WXO
 
-Run the setup script:
+Run the setup script:  
+
+Note: Make sure you are connected to remote WXO saas instance.   
 
 ```bash
 ./import_to_wxo.sh
@@ -539,32 +566,19 @@ The agent will now run within the WXO runtime environment, using WXO's model inf
 
 ## Summary
 
-In this tutorial, you learned how to:
+This tutorial walked you through the complete journey of building a custom LangGraph agent and deploying it to watsonx Orchestrate. You started by creating a standalone agent that calculates investment returns, complete with its own tools and interactive interface. This gave you a working agent that runs independently on your local machine.
 
-1. **Create a standalone LangGraph agent** with:
-   - Custom tools (`tools.py`)
-   - Agent logic (`agent.py`)
-   - Interactive interface (`main.py`)
-   - Environment configuration (`.env`)
+Next, you learned how to adapt that same agent to run within the watsonx Orchestrate platform. The key changes involved connecting to WXO's model infrastructure, using WXO's credential management system, and packaging everything according to WXO's requirements. These modifications allow your agent to benefit from WXO's enterprise features like centralized security, scalability, and governance.
 
-2. **Adapt the agent for WXO** by:
-   - Modifying the agent function to accept `RunnableConfig`
-   - Switching from `ChatOpenAI` to `ChatWxO`
-   - Accessing credentials from WXO connections
-   - Adding proper logging
-   - Creating agent configuration (`agent.yaml`)
-   - Setting up WXO connections
-
-3. **Deploy to WXO** using:
-   - The ADK CLI
-   - Connection management
-   - Agent import process
+Finally, you deployed your agent to WXO using an automated script that handles all the setup steps. Once deployed, your agent runs in a managed environment where it can be easily accessed, monitored, and integrated with other enterprise systems. This approach lets you preserve your custom agent logic while gaining all the advantages of an enterprise AI platform.
 
 
-## Acknowledgments
+## Acknowledgments  
 
-This tutorial is produced as part of an IBM Open Innovation Community initiative.
+This tutorial is produced as part of an IBM Open Innovation Community initiative : Agentic AI (AI for Developers and Ecosystem).
 
-The authors deeply appreciate the support of Jerome Joubert (jerome.joubert@fr.ibm.com) for the guidance on making langraph agent works in wxo enviornment.
+The authors deeply appreciate the support of Jerome Joubert (jerome.joubert@fr.ibm.com) for technical guidance on making langraph agent works in wxo environment and technical reviewer Ela Dixit(https://www.linkedin.com/in/ela-dixit/) for thorough reviews and insightful feedback.  
+
+The authors also extend their sincere thanks to Michelle Corbin for her editorial guidance and support, which significantly enhanced the clarity and quality of this tutorial.
 
 For more information, visit the [watsonx Orchestrate documentation](https://www.ibm.com/docs/en/watsonx/watson-orchestrate).
