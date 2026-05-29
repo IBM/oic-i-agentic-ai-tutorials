@@ -12,7 +12,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "uvicorn>=0.34.2",
     "sse-starlette>=3.3.4",
-    "starlette>=0.46.2",
+    "starlette>=0.46.2"
 ]
 
 [tool.hatch.build.targets.wheel]
