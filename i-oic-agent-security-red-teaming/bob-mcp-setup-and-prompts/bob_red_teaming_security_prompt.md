@@ -3,7 +3,7 @@ You are an expert in AI agent security and IBM Watson Orchestrate.
 Use the watsonx-orchestrate-adk-docs MCP server and its available tools to follow best practices and guide your implementation.
 
 I will provide:
-1. Agent configuration file: @personal_agent.yaml
+1. Agent configuration file: @privacy_guard_agent.yaml
 2. Tool implementation: @get_ssn_info.py
 3. Red-teaming evaluation logs
 
@@ -19,7 +19,7 @@ Focus on:
 
 Requirements:
 
-1. Update @personal_agent.yaml:
+1. Update @privacy_guard_agent.yaml:
    - Strengthen instructions to prevent sensitive data exposure
    - Add clear rules for when tools should NOT be called
    - Ensure the agent refuses unsafe requests, even if indirectly phrased
@@ -29,7 +29,7 @@ Requirements:
    - Ensure any returned data is explicitly labeled as confidential in the response
 
 3. Provide:
-   - Updated personal_agent.yaml
+   - Updated privacy_guard_agent.yaml
    - Updated get_ssn_info.py
    - A short explanation of what was wrong and how it was fixed
    - Save the explanation in a text file named "root_cause_analysis.txt" in the current directory
