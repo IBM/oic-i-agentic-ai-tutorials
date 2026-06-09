@@ -170,33 +170,42 @@ Open the `index.html` file in any browser.
 
 ---
 
-# Enable security
+# Enable User-Specific Memory
 
-To maintain user-specific memory, the application must identify users uniquely.
+To maintain user-specific memory, the application must uniquely identify each user.
 
-Paste the embedded web chat Configuration Script into the sample UI.
+For this, the application must send the User Identity (`sub`) value, which is used to track and retrieve the user’s memory context. To securely send the user identity, security must be enabled.
+
+## 1. Configure Security
 
 If security is already enabled for your watsonx Orchestrate instance:
-- Use the existing generated keys.
 
-Otherwise:
+- Use the existing generated security keys.
+
+**Otherwise**:
+
 - Provide the watsonx Orchestrate API Key
 - Provide the watsonx Orchestrate Instance URL
 - Enable security using the sample UI
 
-The application generates the required security keys automatically.
+The application automatically generates the required security keys.
 
----
+## 2. Configure Embedded Web Chat
 
-# Load the agent
+Paste the Embedded Web Chat Configuration Script into the sample UI.
+
+## 3. Load the Agent
 
 Enter the User Identity (`sub`) value and load the agent.
 
-Different users maintain independent memory contexts:
-- User1 can store Bangalore as the preferred location
-- User2 can store Mysore independently
+Each user maintains an independent memory context.
 
-The agent retrieves stored preferences automatically during future interactions.
+For example:
+
+- User1 can store Bangalore as the preferred location
+- User2 can independently store Mysore as the preferred location
+
+During future interactions, the agent automatically retrieves the stored preferences for the respective user.
 
 ---
 
