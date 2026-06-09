@@ -208,6 +208,8 @@ The application will automatically generate and configure the required security 
 ## 2. Configure Embedded Web Chat
 
 Paste the Embedded Web Chat Configuration Script into the sample UI.
+<img width="2960" height="1596" alt="image" src="https://github.com/user-attachments/assets/481378ab-f7f7-4061-8052-5bd09fcfc721" />
+
 
 ## 3. Load the Agent
 
