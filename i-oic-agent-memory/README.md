@@ -176,19 +176,34 @@ To maintain user-specific memory, the application must uniquely identify each us
 
 For this, the application must send the User Identity (`sub`) value, which is used to track and retrieve the user’s memory context. To securely send the user identity, security must be enabled.
 
+
 ## 1. Configure Security
 
 If security is already enabled for your watsonx Orchestrate instance:
 
 - Use the existing generated security keys.
+- In the **Security Setup** section, select **"Yes, I have client Private Key"**.
+- Paste the IBM private key.
+<img width="2944" height="1444" alt="image" src="https://github.com/user-attachments/assets/de71fc12-ca9e-4732-8fe6-f6c8859a245c" />
 
-**Otherwise**:
+### Otherwise
 
-- Provide the watsonx Orchestrate API Key
-- Provide the watsonx Orchestrate Instance URL
-- Enable security using the sample UI
+1. Navigate to the **Security Setup** section.
+2. Select **"No, enable security for me"**.
+3. Choose the deployment type:
+   - **IBM Cloud SaaS**, or
+   - **AWS**
+4. Enter the following details:
+   - **watsonx Orchestrate API Key**
+   - **watsonx Orchestrate Instance URL**
+5. Click **"Rotate & Generate Keys"**.
 
-The application automatically generates the required security keys.
+The application will automatically generate and configure the required security keys.
+
+
+<img width="1470" height="781" alt="Screenshot 2026-06-09 at 11 59 45 PM" src="https://github.com/user-attachments/assets/6d42589a-20e8-4451-8684-f3c3f3d719b9" />
+
+
 
 ## 2. Configure Embedded Web Chat
 
