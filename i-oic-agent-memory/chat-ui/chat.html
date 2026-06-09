@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WXO Chat</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'IBM Plex Sans', Arial, sans-serif;
+            background-color: #ffffff;
+        }
+
+        #wxo-chat-root {
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            font-size: 18px;
+            color: #161616;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #0f62fe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-text {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: #525252;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-subtext {
+            font-size: 0.875rem;
+            color: #8d8d8d;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Shared toast notification styles */
+        .toast-notification {
+            position: fixed;
+            right: 20px;
+            background: #defbe6;
+            border-left: 4px solid #24a148;
+            padding: 1rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: none;
+            min-width: 280px;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast-notification.show {
+            display: block;
+        }
+
+        .toast-notification.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .toast-notification .toast-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .toast-notification .toast-icon {
+            width: 20px;
+            height: 20px;
+            fill: #24a148;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .toast-notification .toast-body {
+            flex: 1;
+        }
+
+        .toast-notification .toast-title {
+            font-weight: 600;
+            color: #161616;
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .toast-notification .toast-content {
+            color: #525252;
+            margin: 0;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .toast-notification .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            color: #161616;
+            font-size: 1.25rem;
+            line-height: 1;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .toast-notification .close-btn:hover {
+            color: #000;
+        }
+
+        /* JWT popup — positioned at top */
+        #jwtExpiration {
+            top: 20px;
+            z-index: 9999;
+        }
+
+        /* Chat loaded toast — positioned below JWT popup */
+        #chatLoadedToast {
+            top: 80px;
+            z-index: 10000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Error state */
+        .error {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 18px;
+            color: #da1e28;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .error button {
+            margin-top: 20px;
+            background-color: #0f62fe;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .error button:hover {
+            background-color: #0353e9;
+        }
+
+        /* Welcome prompt */
+        .welcome-prompt {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .welcome-prompt.show {
+            display: flex;
+        }
+
+        .welcome-prompt-icon {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 1.5rem;
+            background-color: #0f62fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .welcome-prompt-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: white;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        .welcome-prompt-text {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #161616;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-prompt-subtext {
+            font-size: 1rem;
+            color: #525252;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- JWT Expiration Popup -->
+    <div id="jwtExpiration" class="toast-notification">
+        <div class="toast-header">
+            <svg class="toast-icon" viewBox="0 0 16 16">
+                <path
+                    d="M8,1C4.1,1,1,4.1,1,8s3.1,7,7,7s7-3.1,7-7S11.9,1,8,1z M7,11L3.5,7.5L4.9,6.1L7,8.2l4.1-4.1l1.4,1.4L7,11z" />
+            </svg>
+            <div class="toast-body">
+                <h3 class="toast-title">Success!</h3>
+                <p class="toast-content">Generated JWT expires at:<br><span id="expirationTime"></span></p>
+            </div>
+            <button class="close-btn" onclick="closeToast('jwtExpiration')" aria-label="Close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Chat Loaded Toast -->
+    <div id="chatLoadedToast" class="toast-notification">
+        <div class="toast-header">
+            <svg class="toast-icon" viewBox="0 0 16 16">
+                <path
+                    d="M8,1C4.1,1,1,4.1,1,8s3.1,7,7,7s7-3.1,7-7S11.9,1,8,1z M7,11L3.5,7.5L4.9,6.1L7,8.2l4.1-4.1l1.4,1.4L7,11z" />
+            </svg>
+            <div class="toast-body">
+                <h3 class="toast-title">Chat Loaded Successfully</h3>
+                <p class="toast-content">Click the chat icon to start a conversation</p>
+            </div>
+            <button class="close-btn" onclick="closeToast('chatLoadedToast')" aria-label="Close">&times;</button>
+        </div>
+    </div>
+
+    <div id="wxo-chat-root">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading WXO Chat</div>
+            <div class="loading-subtext">Initializing secure connection...</div>
+        </div>
+    </div>
+
+    <!-- Welcome prompt shown after loading, hidden when chat opens -->
+    <div class="welcome-prompt" id="welcomePrompt">
+        <div class="welcome-prompt-icon">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M17.74 30L16 29l4-7h6a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2h9v2H6a4 4 0 01-4-4V8a4 4 0 014-4h20a4 4 0 014 4v12a4 4 0 01-4 4h-4.84z" />
+                <path d="M8 12h16v2H8zM8 16h10v2H8z" />
+            </svg>
+        </div>
+        <div class="welcome-prompt-text">Chat is ready!</div>
+        <div class="welcome-prompt-subtext">Click the chat icon below to start a conversation</div>
+    </div>
+
+    <!-- Include required libraries -->
+    <script>
+        let wxoInstance = null;
+
+        // ── JWT Generation (Calls Backend API) ───────────────────────
+        async function generateJWT(privateKeyPem, ibmPublicKeyPem, userPayloadObj, contextObj, subject) {
+            const serverUrl = "http://localhost:3001/api/jwt";
+
+            try {
+                const response = await fetch(serverUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subject: subject,
+                        userPayload: userPayloadObj,
+                        context: contextObj,
+                        privateKey: privateKeyPem,
+                        ibmKey: ibmPublicKeyPem
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Server error');
+                }
+
+                const data = await response.json();
+                return data.jwt;
+            } catch (error) {
+                console.error('❌ Backend JWT error:', error);
+                throw new Error('Backend Server Failed: ' + error.message);
+            }
+        }
+
+        // ── UI Helpers ──────────────────────────────────────────────
+        function showError(message) {
+            document.getElementById('wxo-chat-root').innerHTML = `
+                <div class="error">
+                    <div>${message}</div>
+                    <button onclick="window.close()">Close Window</button>
+                </div>
+            `;
+        }
+
+        function closeToast(id) {
+            const el = document.getElementById(id);
+            if (el && el.classList.contains('show')) {
+                el.classList.add('fade-out');
+                setTimeout(() => el.classList.remove('show', 'fade-out'), 500);
+            }
+        }
+
+        function hideWelcomePrompt() {
+            const el = document.getElementById('welcomePrompt');
+            if (el) el.classList.remove('show');
+        }
+
+        // ── Chat Initialization ─────────────────────────────────────
+        async function initializeChat() {
+            try {
+                const chatData = localStorage.getItem('wxo_chat_data');
+                if (!chatData) {
+                    showError('No chat configuration found. Please launch from the main page.');
+                    return;
+                }
+
+                const data = JSON.parse(chatData);
+
+                let jwt = null;
+
+                // Only generate JWT if security is enabled
+                if (data.securityEnabled) {
+                    // Show JWT expiration popup
+                    if (data.jwtExpiration) {
+                        const expirationDate = new Date(data.jwtExpiration * 1000);
+                        document.getElementById('expirationTime').textContent = expirationDate.toLocaleString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+                        });
+                        document.getElementById('jwtExpiration').classList.add('show');
+                    }
+
+                    // Generate JWT
+                    jwt = await generateJWT(
+                        data.privateKey, data.ibmKey,
+                        data.userPayload, data.context, data.subject
+                    );
+                }
+
+                // Prepare configuration
+                const config = data.config;
+                config.rootElementID = 'wxo-chat-root';
+                if (!config.chatOptions) config.chatOptions = {};
+
+                // Define identity token function for JWT refresh
+                const getIdentityToken = async function (isRefresh = false) {
+                    const newToken = await generateJWT(
+                        data.privateKey, data.ibmKey,
+                        data.userPayload, data.context, data.subject
+                    );
+
+                    // Update the global config token as required by the loader
+                    window.wxOConfiguration.token = newToken;
+
+                    return newToken;
+                };
+
+                // Set token and identity function if security is enabled
+                if (data.securityEnabled && jwt) {
+                    config.token = jwt;
+
+                    // Set identityTokenFunction at top level (not in chatOptions)
+                    config.identityTokenFunction = getIdentityToken;
+                }
+
+                // onLoad callback
+                config.chatOptions.onLoad = function (instance) {
+                    wxoInstance = instance;
+
+                    // Hide loading spinner
+                    const loadingEl = document.querySelector('.loading');
+                    if (loadingEl) loadingEl.style.display = 'none';
+
+                    // Show welcome prompt
+                    document.getElementById('welcomePrompt')?.classList.add('show');
+
+                    // Hide welcome prompt & toast when chat opens
+                    instance.on('open', () => {
+                        hideWelcomePrompt();
+                        closeToast('chatLoadedToast');
+                    });
+                    instance.on('pre:send', () => closeToast('chatLoadedToast'));
+
+                    // Fallback: hide welcome prompt on ANY click on the page
+                    document.addEventListener('click', function hideOnClick() {
+                        hideWelcomePrompt();
+                        document.removeEventListener('click', hideOnClick);
+                    });
+
+                    // Token refresh handler (only if security is enabled)
+                    if (data.securityEnabled) {
+                        instance.on('authTokenNeeded', async (event) => {
+                            try {
+                                event.authToken = await getIdentityToken(true);
+                            } catch (error) {
+                                console.error('❌ Failed to refresh token:', error);
+                                showError('Token refresh failed. Please close and relaunch.');
+                            }
+                        });
+                    }
+
+                    instance.on('error', (error) => {
+                        console.error('❌ WXO Chat Error:', error);
+                    });
+                };
+
+                // Layout configuration
+                config.layout = {
+                    form: data.layoutMode,
+                    showOrchestrateHeader: true
+                };
+
+                if (data.layoutMode === 'float') {
+                    config.layout.width = data.floatWidth || '450px';
+                    config.layout.height = data.floatHeight || '600px';
+                }
+
+                if (data.layoutMode === 'fullscreen-overlay') {
+                    config.showLauncher = true;
+                }
+
+                // Language configuration
+                if (data.defaultLocale && data.defaultLocale !== 'en') {
+                    config.defaultLocale = data.defaultLocale;
+                }
+
+                // Style configuration
+                if (data.style) {
+                    config.style = {
+                        headerColor: data.style.headerColor,
+                        userMessageBackgroundColor: data.style.userMessageBackgroundColor,
+                        primaryColor: data.style.primaryColor
+                    };
+                }
+
+                // Initialize WXO
+                window.wxOConfiguration = config;
+
+                const script = document.createElement('script');
+                script.src = `${config.hostURL}/wxochat/wxoLoader.js?embed=true`;
+                script.addEventListener('load', () => {
+                    if (window.wxoLoader) {
+                        wxoLoader.init();
+
+                        // Show success toast after a short delay
+                        setTimeout(() => {
+                            const toast = document.getElementById('chatLoadedToast');
+                            if (toast) {
+                                toast.classList.add('show');
+                                // Auto-hide after 4 seconds
+                                setTimeout(() => closeToast('chatLoadedToast'), 4000);
+                            }
+                        }, 500);
+                    } else {
+                        showError('wxoLoader not available');
+                    }
+                });
+                script.onerror = () => showError('Failed to load WXO chat script');
+                document.head.appendChild(script);
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Error initializing chat: ' + error.message);
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', initializeChat);
+
+        // Listen for reload messages from parent window
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'reload') {
+                localStorage.setItem('wxo_chat_data', JSON.stringify(event.data.data));
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+
+</html>

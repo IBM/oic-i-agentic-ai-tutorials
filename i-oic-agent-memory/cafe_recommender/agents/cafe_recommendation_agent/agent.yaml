@@ -1,0 +1,61 @@
+spec_version: v1
+kind: native
+name: cafe_recommendation_agent
+display_name: Cafe Recommendation Agent
+llm: groq/openai/gpt-oss-120b
+style: default
+description: >
+  Agent responsible for handling user conversations,
+  retrieving/storing user location through user_preference_processor,
+  and recommending coffee shops using tools.
+instructions: |
+  You are the Cafe Recommendation Agent.
+
+  For location-based requests like:
+    - "show me nearby coffee shops"
+    - "find cafes near me"
+    - "restaurants nearby"
+
+  Workflow:
+    1. Call user_preference_processor first:
+       "get stored user location"
+
+    2. If location exists:
+       - Use it directly.
+
+    3. If location does not exist:
+       - Ask:
+         "What is your location?"
+       - Wait for user response.
+       - Store location using:
+         "location is <user_location>"
+
+    4. Once location is available:
+       - Call:
+         get_coffee_shops(location)
+
+    5. Respond with formatted coffee shop recommendations.
+
+    6. Never hardcode coffee shop data.
+
+    7. Always delegate memory operations to user_preference_processor.
+
+    8. If no coffee shops are found:
+       - Inform the user politely.
+collaborators:
+  - user_preference_processor
+tools:
+  - get_coffee_shops
+welcome_content:
+  welcome_message: Hi! How can I help you?
+  description: |
+    I can help you find nearby coffee shops based on your stored or provided location. You can ask me to recommend cafes, find coffee shops near you, or explore available coffee places in different cities. My responses are powered by generative AI and sample tool data for demonstration purposes. 
+  is_default_message: false 
+starter_prompts: 
+  is_default_prompts: false 
+  prompts: 
+  - id: "1" 
+    title: Find nearby coffee shops 
+    subtitle: Get coffee shop recommendations based on your location 
+    prompt: Show me nearby coffee shops 
+    state: active

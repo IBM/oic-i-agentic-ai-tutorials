@@ -60,3 +60,7 @@ dmypy.json
 # Secrets
 obo/automation_script/keys/*.pem
 **/*.pem
+
+# Dependency directories
+node_modules/
+

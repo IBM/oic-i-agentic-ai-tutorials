@@ -1,0 +1,21 @@
+# Core LangGraph dependencies for Data Processor Agent
+langgraph>=0.2.0
+langchain-core>=0.3.0
+
+# Memory storage SDK
+ibm-watsonx-orchestrate-sdk>=0.7.0
+
+
+# State persistence options (uncomment as needed)
+# langgraph-checkpoint-sqlite  # For SQLite checkpointer
+# langgraph-checkpoint-postgres  # For PostgreSQL checkpointer
+
+# Data processing libraries (add as needed for your use case)
+# pandas>=2.0.0  # For data manipulation and analysis
+# numpy>=1.24.0  # For numerical operations
+# scikit-learn>=1.3.0  # For machine learning and analytics
+
+# LLM integrations (uncomment as needed)
+# langchain>=0.3.0  # If using LangChain components
+# langchain-openai  # If using OpenAI models
+# langchain-ibm  # If using IBM watsonx.ai models

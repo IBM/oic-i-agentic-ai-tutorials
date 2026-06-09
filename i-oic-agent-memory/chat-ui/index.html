@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WXO Security Configurator</title>
+
+    <!-- Carbon Design System CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/carbon-components@10.58.0/css/carbon-components.min.css">
+    <!-- JSZip for downloading Security Configuration files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        :root {
+            --bx-brand-01: #0f62fe;
+            --bx-active-01: #0353e9;
+            --bx-ui-01: #f4f4f4;
+            --bx-ui-02: #ffffff;
+            --bx-text-01: #161616;
+            --bx-text-02: #525252;
+            --bx-danger: #da1e28;
+            --bx-success: #24a148;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bx-ui-01);
+            color: var(--bx-text-01);
+        }
+
+        .main-wrapper {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .header-section {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .header-section h1 {
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section p {
+            color: var(--bx-text-02);
+            font-size: 1rem;
+        }
+
+        /* Wizard Step Styles */
+        .step-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .step-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .wizard-card {
+            background: var(--bx-ui-02);
+            padding: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--bx-brand-01);
+        }
+
+        .step-indicator {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--bx-brand-01);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .step-title {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .bx--text-area {
+            min-height: 80px;
+            background: #f4f4f4;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.75rem;
+            width: 100%;
+            resize: none;
+            transition: all 0.2s;
+        }
+        .bx--text-area:focus {
+            background: #fff;
+            border-color: #0f62fe;
+            outline: 2px solid #0f62fe;
+            outline-offset: -2px;
+        }
+        textarea[readonly] {
+            background: #f8f9fa !important;
+            cursor: default;
+            color: #525252;
+            border-style: dashed;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 0.875rem;
+        }
+
+        .bx--text-area, .bx--text-input {
+            width: 100%;
+            border-radius: 0;
+            border: 1px solid #dcdcdc;
+            padding: 0.75rem;
+            background-color: #fff !important;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bx--text-area:focus, .bx--text-input:focus {
+            border-color: var(--bx-brand-01);
+            box-shadow: 0 0 0 2px rgba(15, 98, 254, 0.2);
+            outline: none;
+        }
+
+        .branch-options {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .branch-card {
+            flex: 1;
+            padding: 1.5rem;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .branch-card:hover {
+            border-color: var(--bx-brand-01);
+            background-color: rgba(15, 98, 254, 0.02);
+        }
+
+        .branch-card.selected {
+            border-color: var(--bx-brand-01);
+            background-color: rgba(15, 98, 254, 0.05);
+        }
+
+        .branch-card h4 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .branch-card p {
+            font-size: 0.875rem;
+            color: var(--bx-text-02);
+            margin: 0;
+        }
+
+        .action-bar {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Validation & Feedback */
+        .field-error {
+            border-color: var(--bx-danger) !important;
+        }
+
+        .error-msg {
+            color: var(--bx-danger);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Loading States */
+        .loading-btn {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toasts */
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            z-index: 10000;
+            display: none;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .toast.show { display: flex; align-items: center; gap: 1rem; }
+        .toast-error { background: #fff1f1; border-left: 4px solid var(--bx-danger); color: var(--bx-text-01); }
+        .toast-success { background: #defbe6; border-left: 4px solid var(--bx-success); color: var(--bx-text-01); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        /* Workspace Layout - 50/50 Split */
+        .main-wrapper {
+            max-width: 100%;
+            margin: 0;
+            padding: 0.5rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Back to equal 50/50 split */
+            gap: 2rem;
+            height: calc(100vh - 80px); /* Maximized height */
+        }
+
+        .config-column {
+            display: flex;
+            flex-direction: column;
+            /* Smaller fonts for data entry column */
+            font-size: 0.85rem;
+            min-width: 0;
+        }
+
+        .config-column .form-label { 
+            font-size: 0.75rem; 
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+        
+        .config-column .bx--text-input, 
+        .config-column .bx--text-area { 
+            font-size: 0.85rem; 
+            padding: 0.5rem;
+        }
+
+        .column-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--bx-brand-01); /* IBM Blue */
+            letter-spacing: 0.5px;
+        }
+
+        .config-column .section-title { 
+            font-size: 0.9rem; 
+            font-weight: 600;
+        }
+
+        .config-column .section-num { 
+            width: 24px; 
+            height: 24px; 
+            font-size: 0.8rem;
+            line-height: 24px;
+            background: var(--bx-brand-01); /* IBM Blue */
+            color: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .config-column .bx--btn {
+            font-size: 0.8rem;
+            min-height: 2.25rem;
+        }
+
+        .chat-column {
+            display: flex;
+            flex-direction: column;
+            min-width: 0; 
+        }
+
+        .wizard-card {
+            background: var(--bx-ui-02);
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--bx-brand-01);
+            margin-bottom: 1.5rem;
+        }
+
+        .config-container {
+            flex: 1;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 2rem;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .chat-preview-container {
+            flex: 1;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .chat-placeholder {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8d8d8d;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .chat-placeholder.hidden { display: none; }
+
+        .chat-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .chat-frame.active { display: block; }
+
+        .header-section {
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            border-top: 4px solid var(--bx-brand-01); /* IBM Blue top accent */
+            margin-bottom: 0.5rem;
+            background: #fff;
+        }
+
+        .header-section h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .branch-card {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .branch-card p { margin: 0; }
+
+        .branch-card:hover { border-color: var(--bx-brand-01); background: #f0f4ff; }
+        .branch-card.selected { border-color: var(--bx-brand-01); background: #f0f4ff; box-shadow: inset 0 0 0 1px var(--bx-brand-01); }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--bx-brand-01);
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #f4f4f4;
+        }
+
+        .section-num {
+            width: 24px;
+            height: 24px;
+            background: var(--bx-brand-01);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="bx--body">
+    <div id="errorToast" class="toast toast-error">
+        <span id="errorToastMsg"></span>
+    </div>
+    <div id="successToast" class="toast toast-success">
+        <span id="successToastMsg"></span>
+    </div>
+
+    <div class="header-section">
+        <h1 class="bx--type-display-01">WXO Security Configurator</h1>
+        <p>Unified setup and testing workspace</p>
+    </div>
+
+    <div class="main-wrapper">
+        
+        <!-- LEFT COLUMN: CONFIG -->
+        <div class="config-column">
+            <div class="section-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid #f4f4f4; padding-bottom: 0.5rem;">
+                <h2 class="column-header">Configuration Details</h2>
+            </div>
+
+            <div class="config-container">
+                <!-- PHASE 1: SCRIPT -->
+                <div id="phase-1">
+                    <div class="section-header">
+                        <div class="section-num">1</div>
+                        <h2 class="section-title">Configuration Script</h2>
+                    </div>
+                    <div class="form-section">
+                        <p style="font-size: 0.8rem; color: var(--bx-text-02); margin-bottom: 0.5rem;">
+                            Navigate to <strong>Manage Agents → Your Agent → Channel → Embedded Agent → Live</strong> to copy the script.
+                        </p>
+                        <textarea id="wxoConfigScript" class="bx--text-area" rows="4" placeholder="Paste script tag here..."></textarea>
+                    </div>
+                </div>
+
+                <!-- PHASE 2: SECURITY SETUP -->
+                <div id="phase-2" style="margin-top: 1.25rem;">
+                    <div class="section-header">
+                        <div class="section-num">2</div>
+                        <h2 class="section-title">Security Setup</h2>
+                    </div>
+                    <p style="margin-bottom: 1rem; font-size: 0.85rem;">Did you enable security and have a Client Private Key?</p>
+                    
+                    <div class="branch-options">
+                        <div class="branch-card" onclick="selectSecurityBranch('yes')" id="card-yes">
+                            <p style="font-weight: 600;">Yes, I have client Private Key</p>
+                        </div>
+                        <div class="branch-card" onclick="selectSecurityBranch('no')" id="card-no">
+                            <p style="font-weight: 600;">No, enable security for me</p>
+                        </div>
+                    </div>
+
+                    <div id="branch-yes" class="hidden" style="margin-top: 1rem;">
+                        <textarea id="privateKeyRaw" class="bx--text-area" rows="3" placeholder="Paste private key..."></textarea>
+                    </div>
+
+                    <div id="branch-no" class="hidden" style="margin-top: 1.5rem; padding: 1.5rem; background: #fdfdfd; border: 1px solid #e0e0e0; border-radius: 4px;">
+                        <!-- PLATFORM SELECTION -->
+                        <div class="form-section" style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;">
+                            <label class="form-label" style="margin-bottom: 0.75rem;">Deployment Platform</label>
+                            <div style="display: flex; gap: 2rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="deploymentPlatform" value="ibmcloud" checked onchange="togglePlatform()" style="width: 1.1rem; height: 1.1rem; cursor: pointer;">
+                                    <span style="font-size: 0.85rem;">IBM Cloud SaaS</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" name="deploymentPlatform" value="aws" onchange="togglePlatform()" style="width: 1.1rem; height: 1.1rem; cursor: pointer;">
+                                    <span style="font-size: 0.85rem;">AWS</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <label class="form-label" id="apiKeyLabel">watsonx Orchestrate API Key</label>
+                                <a id="apiKeyHelp" href="https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-generating-key-cloud" target="_blank" style="font-size: 0.75rem; color: var(--bx-brand-01);">How to get?</a>
+                            </div>
+                            <input id="apiKey" type="password" class="bx--text-input" placeholder="Paste your API key here...">
+                        </div>
+                        <div class="form-section">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <label class="form-label">Instance URL</label>
+                                <a id="instanceUrlHelp" href="https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-getting-endpoint" target="_blank" style="font-size: 0.75rem; color: var(--bx-brand-01);">How to get?</a>
+                            </div>
+                            <input id="instanceUrl" type="text" class="bx--text-input" placeholder="https://api.au-syd.watson-orchestrate.cloud.ibm.com/instances/...">
+                        </div>
+                        <button class="bx--btn bx--btn--tertiary" style="width: 100%; margin-top: 1rem;" onclick="handleStep2Rotate()">Rotate & Generate Keys</button>
+
+                        <div id="step2-results" class="hidden" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed #e0e0e0;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <p style="font-weight: 600; font-size: 0.85rem; color: var(--bx-success);">✓ Security Configured</p>
+                                <button class="copy-btn" onclick="copyToClipboard('resPrivStep2')">Copy Key</button>
+                            </div>
+                            <textarea id="resPrivStep2" class="bx--text-area" rows="4" readonly style="font-family: monospace; font-size: 0.75rem; background: #fff;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHASE 3: USER ID -->
+                <div id="phase-3" style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #f4f4f4;">
+                    <div class="section-header">
+                        <div class="section-num">3</div>
+                        <h2 class="section-title">User Identity (sub)</h2>
+                    </div>
+                    <div class="form-section">
+                        <input id="subjectGlobal" type="text" class="bx--text-input" placeholder="e.g. user@example.com">
+                    </div>
+                    <div class="action-bar" style="margin-top: 1rem;">
+                        <button id="btn-main-load" class="bx--btn bx--btn--primary" style="width: 100%;" onclick="handleMainLoad()">Setup & Launch Agent</button>
+                    </div>
+                </div>
+
+                <!-- RESULTS -->
+                <div id="phase-results" class="hidden" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px dashed #f4f4f4;">
+                    <div class="section-header">
+                        <div class="section-num">✓</div>
+                        <h2 class="section-title">Credentials Generated</h2>
+                        <button class="copy-btn" onclick="copyToClipboard('resPriv')">Copy Key</button>
+                    </div>
+                    <textarea id="resPriv" class="bx--text-area" rows="2" readonly style="font-family: monospace; font-size: 0.7rem;"></textarea>
+                </div>
+            </div>
+     </div>
+
+        <!-- RIGHT COLUMN: CHAT -->
+        <div class="chat-column">
+            <div class="section-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid #f4f4f4; padding-bottom: 0.5rem;">
+                <h2 class="column-header">Agent Preview</h2>
+            </div>
+            
+            <div id="chat-container" class="chat-preview-container">
+                <div id="chat-placeholder" class="chat-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 32 32" style="fill: #8d8d8d; margin-bottom: 1rem;">
+                        <path d="M17.74 30L16 29l4-7h6a2 2 0 002-2V8a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2h9v2H6a4 4 0 01-4-4V8a4 4 0 014-4h20a4 4 0 014 4v12a4 4 0 01-4 4h-4.84z" />
+                    </svg>
+                    <h3 style="font-weight: 600; color: #161616; margin-bottom: 0.5rem;">Ready to Preview</h3>
+                    <p style="font-size: 0.85rem; color: #525252;">Complete the setup on the left to launch the agent.</p>
+                </div>
+                <iframe id="chat-frame" class="chat-frame"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let lastPrivKey = null;
+        let lastIbmKey = null;
+        let lastSubject = null;
+
+        // --- Core Functions ---
+
+        function togglePlatform() {
+            const platform = document.querySelector('input[name="deploymentPlatform"]:checked').value;
+            const apiKeyLabel = document.getElementById('apiKeyLabel');
+            const apiKeyHelp = document.getElementById('apiKeyHelp');
+            const instanceUrlInput = document.getElementById('instanceUrl');
+            const instanceUrlHelp = document.getElementById('instanceUrlHelp');
+
+            if (platform === 'aws') {
+                apiKeyLabel.textContent = 'watsonx Orchestrate API Key';
+                apiKeyHelp.href = 'https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=api-generating-key';
+                instanceUrlInput.placeholder = 'https://dl.watson-orchestrate.ibm.com/instances/...';
+                instanceUrlHelp.href = 'https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=api-getting-endpoint';
+            } else {
+                apiKeyLabel.textContent = 'watsonx Orchestrate API Key';
+                apiKeyHelp.href = 'https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-generating-key-cloud';
+                instanceUrlInput.placeholder = 'https://api.au-syd.watson-orchestrate.cloud.ibm.com/instances/...';
+                instanceUrlHelp.href = 'https://www.ibm.com/docs/en/watsonx/watson-orchestrate/base?topic=api-getting-endpoint';
+            }
+        }
+
+        function parseWXOConfig(scriptText) {
+            try {
+                let cleaned = scriptText.replace(/<\/?script[^>]*>/gi, '');
+                cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"');
+                cleaned = cleaned.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+                const configMatch = cleaned.match(/window\.wxOConfiguration\s*=\s*({[\s\S]*?})\s*;/);
+                if (!configMatch) throw new Error('Could not find wxOConfiguration');
+                let configStr = configMatch[1];
+                configStr = configStr.replace(/\w+\s*:\s*function\s*\([^)]*\)\s*\{[\s\S]*?\n\s*\}/g, '');
+                configStr = configStr.replace(/,\s*([\]}])/g, '$1');
+                configStr = configStr.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+                configStr = configStr.replace(/'([^']*)'/g, '"$1"');
+                try {
+                    return JSON.parse(configStr);
+                } catch (e) {
+                    return new Function('return (' + configMatch[1] + ')')();
+                }
+            } catch (e) {
+                throw new Error('Failed to parse script: ' + e.message);
+            }
+        }
+
+        async function generateJWT(privateKey, subject) {
+            const response = await fetch('http://localhost:3001/api/jwt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subject, privateKey, userPayload: {}, context: {} })
+            });
+            if (!response.ok) throw new Error((await response.json()).error || 'JWT Failed');
+            const data = await response.json();
+            return { jwt: data.jwt, exp: Math.floor(Date.now() / 1000) + 3600 };
+        }
+
+        function selectSecurityBranch(branch) {
+            document.getElementById('card-yes').classList.toggle('selected', branch === 'yes');
+            document.getElementById('card-no').classList.toggle('selected', branch === 'no');
+            document.getElementById('branch-yes').classList.toggle('hidden', branch !== 'yes');
+            document.getElementById('branch-no').classList.toggle('hidden', branch !== 'no');
+        }
+
+        async function handleStep2Rotate() {
+            clearErrors();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const instanceUrl = document.getElementById('instanceUrl').value.trim();
+            if (!apiKey) { markError('apiKey', 'API Key is required'); return; }
+            if (!instanceUrl) { markError('instanceUrl', 'Instance URL is required'); return; }
+
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = 'Rotating...';
+
+            try {
+                const keys = await rotateSecurity(apiKey, instanceUrl);
+                document.getElementById('resPrivStep2').value = keys.privateKey;
+                document.getElementById('step2-results').classList.remove('hidden');
+                showToast('success', 'Security rotated successfully!');
+
+                // AUTO-LAUNCH CHECK:
+                const script = document.getElementById('wxoConfigScript').value.trim();
+                const subject = document.getElementById('subjectGlobal').value.trim();
+                if (script && subject) {
+                    showToast('success', 'Auto-launching agent with new credentials...');
+                    await performLoad(keys.privateKey, null, subject, 'btn-main-load');
+                }
+            } catch (e) {
+                showToast('error', e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        }
+
+        async function rotateSecurity(apiKey, instanceUrl) {
+            const { apiUrl, instanceId } = parseUrl(instanceUrl);
+            const token = await getIAMToken(apiKey);
+            const authHeader = { 'Authorization': `Bearer ${token}` };
+
+            showToast('success', 'Checking current security status...');
+            const currentConfig = await proxyRequest(`${apiUrl}/instances/${instanceId}/v1/embed/secure/config`, 'GET', authHeader);
+            
+            if (currentConfig.is_security_enabled) {
+                showToast('success', 'Resetting security...');
+                await proxyRequest(`${apiUrl}/instances/${instanceId}/v1/embed/secure/config`, 'POST', 
+                    { ...authHeader, 'Content-Type': 'application/json' }, 
+                    JSON.stringify({ is_security_enabled: false }));
+            }
+
+            showToast('success', 'Generating IBM key...');
+            const ibmKeyRes = await proxyRequest(`${apiUrl}/instances/${instanceId}/v1/embed/secure/generate-key-pair`, 'POST', authHeader);
+            const ibmKey = ibmKeyRes.public_key.replace(/\\n/g, '\n').trim();
+            
+            showToast('success', 'Generating Client key...');
+            const clientKeyRes = await fetch('http://localhost:3001/api/keys/generate', { method: 'POST' });
+            const clientKeys = await clientKeyRes.json();
+            
+            showToast('success', 'Enabling security...');
+            await proxyRequest(`${apiUrl}/instances/${instanceId}/v1/embed/secure/config`, 'POST', 
+                { ...authHeader, 'Content-Type': 'application/json' }, 
+                JSON.stringify({ 
+                    is_security_enabled: true, 
+                    public_key: ibmKey, 
+                    client_public_key: clientKeys.publicKey 
+                }));
+
+            downloadZip(ibmKey, clientKeys.publicKey, clientKeys.privateKey);
+            return clientKeys;
+        }
+
+        async function handleMainLoad() {
+            clearErrors();
+            const script = document.getElementById('wxoConfigScript').value.trim();
+            const subject = document.getElementById('subjectGlobal').value.trim();
+            const isAuto = document.getElementById('card-no').classList.contains('selected');
+            const isManual = document.getElementById('card-yes').classList.contains('selected');
+
+            if (!script) { markError('wxoConfigScript', 'Script is required'); return; }
+            if (!subject) { markError('subjectGlobal', 'Subject is required'); return; }
+            if (!isAuto && !isManual) { showToast('error', 'Please select a Security Setup option'); return; }
+
+            if (isManual) {
+                const privKey = document.getElementById('privateKeyRaw').value.trim();
+                if (!privKey) { markError('privateKeyRaw', 'Private key is required'); return; }
+                await performLoad(privKey, null, subject, 'btn-main-load');
+            } else {
+                const apiKey = document.getElementById('apiKey').value.trim();
+                const instanceUrl = document.getElementById('instanceUrl').value.trim();
+                const existingKey = document.getElementById('resPrivStep2').value.trim();
+                
+                if (existingKey) {
+                    // Use key from Step 2
+                    await performLoad(existingKey, null, subject, 'btn-main-load');
+                } else {
+                    // Perform rotation now
+                    if (!apiKey) { markError('apiKey', 'API Key is required'); return; }
+                    if (!instanceUrl) { markError('instanceUrl', 'Instance URL is required'); return; }
+                    await performAutoSetupAndLoad(apiKey, instanceUrl, subject);
+                }
+            }
+        }
+
+        async function performAutoSetupAndLoad(apiKey, instanceUrl, subject) {
+            setLoading('btn-main-load', true);
+            try {
+                const keys = await rotateSecurity(apiKey, instanceUrl);
+                document.getElementById('resPriv').value = keys.privateKey;
+                document.getElementById('phase-results').classList.remove('hidden');
+                await performLoad(keys.privateKey, null, subject, 'btn-main-load');
+            } catch (e) {
+                showToast('error', e.message);
+            } finally {
+                setLoading('btn-main-load', false);
+            }
+        }
+
+        async function performLoad(privKey, ibmKey, subject, btnId) {
+            setLoading(btnId, true);
+            try {
+                const scriptText = document.getElementById('wxoConfigScript').value.trim();
+                const config = parseWXOConfig(scriptText);
+                const jwtRes = await generateJWT(privKey, subject);
+                
+                const chatData = {
+                    config, securityEnabled: true, privateKey: privKey, ibmKey, 
+                    subject, jwtExpiration: jwtRes.exp, layoutMode: 'float', floatWidth: '450px', floatHeight: '600px'
+                };
+
+                localStorage.setItem('wxo_chat_data', JSON.stringify(chatData));
+                launchInline(chatData);
+                showToast('success', 'Chat loaded in preview below!');
+            } catch (e) { showToast('error', e.message); }
+            finally { setLoading(btnId, false); }
+        }
+
+        function launchInline(data) {
+            const container = document.getElementById('chat-container');
+            const frame = document.getElementById('chat-frame');
+            const placeholder = document.getElementById('chat-placeholder');
+            
+            placeholder.classList.add('hidden');
+            frame.classList.add('active');
+            frame.src = 'chat.html';
+        }
+
+        // --- Helpers ---
+
+        async function getIAMToken(apiKey) {
+            const platform = document.querySelector('input[name="deploymentPlatform"]:checked').value;
+
+            if (platform === 'aws') {
+                const iamEndpoints = [
+                    { url: 'https://iam.platform.saas.ibm.com', name: 'Production' },
+                    { url: 'https://iam.platform.test.saas.ibm.com', name: 'Test/Staging' },
+                    { url: 'https://iam.platform.dev.saas.ibm.com', name: 'Development' }
+                ];
+
+                for (const iam of iamEndpoints) {
+                    try {
+                        console.log(`Trying ${iam.name} IAM environment...`);
+                        const data = await proxyRequest(
+                            `${iam.url}/siusermgr/api/1.0/apikeys/token`,
+                            'POST',
+                            { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                            JSON.stringify({ apikey: apiKey })
+                        );
+                        if (data.token) return data.token;
+                    } catch (e) {
+                        console.warn(`${iam.name} failed: ${e.message}`);
+                    }
+                }
+                throw new Error("Failed to obtain IAM token from all AWS environments.");
+            } else {
+                const url = "https://iam.cloud.ibm.com/identity/token";
+                const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                const textBody = `grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${apiKey}`;
+                
+                const res = await proxyRequest(url, 'POST', headers, textBody);
+                if (!res.access_token) throw new Error('IAM Auth Failed: ' + (res.errorMessage || 'Unknown error'));
+                return res.access_token;
+            }
+        }
+
+        async function proxyRequest(url, method, headers, textBody) {
+            const res = await fetch("http://localhost:3001/api/proxy", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, method, headers, textBody })
+            });
+            if (!res.ok) throw new Error((await res.json()).error || 'Proxy error');
+            return await res.json();
+        }
+
+        function parseUrl(url) {
+            const match = url.match(/^(https?:\/\/[^\/]+)\/instances\/([a-zA-Z0-9-]+)$/);
+            if (!match) throw new Error('Invalid Instance URL');
+            return { apiUrl: match[1], instanceId: match[2] };
+        }
+
+        function downloadZip(ibm, pub, priv) {
+            const zip = new JSZip();
+            const f = zip.folder("wxo_keys");
+            f.file("ibm_public.key", ibm);
+            f.file("client_public.key", pub);
+            f.file("client_private.key", priv);
+            zip.generateAsync({ type: "blob" }).then(c => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(c);
+                a.download = "wxo_keys.zip";
+                a.click();
+            });
+        }
+
+        function setLoading(id, loading) {
+            const b = document.getElementById(id);
+            if (!b) return;
+            if (loading) {
+                b.classList.add('loading-btn');
+                b.disabled = true;
+                b.dataset.label = b.innerHTML;
+                b.innerHTML = `<span class="spinner"></span>Processing...`;
+            } else {
+                b.classList.remove('loading-btn');
+                b.disabled = false;
+                b.innerHTML = b.dataset.label;
+            }
+        }
+
+        function markError(id, msg) {
+            const el = document.getElementById(id);
+            el.classList.add('field-error');
+            const err = document.createElement('span');
+            err.className = 'error-msg';
+            err.textContent = msg;
+            el.parentNode.appendChild(err);
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(e => e.classList.remove('field-error'));
+            document.querySelectorAll('.error-msg').forEach(e => e.remove());
+        }
+
+        function copyToClipboard(id) {
+            const el = document.getElementById(id);
+            el.select();
+            document.execCommand('copy');
+            showToast('success', 'Copied to clipboard!');
+        }
+
+        function showToast(type, msg) {
+            const t = document.getElementById(type + 'Toast');
+            const m = document.getElementById(type + 'ToastMsg');
+            m.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 5000);
+        }
+
+        // Initialize UI
+        window.onload = () => {
+            togglePlatform();
+            selectSecurityBranch('no'); // Default to "No, enable security for me"
+        };
+    </script>
+</body>
+</html>
