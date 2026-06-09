@@ -457,24 +457,10 @@
             </div>
 
             <div class="config-container">
-                <!-- PHASE 1: SCRIPT -->
+                <!-- PHASE 1: SECURITY SETUP -->
                 <div id="phase-1">
                     <div class="section-header">
                         <div class="section-num">1</div>
-                        <h2 class="section-title">Configuration Script</h2>
-                    </div>
-                    <div class="form-section">
-                        <p style="font-size: 0.8rem; color: var(--bx-text-02); margin-bottom: 0.5rem;">
-                            Navigate to <strong>Manage Agents → Your Agent → Channel → Embedded Agent → Live</strong> to copy the script.
-                        </p>
-                        <textarea id="wxoConfigScript" class="bx--text-area" rows="4" placeholder="Paste script tag here..."></textarea>
-                    </div>
-                </div>
-
-                <!-- PHASE 2: SECURITY SETUP -->
-                <div id="phase-2" style="margin-top: 1.25rem;">
-                    <div class="section-header">
-                        <div class="section-num">2</div>
                         <h2 class="section-title">Security Setup</h2>
                     </div>
                     <p style="margin-bottom: 1rem; font-size: 0.85rem;">Did you enable security and have a Client Private Key?</p>
@@ -531,6 +517,20 @@
                             </div>
                             <textarea id="resPrivStep2" class="bx--text-area" rows="4" readonly style="font-family: monospace; font-size: 0.75rem; background: #fff;"></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <!-- PHASE 2: SCRIPT -->
+                <div id="phase-2" style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #f4f4f4;">
+                    <div class="section-header">
+                        <div class="section-num">2</div>
+                        <h2 class="section-title">Configuration Script</h2>
+                    </div>
+                    <div class="form-section">
+                        <p style="font-size: 0.8rem; color: var(--bx-text-02); margin-bottom: 0.5rem;">
+                            Navigate to <strong>Manage Agents → Your Agent → Channel → Embedded Agent → Live</strong> to copy the script.
+                        </p>
+                        <textarea id="wxoConfigScript" class="bx--text-area" rows="4" placeholder="Paste script tag here..."></textarea>
                     </div>
                 </div>
 
