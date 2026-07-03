@@ -14,11 +14,11 @@ def main():
     # Load environment variables
     load_dotenv()
     
-    # Check for OpenAI API key
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
-        print("Please create a .env file with your OpenAI API key:")
-        print("OPENAI_API_KEY=your-api-key-here")
+    # Check for Google API key
+    if not os.getenv("GOOGLE_API_KEY"):
+        print("Error: GOOGLE_API_KEY not found in environment variables.")
+        print("Please create a .env file with your Google API key:")
+        print("GOOGLE_API_KEY=your-api-key-here")
         return
     
     # Create the agent
@@ -83,8 +83,8 @@ def run_example():
     # Load environment variables
     load_dotenv()
     
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
+    if not os.getenv("GOOGLE_API_KEY"):
+        print("Error: GOOGLE_API_KEY not found in environment variables.")
         return
     
     # Create the agent

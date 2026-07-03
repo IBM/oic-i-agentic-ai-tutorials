@@ -14,7 +14,7 @@ from langchain_core.tools.base import BaseTool
 
 
 from typing import Annotated, TypedDict, Literal
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode
@@ -37,7 +37,7 @@ def create_react_agent():
         A compiled LangGraph agent
     """
     # Initialize the LLM
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
     
     # Bind tools to the LLM
     tools: list[BaseTool] = [calculate_annualized_return]

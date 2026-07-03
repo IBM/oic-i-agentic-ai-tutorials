@@ -1,5 +1,5 @@
 langgraph
 langchain
-langchain-openai
+langchain-google-genai
 python-dotenv
 ibm-watsonx-orchestrate>=2.10.0
