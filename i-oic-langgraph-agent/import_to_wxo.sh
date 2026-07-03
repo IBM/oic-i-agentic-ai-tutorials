@@ -63,14 +63,14 @@ echo "Importing agent..."
 echo ""
 
 # Import the agent
-orchestrate agents import --experimental-package-root my_langraph_agent --experimental-config-file my_langraph_agent/agent.yaml
+orchestrate agents import --package-root my_langraph_agent --config-file my_langraph_agent/agent.yaml
 
 echo ""
 echo "Connecting agent to connection..."
 echo ""
 
 # Connect agent to connection
-orchestrate agents experimental-connect -n my_langraph_agent -c wxo_langgraph
+orchestrate agents connect -n my_langraph_agent -a wxo_langgraph
 
 echo ""
 echo "=========================================="
