@@ -1,0 +1,13 @@
+# Environment files with secrets
+.env.vault
+
+# Vault tokens and sensitive data
+*.token
+vault-token
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
