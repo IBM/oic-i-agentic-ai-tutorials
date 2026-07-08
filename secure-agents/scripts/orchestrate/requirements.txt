@@ -1,0 +1,8 @@
+# Basic dependencies for orchestrate-scripts
+requests>=2.31.0
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# IBM WatsonX Orchestrate CLI
+# Requires Python >=3.11,<3.14
+ibm-watsonx-orchestrate>=2.7.0
