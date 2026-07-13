@@ -1,0 +1,269 @@
+{
+  "server_placeholder": "https://customer-tools.example.com",
+  "tools": [
+    {
+      "name": "compute_integral",
+      "description": "Compute a definite integral for a safe allow-list of math functions.",
+      "request": {
+        "request_body": {
+          "function_name": "sin",
+          "lower_bound": 0,
+          "upper_bound": 3.14159,
+          "intervals": 1000
+        },
+        "query_params": {},
+        "path_params": {},
+        "headers": {},
+        "tool_spec": {
+          "name": "compute_integral",
+          "description": "Compute a definite integral for a safe allow-list of math functions.",
+          "binding": {
+            "openapi": {
+              "http_method": "POST",
+              "http_path": "/tools/math/integral",
+              "servers": [
+                "https://customer-tools.example.com"
+              ],
+              "security": [
+                {
+                  "type": "api_key_auth",
+                  "in": "header",
+                  "name": "X-API-Key"
+                }
+              ]
+            }
+          },
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "function_name",
+              "lower_bound",
+              "upper_bound"
+            ],
+            "properties": {
+              "function_name": {
+                "type": "string",
+                "enum": [
+                  "sin",
+                  "cos",
+                  "tan",
+                  "exp",
+                  "log",
+                  "sqrt"
+                ]
+              },
+              "lower_bound": {
+                "type": "number"
+              },
+              "upper_bound": {
+                "type": "number"
+              },
+              "intervals": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 100000,
+                "default": 1000
+              }
+            }
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "number"
+              },
+              "method": {
+                "type": "string"
+              },
+              "intervals": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "extract_text_insights",
+      "description": "Return word count, sentence count, and top keywords for a text block.",
+      "request": {
+        "request_body": {
+          "text": "The customer needs a renewal plan, an executive sponsor, and a follow-up meeting.",
+          "max_keywords": 5
+        },
+        "query_params": {},
+        "path_params": {},
+        "headers": {},
+        "tool_spec": {
+          "name": "extract_text_insights",
+          "description": "Return word count, sentence count, and top keywords for a text block.",
+          "binding": {
+            "openapi": {
+              "http_method": "POST",
+              "http_path": "/tools/text/insights",
+              "servers": [
+                "https://customer-tools.example.com"
+              ],
+              "security": [
+                {
+                  "type": "api_key_auth",
+                  "in": "header",
+                  "name": "X-API-Key"
+                }
+              ]
+            }
+          },
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "text"
+            ],
+            "properties": {
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "max_keywords": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20,
+                "default": 5
+              }
+            }
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "word_count": {
+                "type": "integer"
+              },
+              "sentence_count": {
+                "type": "integer"
+              },
+              "keywords": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "term": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "score_customer_priority",
+      "description": "Score a customer signal and recommend the next action.",
+      "request": {
+        "request_body": {
+          "customer_id": "CUST-1001",
+          "tier": "strategic",
+          "open_support_tickets": 2,
+          "days_since_last_contact": 21,
+          "contract_value_usd": 300000,
+          "recent_nps": 6
+        },
+        "query_params": {},
+        "path_params": {},
+        "headers": {},
+        "tool_spec": {
+          "name": "score_customer_priority",
+          "description": "Score a customer signal and recommend the next action.",
+          "binding": {
+            "openapi": {
+              "http_method": "POST",
+              "http_path": "/tools/customer/priority",
+              "servers": [
+                "https://customer-tools.example.com"
+              ],
+              "security": [
+                {
+                  "type": "api_key_auth",
+                  "in": "header",
+                  "name": "X-API-Key"
+                }
+              ]
+            }
+          },
+          "input_schema": {
+            "type": "object",
+            "required": [
+              "customer_id",
+              "tier"
+            ],
+            "properties": {
+              "customer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "tier": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "premium",
+                  "strategic"
+                ]
+              },
+              "open_support_tickets": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "days_since_last_contact": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "contract_value_usd": {
+                "type": "number",
+                "minimum": 0,
+                "default": 0
+              },
+              "recent_nps": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              }
+            }
+          },
+          "output_schema": {
+            "type": "object",
+            "properties": {
+              "customer_id": {
+                "type": "string"
+              },
+              "priority_score": {
+                "type": "integer"
+              },
+              "priority": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              "recommended_action": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

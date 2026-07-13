@@ -1,0 +1,402 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Customer Python Tools API",
+    "description": "Exposes Python tool functions as OpenAPI operations for import into WatsonX Orchestrate.",
+    "contact": {
+      "name": "Customer tools team"
+    },
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://customer-tools.example.com",
+      "description": "Live server"
+    }
+  ],
+  "paths": {
+    "/tools/math/integral": {
+      "post": {
+        "tags": ["math"],
+        "summary": "Compute Definite Integral",
+        "description": "Compute a definite integral for a safe allow-list of math functions (sin, cos, tan, exp, log, sqrt) using the trapezoidal rule.",
+        "operationId": "compute_integral",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegralRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Numeric integration result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegralResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid function name or bounds."
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { "APIKeyHeader": [] }
+        ]
+      }
+    },
+    "/tools/text/insights": {
+      "post": {
+        "tags": ["text"],
+        "summary": "Extract Text Insights",
+        "description": "Return word count, sentence count, and top keywords for a given text block.",
+        "operationId": "extract_text_insights",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextInsightsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Text analysis results including word count, sentence count, and top keywords.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextInsightsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { "APIKeyHeader": [] }
+        ]
+      }
+    },
+    "/tools/customer/priority": {
+      "post": {
+        "tags": ["customer"],
+        "summary": "Score Customer Priority",
+        "description": "Score a customer signal based on tier, open tickets, contract value, and NPS, then recommend the next best action.",
+        "operationId": "score_customer_priority",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerPriorityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Priority score, priority level, recommended action, and reasons.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerPriorityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { "APIKeyHeader": [] }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "IntegralRequest": {
+        "type": "object",
+        "title": "IntegralRequest",
+        "required": ["function_name", "lower_bound", "upper_bound"],
+        "properties": {
+          "function_name": {
+            "type": "string",
+            "enum": ["sin", "cos", "tan", "exp", "log", "sqrt"],
+            "title": "Function Name",
+            "description": "Math function to integrate. One of: sin, cos, tan, exp, log, sqrt.",
+            "example": "sin"
+          },
+          "lower_bound": {
+            "type": "number",
+            "title": "Lower Bound",
+            "description": "Lower limit of integration.",
+            "example": 0
+          },
+          "upper_bound": {
+            "type": "number",
+            "title": "Upper Bound",
+            "description": "Upper limit of integration.",
+            "example": 3.14159
+          },
+          "intervals": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 100000,
+            "default": 1000,
+            "title": "Intervals",
+            "description": "Number of trapezoids used for numeric integration.",
+            "example": 1000
+          }
+        }
+      },
+      "IntegralResponse": {
+        "type": "object",
+        "title": "IntegralResponse",
+        "required": ["result", "method", "intervals"],
+        "properties": {
+          "result": {
+            "type": "number",
+            "title": "Result",
+            "description": "Computed value of the definite integral."
+          },
+          "method": {
+            "type": "string",
+            "title": "Method",
+            "description": "Numeric method used (e.g. trapezoidal)."
+          },
+          "intervals": {
+            "type": "integer",
+            "title": "Intervals",
+            "description": "Number of intervals used in the computation."
+          }
+        }
+      },
+      "TextInsightsRequest": {
+        "type": "object",
+        "title": "TextInsightsRequest",
+        "required": ["text"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Text",
+            "description": "The text block to analyse.",
+            "example": "The customer needs a renewal plan and a follow-up meeting."
+          },
+          "max_keywords": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "default": 5,
+            "title": "Max Keywords",
+            "description": "Maximum number of top keywords to return.",
+            "example": 5
+          }
+        }
+      },
+      "Keyword": {
+        "type": "object",
+        "title": "Keyword",
+        "required": ["term", "count"],
+        "properties": {
+          "term": {
+            "type": "string",
+            "title": "Term"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        }
+      },
+      "TextInsightsResponse": {
+        "type": "object",
+        "title": "TextInsightsResponse",
+        "required": ["word_count", "sentence_count", "keywords"],
+        "properties": {
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "sentence_count": {
+            "type": "integer",
+            "title": "Sentence Count"
+          },
+          "keywords": {
+            "type": "array",
+            "title": "Keywords",
+            "items": {
+              "$ref": "#/components/schemas/Keyword"
+            }
+          }
+        }
+      },
+      "CustomerPriorityRequest": {
+        "type": "object",
+        "title": "CustomerPriorityRequest",
+        "required": ["customer_id", "tier"],
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Customer Id",
+            "description": "Unique identifier for the customer.",
+            "example": "CUST-1001"
+          },
+          "tier": {
+            "type": "string",
+            "enum": ["standard", "premium", "strategic"],
+            "title": "Tier",
+            "description": "Customer subscription tier.",
+            "example": "strategic"
+          },
+          "open_support_tickets": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Open Support Tickets",
+            "description": "Number of currently open support tickets.",
+            "example": 2
+          },
+          "days_since_last_contact": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "title": "Days Since Last Contact",
+            "description": "Number of days elapsed since last customer contact.",
+            "example": 21
+          },
+          "contract_value_usd": {
+            "type": "number",
+            "minimum": 0,
+            "default": 0,
+            "title": "Contract Value USD",
+            "description": "Annual contract value in US dollars.",
+            "example": 300000
+          },
+          "recent_nps": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "nullable": true,
+            "title": "Recent NPS",
+            "description": "Most recent Net Promoter Score (0-10). Omit if unknown.",
+            "example": 6
+          }
+        }
+      },
+      "CustomerPriorityResponse": {
+        "type": "object",
+        "title": "CustomerPriorityResponse",
+        "required": ["customer_id", "priority_score", "priority", "recommended_action", "reasons"],
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "title": "Customer Id"
+          },
+          "priority_score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "title": "Priority Score"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "title": "Priority"
+          },
+          "recommended_action": {
+            "type": "string",
+            "title": "Recommended Action"
+          },
+          "reasons": {
+            "type": "array",
+            "items": { "type": "string" },
+            "title": "Reasons"
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "type": "object",
+        "title": "HTTPValidationError",
+        "properties": {
+          "detail": {
+            "type": "array",
+            "title": "Detail",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "properties": {
+          "loc": {
+            "type": "array",
+            "title": "Location",
+            "items": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "integer" }
+              ]
+            }
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}
