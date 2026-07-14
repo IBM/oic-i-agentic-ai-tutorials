@@ -271,3 +271,5 @@ Workflow:
 # Summary
 
 This tutorial demonstrates how to build a personalized memory-enabled multi-agent workflow using watsonx Orchestrate, LangGraph, and embedded web chat integration. The application stores and retrieves user preferences using memory capabilities and delivers personalized coffee shop recommendations across conversations.
+
+For an in-depth explanation of state management, user-scoped memory, and checkpointers in watsonx Orchestrate, see the detailed [wxO_Memory_and_Checkpointers_Guide.md](file:///Users/madan/Documents/2026/oic/oic-i-agentic-ai-tutorials/i-oic-agent-memory/wxO_Memory_and_Checkpointers_Guide.md).
