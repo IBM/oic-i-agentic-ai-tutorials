@@ -116,15 +116,38 @@ This division of responsibility reflects hard-won operational experience — eac
 
 The intended solution should mirror this model. Rather than consolidating all logic into a single opaque system, the solution should replicate the same structure: a coordinating workflow that manages the end-to-end process, supported by specialised agents that each own a distinct step — each operating independently, with clear inputs and outputs. This approach preserves the accountability, transparency, and explainability of the current human model — while eliminating the manual effort and inconsistency that comes with it.
 
-### Agent Roster
+### Solution Components
+
+The solution is composed of four types of component, each with a distinct role:
+
+#### Orchestration Flow
+
+| Component | Type | Purpose |
+|---|---|---|
+| `incident_triage_orchestration` | `@flow` | The mandatory end-to-end coordinator. Owns the complete triage sequence — calls each specialist agent in strict order, wires structured data between steps, and ensures no step is skipped or re-ordered. Invoked by `incident_triage_coordinator`; returns the final resolution summary. |
+
+#### Specialist Agents
 
 | Human Role | Agent | Responsibilities | Tool / KB |
 |---|---|---|---|
-| Team Lead | `incident_triage_coordinator` | User-facing entry and exit point; invokes the triage flow; presents the final report | `incident_triage_orchestration` (flow) |
+| Team Lead | `incident_triage_coordinator` | User-facing entry and exit point; invokes `incident_triage_orchestration`; presents the final report | `incident_triage_orchestration` (flow) |
 | First Responder | `first_responder` | Classifies the incident (category, severity, affected system); creates the support ticket | `create_support_ticket` |
 | Knowledge & Runbook Specialist | `runbook_specialist` | Searches the knowledge base; identifies root cause, resolution steps, and remediation action | `incident_runbooks` KB |
 | Remediation Engineer | `remediation_engineer` | Executes the recommended remediation action; confirms outcome | `execute_remediation_action` |
 | Summary Specialist | `summary_specialist` | Compiles all step outputs into a plain-language resolution report | — |
+
+#### Knowledge Base
+
+| Component | Type | Purpose |
+|---|---|---|
+| `incident_runbooks` | Knowledge Base | Pre-loaded with resolution guidance for the three demo scenarios (Network VPN, SCADA application, billing access). Queried exclusively by `runbook_specialist`. |
+
+#### Python Tools
+
+| Component | Type | Called By | Purpose |
+|---|---|---|---|
+| `create_support_ticket` | Python Tool | `first_responder` | Generates a unique mock ticket ID (`TKT-<hex>`) and URL. No real ticketing system is connected. |
+| `execute_remediation_action` | Python Tool | `remediation_engineer` | Simulates execution of the remediation action and returns a status and confirmation. No real system calls are made. |
 
 ### Target Architecture
 
