@@ -140,7 +140,7 @@ The solution is composed of four types of component, each with a distinct role:
 
 | Component | Type | Purpose |
 |---|---|---|
-| `incident_runbooks` | Knowledge Base | Pre-loaded with resolution guidance for the three demo scenarios (Network VPN, SCADA application, billing access). Queried exclusively by `runbook_specialist`. |
+| `incident_runbooks` | Knowledge Base | Pre-loaded with resolution guidance for the three demo scenarios (Network VPN, SCADA application, billing access). Queried exclusively by `runbook_specialist`. Runbook documents must be provided as **`.txt` files**. |
 
 #### Python Tools
 
