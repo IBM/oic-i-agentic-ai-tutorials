@@ -1,0 +1,42 @@
+spec_version: v1
+kind: external
+name: annualized_return_agent
+title: Annualized Return Agent
+nickname: annualized_return_agent
+provider: external_chat/A2A/0.3.0
+
+description: |
+  A LangGraph-based AI agent that calculates the annualized rate of return for
+  investments. Provide an initial investment amount, current value, and the
+  number of months invested to get back the annualized return %, total return %,
+  and profit/loss in dollars.
+
+tags:
+  - finance
+  - investment
+  - returns
+  - langgraph
+
+api_url: "https://annualized-return-agent.2dx22psmaucq.us-south.codeengine.appdomain.cloud"
+
+# Authentication for the A2A endpoint (matches AGENT_API_KEY env var)
+auth_scheme: BEARER_TOKEN
+auth_config:
+  token: "REPLACE_WITH_YOUR_AGENT_API_KEY"
+
+chat_params:
+  # Send full conversation history to the agent on each turn
+  sendHistory: true
+  # Use standard blocking REST call (set to true for SSE streaming)
+  stream: false
+  # Push notifications not supported in this deployment
+  pushNotifications: false
+
+config:
+  hidden: false
+  enable_cot: true
+
+# Allow wxO context variables to be forwarded to the agent
+context_access_enabled: true
+context_variables:
+  - clientID
