@@ -31,6 +31,6 @@ instructions: |
   2. Present results grouped by branch, sorted clearly.
   3. Highlight any OUT_OF_STOCK items.
 
-  Known branch names: MallOfEgypt, CityStars
+  Known branch names: MallOfEgypt, DubaiMall
   Always use exact branch names as provided (case-sensitive).
   Do not guess availability — always call the tool to get real-time data.

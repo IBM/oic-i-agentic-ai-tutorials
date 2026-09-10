@@ -68,24 +68,35 @@ print()
 # ---------------------------------------------------------------------------
 # Load and validate sample data
 # ---------------------------------------------------------------------------
+# sample-transactions.json is NDJSON (one JSON object per line), not a JSON
+# array. Some source records encode SALE quantities as already-negative
+# numbers (e.g. -15) rather than always-positive with the sign implied by
+# transaction_type. Since the Flink aggregation SQL does
+# `WHEN SALE THEN -quantity`, feeding it an already-negative SALE quantity
+# would double-negate it and inflate the result. Normalize every quantity to
+# its absolute value here so the stored `inventory.transactions` rows always
+# carry non-negative quantities, matching what the unchanged Flink SQL
+# expects, regardless of how the source file encoded the sign.
 DATA_FILE = Path(__file__).parent / "sample-transactions.json"
 if not DATA_FILE.exists():
     print(f"[ERROR] {DATA_FILE} not found.")
     sys.exit(1)
 
-records = json.loads(DATA_FILE.read_text())
-
-for i, r in enumerate(records):
+records = []
+for i, line in enumerate(DATA_FILE.read_text().splitlines()):
+    line = line.strip()
+    if not line:
+        continue
+    r = json.loads(line)
     for field in ("sku", "branch", "quantity", "transaction_type"):
         if field not in r:
             print(f"[ERROR] Record {i} missing field '{field}': {r}")
             sys.exit(1)
-    if r["quantity"] < 0:
-        print(f"[ERROR] Record {i} has negative quantity: {r}")
-        sys.exit(1)
     if r["transaction_type"].upper() not in ("ADDITION", "SALE"):
         print(f"[ERROR] Record {i} invalid transaction_type: {r['transaction_type']}")
         sys.exit(1)
+    r["quantity"] = abs(int(r["quantity"]))
+    records.append(r)
 
 print(f"[INFO] Loaded {len(records)} records from {DATA_FILE.name}")
 print()
