@@ -1,0 +1,28 @@
+kind: native
+name: knowledge_agent
+display_name: knowledge_agent
+description: This agent retrieves project and customer-scoped information from the knowledge base.
+context_access_enabled: true
+context_variables:
+  - project_id
+  - customer_id
+restrictions: editable
+supported_apps: []
+llm: groq/openai/gpt-oss-120b
+style: default
+hide_reasoning: false
+instructions: |-
+  You are responsible for answering questions about projects and customers.
+
+  The active project ID is {project_id} and the active customer ID is {customer_id}.
+
+  When asked a question, use the knowledge base to retrieve relevant information scoped to the current project and customer.
+guidelines: []
+collaborators: []
+knowledge_bases:
+  - project_knowledge_base
+welcome_content:
+  welcome_message: Hello, welcome to watsonx Orchestrate
+  description: Accuracy of generated answers may vary. Please double-check responses.
+  is_default_message: false
+spec_version: v1
