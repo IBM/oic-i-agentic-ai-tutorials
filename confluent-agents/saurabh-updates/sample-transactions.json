@@ -1,0 +1,29 @@
+[
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "MallOfEgypt",  "quantity": 10, "transaction_type": "ADDITION"},
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "MallOfEgypt",  "quantity": 4,  "transaction_type": "SALE"},
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "MallOfEgypt",  "quantity": 3,  "transaction_type": "SALE"},
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "MallOfEgypt",  "quantity": 3,  "transaction_type": "SALE"},
+
+  {"sku": "LAPTOP-MACBOOK-PRO-16",  "branch": "MallOfEgypt",  "quantity": 8,  "transaction_type": "ADDITION"},
+  {"sku": "LAPTOP-MACBOOK-PRO-16",  "branch": "MallOfEgypt",  "quantity": 2,  "transaction_type": "SALE"},
+  {"sku": "LAPTOP-MACBOOK-PRO-16",  "branch": "MallOfEgypt",  "quantity": 1,  "transaction_type": "SALE"},
+
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "CityStars",    "quantity": 5,  "transaction_type": "ADDITION"},
+  {"sku": "LAPTOP-DELL-XPS-15",     "branch": "CityStars",    "quantity": 2,  "transaction_type": "SALE"},
+
+  {"sku": "LAPTOP-MACBOOK-PRO-16",  "branch": "CityStars",    "quantity": 6,  "transaction_type": "ADDITION"},
+  {"sku": "LAPTOP-MACBOOK-PRO-16",  "branch": "CityStars",    "quantity": 3,  "transaction_type": "SALE"},
+
+  {"sku": "MONITOR-LG-ULTRAFINE",   "branch": "MallOfEgypt",  "quantity": 12, "transaction_type": "ADDITION"},
+  {"sku": "MONITOR-LG-ULTRAFINE",   "branch": "MallOfEgypt",  "quantity": 5,  "transaction_type": "SALE"},
+  {"sku": "MONITOR-LG-ULTRAFINE",   "branch": "MallOfEgypt",  "quantity": 3,  "transaction_type": "SALE"},
+
+  {"sku": "MONITOR-LG-ULTRAFINE",   "branch": "CityStars",    "quantity": 7,  "transaction_type": "ADDITION"},
+  {"sku": "MONITOR-LG-ULTRAFINE",   "branch": "CityStars",    "quantity": 4,  "transaction_type": "SALE"},
+
+  {"sku": "KEYBOARD-LOGITECH-MX",   "branch": "MallOfEgypt",  "quantity": 20, "transaction_type": "ADDITION"},
+  {"sku": "KEYBOARD-LOGITECH-MX",   "branch": "MallOfEgypt",  "quantity": 9,  "transaction_type": "SALE"},
+
+  {"sku": "KEYBOARD-LOGITECH-MX",   "branch": "CityStars",    "quantity": 15, "transaction_type": "ADDITION"},
+  {"sku": "KEYBOARD-LOGITECH-MX",   "branch": "CityStars",    "quantity": 6,  "transaction_type": "SALE"}
+]

@@ -1,0 +1,14 @@
+Update produce_messages.py and sample-transactions.json for this Flink tutorial. Load these .env variables using python-dotenv: FLINK_API_KEY, FLINK_API_SECRET, CONFLUENT_ORG_ID, CONFLUENT_ENVIRONMENT_ID, CONFLUENT_FLINK_COMPUTE_POOL_ID, CONFLUENT_CLUSTER_NAME, TOPIC_NAME. Do not require CONFLUENT_CLOUD_API_KEY, CONFLUENT_CLOUD_API_SECRET, CONFLUENT_CLUSTER_REST_ENDPOINT, BOOTSTRAP_SERVERS, KAFKA_API_KEY, KAFKA_API_SECRET, or KSQLDB_* variables — this script does not use the Kafka REST API at all.
+
+sample-transactions.json must contain 20 JSON records, each with sku, branch, quantity, and transaction_type. quantity must always be non-negative; transaction_type must be ADDITION or SALE. Build the sample data so LAPTOP-DELL-XPS-15 in MallOfEgypt ends at exactly 0, and LAPTOP-MACBOOK-PRO-16 in MallOfEgypt remains above 0.
+
+Do NOT publish these records using the Kafka REST Produce API. Instead, publish them by submitting a single Flink SQL statement via the Confluent Cloud Flink SQL REST API — the same REST endpoint and submit-then-poll pattern used in run_flink_sql.py. Build one SQL statement with one row per record from sample-transactions.json, escaping any single quotes in string values by doubling them, in this form:
+
+INSERT INTO `inventory.transactions` (sku, branch, quantity, transaction_type) VALUES
+  ('<sku>', '<branch>', <quantity>, '<transaction_type>'),
+  ('<sku>', '<branch>', <quantity>, '<transaction_type>'),
+  ...;
+
+Give the statement a unique name each run (for example, append the current Unix timestamp) so re-runs never collide with a previous run's statement name. Submit it with POST to the statements endpoint, then poll with GET on that statement until its status.phase is COMPLETED. Print the statement name and each poll status. Never print API secrets.
+
+After the statement reaches COMPLETED, print a summary of the locally-computed expected final quantities per SKU/branch — computed by summing ADDITION as positive and SALE as negative directly from sample-transactions.json — so the reader can compare it against inventory.availability afterward.
