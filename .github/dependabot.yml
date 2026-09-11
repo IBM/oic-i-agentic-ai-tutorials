@@ -1,633 +1,333 @@
 version: 2
 
+# Security-only configuration.
+#
+# pip / npm: open-pull-requests-limit: 0 disables regular version-bump PRs.
+#            Dependabot still opens PRs for CVE-driven security advisories
+#            regardless of this limit — those bypass the cap entirely.
+#
+# docker:    No Docker CVEs are present in the active security alerts.
+#            Docker entries are omitted to avoid noise from base image bumps.
+#
+# To activate security update PRs, also enable "Dependabot security updates"
+# in repo Settings → Advanced Security → Dependabot security updates.
+
 updates:
-  # ── pip ────────────────────────────────────────────────────────────────────
+  # ── pip (security only) ────────────────────────────────────────────────────
 
   - package-ecosystem: "pip"
     directory: "/a2a/hr-agent-pure-a2a"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/astra-db-graphrag/data-load-astradb-script"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/astra-db-graphrag/data-load-web-crawl"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/astra-db-graphrag/wxo/tools"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/beeai-a2a/automotive_system/wxo_tools"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/confluent-agents"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/crewai-external-orchestrate-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/Doc_processing_docling&WXO"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/envizi-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/external-agents/hr-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/external-agents/it-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/external-llms"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-agent-memory/cafe_recommender/agents/user_preference_processor"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-confluent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-cost-inflation-analysis-agent/tools"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-custom-langgraph-rlm-agent/rlm_data_processor"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-integrate-headless-ai-agent/backend_code"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-langgraph-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-parallel-processing-agentic-flows"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-rbac-using-obo/mcp_server_code"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-text2sql-ai-agent/tools/sql_db_query/source"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-wxo-external-agent-observability"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/i-oic-wxo-planning-analytics-agent/tools"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/incident-response-agent"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/openapi-python-tools-server"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/rag-langFlow-mcp"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/secure-agents/scripts/orchestrate"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/siri-watsonx-orchestrate"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/sterling-oms-smart-supply-chain-agent/tools/weather_retriever_tool"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/wxo-context-variables-in-knowledge-base/custom-kb-service"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "pip"
     directory: "/wxo-context-variables-in-tools/app"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "python"
 
-  # ── npm ────────────────────────────────────────────────────────────────────
+  # ── npm (security only) ────────────────────────────────────────────────────
 
   - package-ecosystem: "npm"
     directory: "/i-oic-agent-memory/chat-ui"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "javascript"
 
   - package-ecosystem: "npm"
     directory: "/i-oic-integrate-headless-ai-agent/frontend_code"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "javascript"
 
   - package-ecosystem: "npm"
     directory: "/i-oic-rbac-using-obo/embed_chat_webapp"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "javascript"
 
   - package-ecosystem: "npm"
     directory: "/secure-agents/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
-    groups:
-      all-dependencies:
-        patterns: ["*"]
+    open-pull-requests-limit: 0
     labels:
       - "dependencies"
-      - "javascript"
-
-  # ── docker ─────────────────────────────────────────────────────────────────
-
-  - package-ecosystem: "docker"
-    directory: "/a2a/hr-agent-pure-a2a"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/beeai-a2a/automotive_system/beeai_service"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/crewai-external-orchestrate-agent"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/external-agents/hr-agent"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/external-agents/it-agent"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/external-llms"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/i-oic-confluent"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/i-oic-integrate-headless-ai-agent/backend_code"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/i-oic-rbac-using-obo/embed_chat_webapp"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/i-oic-rbac-using-obo/mcp_server_code"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/i-oic-wxo-external-agent-observability"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/openapi-python-tools-server"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/secure-agents/backend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/secure-agents/frontend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/secure-agents/mcp"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/siri-watsonx-orchestrate"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"
-
-  - package-ecosystem: "docker"
-    directory: "/wxo-context-variables-in-tools"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "docker"

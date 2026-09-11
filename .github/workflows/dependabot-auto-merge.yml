@@ -1,7 +1,9 @@
-name: Auto-Approve Security Patches
+name: Dependabot auto-merge
 
-# Automatically approves and enables auto-merge for security patch PRs from Dependabot
-# Only runs for patch-level updates (semver-patch) to minimize risk
+# Auto-merges Dependabot PRs unconditionally.
+# Safe to do so because dependabot.yml uses open-pull-requests-limit: 0 for
+# all pip/npm entries — Dependabot will only ever open a PR when a CVE/GHSA
+# security advisory exists for a dependency. No security alert = no PR.
 
 on: pull_request
 
@@ -10,26 +12,24 @@ permissions:
   pull-requests: write
 
 jobs:
-  dependabot:
+  auto-merge:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
-      - name: Dependabot metadata
+      - name: Fetch Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Enable auto-merge for security patches
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch' || contains(steps.metadata.outputs.dependency-names, 'security')
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Approve security PRs
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      - name: Approve PR
         run: gh pr review --approve "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
