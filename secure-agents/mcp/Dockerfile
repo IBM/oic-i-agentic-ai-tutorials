@@ -2,7 +2,7 @@
 # syntax=docker/dockerfile:1
 # Multi-process build with nginx proxy and Python MCP server (OpenShift compatible)
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 WORKDIR /app
 
