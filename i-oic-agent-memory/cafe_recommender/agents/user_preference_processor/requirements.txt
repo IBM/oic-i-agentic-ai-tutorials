@@ -1,5 +1,5 @@
 # Core LangGraph dependencies for Data Processor Agent
-langgraph>=0.2.0
+langgraph>=1.2.11
 langchain-core>=0.3.0
 
 # Memory storage SDK
