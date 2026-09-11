@@ -5,7 +5,7 @@ description = ""
 requires-python = ">=3.10,<3.13"
 dependencies = [
     "fastapi[standard]>=0.116.0",
-    "python-multipart>=0.0.20",
+    "python-multipart>=0.0.32",
     "passlib[bcrypt]<2.0.0,>=1.7.4",
     "tenacity<9.0.0,>=8.2.3",
     "alembic<2.0.0,>=1.16.2",
@@ -13,11 +13,11 @@ dependencies = [
     "psycopg[binary]<4.0.0,>=3.1.13",
     "sqlmodel<1.0.0,>=0.0.21",
     "bcrypt>=3.2.0,<4.0.0",
-    "pydantic-settings<3.0.0,>=2.10.1",
-    "pyjwt<3.0.0,>=2.8.0",
+    "pydantic-settings>=2.15.0,<3.0.0",
+    "pyjwt>=2.13.0,<3.0.0",
     "pydantic>=2.10.5",
-    "cryptography>=46.0.5",
-    "requests>=2.32.5",
+    "cryptography>=50.0.1",
+    "requests>=2.34.2",
 ]
 
 [tool.uv]
