@@ -6,11 +6,10 @@ name: Auto-Merge Dependabot Security PRs
 # Key design decisions (see AGENTS.md for full rationale):
 # - pull_request_target: reads workflow from main branch, not the PR branch,
 #   so fixes pushed to main apply to all open Dependabot PRs immediately.
-# - Three-signal security detection (ANY one is sufficient to treat as security):
-#     1. ghsa-id from dependabot/fetch-metadata (most reliable)
-#     2. 'security' label on the PR
-#     3. CVE-YYYY-NNNNN or GHSA-* pattern found anywhere in the PR body
-#   Signal 3 catches PRs that fix CVEs but weren't labelled/tagged correctly.
+# - Two-signal security detection via gh CLI only (no fetch-metadata action):
+#     1. 'security' label on the PR
+#     2. CVE-YYYY-NNNNN or GHSA-* pattern found anywhere in the PR body
+#   Avoids dependabot/fetch-metadata which fails hard on grouped PRs ("N updates").
 # - --squash --admin: merges immediately without requiring branch protection rules.
 
 on:
@@ -26,24 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
-      - name: Fetch Dependabot metadata
-        id: metadata
-        continue-on-error: true
-        uses: dependabot/fetch-metadata@v2
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
       - name: Detect security signals
         id: security
         run: |
-          # Signal 1: GHSA ID from metadata action
-          GHSA_ID="${{ steps.metadata.outputs.ghsa-id }}"
-
-          # Signal 2: 'security' label
+          # Signal 1: 'security' label on the PR
           HAS_LABEL=$(gh pr view "$PR_URL" --json labels \
             --jq '[.labels[].name] | contains(["security"])' 2>/dev/null || echo "false")
 
-          # Signal 3: CVE or GHSA pattern in PR body
+          # Signal 2: CVE or GHSA pattern in PR body
           BODY=$(gh pr view "$PR_URL" --json body --jq '.body' 2>/dev/null || echo "")
           if echo "$BODY" | grep -qiE '(CVE-[0-9]{4}-[0-9]+|GHSA-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+)'; then
             HAS_CVE_IN_BODY="true"
@@ -51,12 +40,11 @@ jobs:
             HAS_CVE_IN_BODY="false"
           fi
 
-          echo "ghsa_id=$GHSA_ID"           >> "$GITHUB_OUTPUT"
-          echo "has_label=$HAS_LABEL"       >> "$GITHUB_OUTPUT"
+          echo "has_label=$HAS_LABEL"            >> "$GITHUB_OUTPUT"
           echo "has_cve_in_body=$HAS_CVE_IN_BODY" >> "$GITHUB_OUTPUT"
 
           # Combined: any signal → is_security=true
-          if [ -n "$GHSA_ID" ] || [ "$HAS_LABEL" = "true" ] || [ "$HAS_CVE_IN_BODY" = "true" ]; then
+          if [ "$HAS_LABEL" = "true" ] || [ "$HAS_CVE_IN_BODY" = "true" ]; then
             echo "is_security=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_security=false" >> "$GITHUB_OUTPUT"
