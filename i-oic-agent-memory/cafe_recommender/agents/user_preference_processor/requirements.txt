@@ -3,7 +3,7 @@ langgraph>=0.2.0
 langchain-core>=0.3.0
 
 # Memory storage SDK
-ibm-watsonx-orchestrate-sdk>=0.7.0
+ibm-watsonx-orchestrate-sdk>=2.16.1
 
 
 # State persistence options (uncomment as needed)
