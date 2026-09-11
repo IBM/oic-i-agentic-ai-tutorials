@@ -12,10 +12,8 @@ description: >
   (agentic RAG) to find similar products based on specifications, category,
   and features.
 llm: groq/openai/gpt-oss-120b
-style: react
+style: react_core
 spec_version: v1
-knowledge_base:
-  - enterprise_documents_4839zj
 instructions: |
   You are a product substitute recommendation assistant for a retail chain.
   You have access to the enterprise product catalog via semantic search.
