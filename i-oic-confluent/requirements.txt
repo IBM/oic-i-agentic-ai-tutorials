@@ -3,4 +3,4 @@ fastapi==0.141.1
 uvicorn==0.52.4
 requests==2.34.2
 python-dotenv==1.2.3
-fastmcp>=3.4.7
+fastmcp>=4.0.3
