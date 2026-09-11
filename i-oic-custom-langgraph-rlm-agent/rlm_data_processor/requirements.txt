@@ -15,7 +15,7 @@ langchain-text-splitters>=0.3.0
 
 # Data processing libraries
 pandas>=2.0.0
-numpy>=1.24.0
+numpy>=2.5.3
 
 # Environment variable management
 python-dotenv>=1.0.0
