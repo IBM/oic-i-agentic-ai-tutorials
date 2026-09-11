@@ -44,7 +44,10 @@
   "overrides": {
     "form-data": "^3.0.4",
     "prismjs": "^1.29.0",
-    "nth-check": "^2.0.1"
+    "nth-check": "^2.0.1",
+    "qs": ">=6.16.0",
+    "underscore": ">=1.13.8",
+    "svgo": ">=2.8.4"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
