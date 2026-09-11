@@ -71,5 +71,9 @@
     "**/*.{css,scss,md,json}": [
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "postcss-selector-parser": ">=7.1.3",
+    "js-yaml": ">=4.3.2"
   }
 }
