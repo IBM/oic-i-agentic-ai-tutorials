@@ -118,7 +118,7 @@ tinycss2==1.5.1
 tornado==6.5.8
 traitlets==5.16.1
 typer==0.27.2
-types-python-dateutil==2.9.0.20260518
+types-python-dateutil==2.9.0.20260807
 typing-inspect==0.9.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0
