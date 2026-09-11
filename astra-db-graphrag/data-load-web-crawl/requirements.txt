@@ -11,5 +11,5 @@ langchain-community==0.4.1
 langchain-core
 langchain_ibm==1.0.0
 langchain-astradb==1.0.0
-selenium==4.38.0
+selenium==4.48.0
 jupyter==1.1.1
