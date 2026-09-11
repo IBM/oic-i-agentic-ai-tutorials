@@ -20,4 +20,4 @@ fastmcp>=3.4.7
 requests>=2.34.2
 
 # Utilities
-python-dotenv>=1.0.0
+python-dotenv>=1.2.3
