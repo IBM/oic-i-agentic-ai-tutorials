@@ -1,6 +1,6 @@
 # Core LangGraph dependencies for Data Processor Agent
 langgraph>=0.2.0
-langchain-core>=0.3.0
+langchain-core>=1.6.2
 
 # watsonx.ai integration for RLM
 langchain-ibm>=0.3.0
