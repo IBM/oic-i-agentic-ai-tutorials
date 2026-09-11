@@ -1,12 +1,13 @@
 name: Auto-Merge Dependabot Security PRs
 
 # Automatically approves and merges security-driven Dependabot PRs.
+# Closes non-security (routine version bump) PRs with an explanatory comment.
 #
 # Key design decisions (see AGENTS.md for full rationale):
 # - pull_request_target: reads workflow from main branch, not the PR branch,
 #   so fixes pushed to main apply to all open Dependabot PRs immediately.
-# - ghsa-id check: only merges PRs that fix a known CVE/GHSA advisory,
-#   skipping routine version bumps that have no security context.
+# - ghsa-id check: only merges PRs that fix a known CVE/GHSA advisory.
+#   Non-security PRs are closed — dependency version bumps are managed manually.
 # - --squash --admin: merges immediately without requiring branch protection rules.
 
 on:
@@ -28,16 +29,38 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Approve PR
-        if: steps.metadata.outputs.ghsa-id != ''
-        run: gh pr review --approve "$PR_URL"
+      - name: Check for security label
+        id: labels
+        run: |
+          HAS_SECURITY=$(gh pr view "$PR_URL" --json labels --jq '[.labels[].name] | contains(["security"])' 2>/dev/null || echo "false")
+          echo "has_security_label=$HAS_SECURITY" >> "$GITHUB_OUTPUT"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge security PR
-        if: steps.metadata.outputs.ghsa-id != ''
-        run: gh pr merge --squash --admin "$PR_URL"
+      - name: Approve and merge security PR
+        if: steps.metadata.outputs.ghsa-id != '' || steps.labels.outputs.has_security_label == 'true'
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --admin "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Close non-security PR with comment
+        if: steps.metadata.outputs.ghsa-id == '' && steps.labels.outputs.has_security_label != 'true'
+        run: |
+          gh pr comment "$PR_URL" --body "$(cat <<'EOF'
+          Thanks, Dependabot! 🤖
+
+          This PR is a **routine version bump** with no associated CVE or security advisory, so it is being closed automatically per our policy.
+
+          **Why?** Routine upgrades carry compatibility risk and are reviewed manually as part of planned maintenance — not auto-merged.
+
+          **Security PRs** (those fixing a known CVE/GHSA) are merged automatically. To see open security alerts, visit the [Security tab](../../security/dependabot).
+          EOF
+          )"
+          gh pr close "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
