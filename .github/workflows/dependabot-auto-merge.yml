@@ -1,7 +1,7 @@
 name: Dependabot auto-merge
 
-# Merges Dependabot PRs ONLY when driven by a security advisory (CVE/GHSA).
-# Routine version bumps (no ghsa-id) are left open for manual review.
+# Security PRs (ghsa-id present)  → approve + merge automatically.
+# Non-security PRs (no ghsa-id)   → close with an explanatory comment.
 #
 # Uses pull_request_target so this workflow is always read from main,
 # not from the Dependabot PR branch.
@@ -24,15 +24,19 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Approve PR
-        run: gh pr review --approve "$PR_URL"
+      - name: Approve and merge security PRs
+        if: steps.metadata.outputs.ghsa-id != ''
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --admin "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge if security-driven
-        if: steps.metadata.outputs.ghsa-id != ''
-        run: gh pr merge --squash --admin "$PR_URL"
+      - name: Close non-security PRs
+        if: steps.metadata.outputs.ghsa-id == ''
+        run: |
+          gh pr close "$PR_URL" --comment "Closing: no CVE/GHSA advisory associated with this update. Only security-driven updates are auto-merged in this repo."
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
