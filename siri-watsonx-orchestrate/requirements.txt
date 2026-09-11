@@ -13,7 +13,7 @@ bleach==6.3.0
 certifi==2026.5.20
 cffi==2.0.0
 charset-normalizer==3.4.7
-click==8.4.1
+click==8.5.0
 comm==0.2.3
 dataclasses-json==0.6.7
 debugpy==1.8.20
