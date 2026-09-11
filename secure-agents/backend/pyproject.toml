@@ -4,20 +4,20 @@ version = "0.1.0"
 description = ""
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "fastapi[standard]>=0.116.0",
-    "python-multipart>=0.0.20",
+    "fastapi[standard]>=0.141.1",
+    "python-multipart>=0.0.32",
     "passlib[bcrypt]<2.0.0,>=1.7.4",
-    "tenacity>=9.0.0,<10.0.0",
-    "alembic<2.0.0,>=1.16.2",
+    "tenacity>=9.1.4,<10.0.0",
+    "alembic>=1.19.2,<2.0.0",
     "httpx>=0.28.1,<1.0.0",
     "psycopg[binary]>=3.3.5,<4.0.0",
     "sqlmodel>=0.0.42,<1.0.0",
-    "bcrypt>=4.0.0,<5.0.0",
+    "bcrypt>=5.0.0,<6.0.0",
     "pydantic-settings>=2.15.0,<3.0.0",
     "pyjwt>=2.13.0,<3.0.0",
-    "pydantic>=2.10.5",
-    "cryptography>=50.0.0",
-    "requests>=2.32.5",
+    "pydantic>=2.13.5",
+    "cryptography>=50.0.1",
+    "requests>=2.34.2",
 ]
 
 [tool.uv]
