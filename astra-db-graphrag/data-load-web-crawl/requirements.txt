@@ -1,15 +1,15 @@
 # Required by wxo_docs notebook
-beautifulsoup4==4.14.2
-lxml==6.1.0
-requests==2.33.0
-markdownify==1.2.0
+beautifulsoup4==4.15.0
+lxml==6.1.3
+requests==2.34.2
+markdownify==1.2.3
 python-dotenv==1.2.3
 aiohttp==3.14.3
-transformers==5.10.0
+transformers==5.16.1
 langchain==1.4.0
-langchain-community==0.4.1
+langchain-community==0.4.2
 langchain-core
-langchain_ibm==1.0.0
+langchain_ibm==1.1.0
 langchain-astradb==1.0.0
-selenium==4.38.0
+selenium==4.48.0
 jupyter==1.1.1
