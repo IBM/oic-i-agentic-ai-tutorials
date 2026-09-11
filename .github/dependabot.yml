@@ -505,20 +505,6 @@ updates:
     labels:
       - "dependencies"
 
-  - package-ecosystem: "pip"
-    directory: "/i-oic-rbac-using-obo/mcp_server_code"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    allow:
-      - dependency-type: "all"
-    groups:
-      all-dependencies:
-        patterns: ["*"]
-    labels:
-      - "dependencies"
-
   # ── npm ─────────────────────────────────────────────────────────────────────
 
   - package-ecosystem: "npm"

@@ -38,18 +38,26 @@ from crewai.tools import BaseTool
 from crewai.events import *
 from crewai.utilities.events.base_event_listener import BaseEventListener
 
-# --- Setup NLTK for text preprocessing ---
-# Downloads tokenizers and stopwords on first run if missing
-try:
-    nltk.data.find("tokenizers/punkt")
-    nltk.data.find("corpora/stopwords")
-except LookupError:
-    nltk.download("punkt")
-    nltk.download("stopwords")
+# --- Step 1: Setup NLTK for text preprocessing ---
+# CVE-2026-81726: nltk's model-artifact download API can write outside allowed
+# roots (path-traversal). No patched release exists yet (affected <= 3.10.3).
+# Mitigation: NEVER call nltk.download() at runtime. NLTK data MUST be
+# pre-installed at image build time via the Dockerfile RUN step below.
+# If the data is absent the app raises immediately rather than downloading.
+for _resource, _path in [("punkt tokeniser", "tokenizers/punkt_tab"),
+                          ("stopwords corpus", "corpora/stopwords")]:
+    try:
+        nltk.data.find(_path)
+    except LookupError as exc:
+        raise RuntimeError(
+            f"Required NLTK data '{_resource}' is missing. "
+            "Pre-install it during the Docker build step — "
+            "see the RUN instruction in Dockerfile."
+        ) from exc
 
 stop_words = set(stopwords.words("english"))
 
-# --- Load environment variables ---
+# --- Step 2: Load environment variables ---
 # These allow secure configuration via a .env file.
 load_dotenv()
 WX_API_KEY = os.getenv("APIKEY")
@@ -59,7 +67,7 @@ ES_USER = os.getenv("username", None)
 ES_PASS = os.getenv("password", None)
 EXPECTED_API_KEY = os.getenv("ORCH_API_KEY")
 
-# --- Connect to Elasticsearch (for RAG retrieval) ---
+# --- Step 3: Connect to Elasticsearch (for RAG retrieval) ---
 # This assumes you’ve stored vector embeddings in an Elasticsearch index.
 es = Elasticsearch(
     ES_URL,
@@ -69,7 +77,7 @@ es = Elasticsearch(
     retry_on_timeout=True,
 )
 
-# --- Configure IBM watsonx as the primary LLM ---
+# --- Step 4: Configure IBM watsonx as the primary LLM ---
 # This model handles reasoning, classification, and generation.
 llm = LLM(
     model="watsonx/meta-llama/llama-3-3-70b-instruct",
@@ -79,11 +87,11 @@ llm = LLM(
     max_tokens=4000,
 )
 
-# --- Initialise FastAPI ---
+# --- Step 5: Initialize FastAPI ---
 # Provides REST endpoints for querying the multi-agent system.
-app = FastAPI(title="Multi-Agent CrewAI RAG", version="1.0")
+app = FastAPI(title="Multi-Agent RAG Template", version="1.0")
 
-# --- Define data schemas for API inputs ---
+# --- Step 6: Define data schemas for API inputs ---
 # These control validation and typing for chat and query requests.
 class ChatRequest(BaseModel):
     model: str
@@ -94,7 +102,7 @@ class QueryRequest(BaseModel):
     query: str
 
 
-# --- Define Tools ---
+# --- Step 7: Define Tools ---
 # Tools encapsulate specific actions that agents can perform.
 # Each tool extends BaseTool and implements `_run()`.
 
@@ -169,7 +177,7 @@ class QueryClassifierTool(BaseTool):
         return "knowledge_agent" if "knowledge_agent" in text else "expert_agent"
 
 
-# --- Define Agents ---
+# --- Step 8: Define Agents ---
 # Agents are autonomous units powered by the LLM and optional tools.
 
 supervisor_agent = Agent(
@@ -194,7 +202,7 @@ expert_agent = Agent(
 )
 
 
-# --- Multi-Agent System Orchestration ---
+# --- Step 9: Multi-Agent System Orchestration ---
 # The system coordinates classification, routing, and generation.
 
 class MultiAgentRAGSystem:
@@ -233,13 +241,13 @@ class MultiAgentRAGSystem:
             return str(Crew([expert_agent], [task], Process.sequential).kickoff())
 
 
-# --- Helper function for direct use ---
+# --- Step 10: Helper function for direct use ---
 def run_rag(query: str):
     """Convenience wrapper for synchronous execution."""
     return MultiAgentRAGSystem().process_query(query)
 
 
-# --- API Endpoint for Chat Completion ---
+# --- Step 11: API Endpoint for Chat Completion ---
 @app.post("/v1/chat")
 async def chat_completion(request: ChatRequest, authorization: str = Header(None)):
     """Handles both standard and streaming chat completions."""
@@ -266,7 +274,7 @@ async def chat_completion(request: ChatRequest, authorization: str = Header(None
         return {"response": run_rag(query)}
 
 
-# --- Streaming Implementation ---
+# --- Step 12: Streaming Implementation ---
 # This streams the model output to the client incrementally (chunked by words).
 async def stream_response(query: str):
     """Streams RAG output as Server-Sent Events."""
@@ -284,14 +292,14 @@ async def stream_response(query: str):
     yield "data: [DONE]\n\n"
 
 
-# --- Health Check Endpoint ---
+# --- Step 13: Health Check Endpoint ---
 @app.get("/")
 def health_check():
     """Simple health check for deployment verification."""
     return {"status": "ok", "message": "Multi-Agent RAG Template running 🚀"}
 
 
-# --- Entry Point ---
+# --- Step 14: Entry Point ---
 # This runs the FastAPI server when executed directly.
 if __name__ == "__main__":
     import uvicorn
