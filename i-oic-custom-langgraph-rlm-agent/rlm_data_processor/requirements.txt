@@ -20,4 +20,4 @@ numpy>=1.24.0
 # Environment variable management
 python-dotenv>=1.2.3
 
-ibm-watsonx-orchestrate==2.10.0
+ibm-watsonx-orchestrate==2.16.1
