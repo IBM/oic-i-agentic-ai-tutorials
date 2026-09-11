@@ -1,0 +1,82 @@
+ I need you to perform the following steps in order. Do NOT skip any step. Confirm each step before moving to the next.
+
+---
+
+### Step 1 — Update sku_availability_toolkit.yaml
+
+Read the file `sku_availability_toolkit.yaml`.
+Update the `package_root` field to the absolute path of the current working directory
+(use `pwd` via execute_command to get the exact path).
+Save the file with the updated value.
+
+---
+
+### Step 2 — Import the MCP Toolkit
+
+Import the toolkit from the updated `sku_availability_toolkit.yaml` using:
+  orchestrate toolkits add --kind mcp \
+    --name "sku-availability-checker" \
+    --description "Real-time inventory availability checker using Confluent Kafka and Apache Flink. Exposes get_sku_availability(sku, branch) and get_all_availability() tools that query the inventory.availability Kafka topic continuously updated by an Apache Flink aggregation pipeline on Confluent Cloud." \
+    --language python \
+    --package-root <value read from sku_availability_toolkit.yaml package_root> \
+    --command "python3 get_sku_availability.py" \
+    --tools "*" \
+    --app-id "confluent_sku_creds"
+
+Wait for confirmation that the toolkit was imported successfully and that both tools
+`sku-availability-checker:get_sku_availability` and `sku-availability-checker:get_all_availability`
+appear in `orchestrate toolkits list` before proceeding.
+
+---
+
+### Step 3 — Set credentials on the `confluent_sku_creds` connection (DRAFT)
+
+Call `set_credentials_connection` for app_id `confluent_sku_creds`, environment `draft`,
+with the following key-value entries read from the `.env` file in the current directory:
+
+  FLINK_API_KEY             = <FLINK_API_KEY from .env>
+  FLINK_API_SECRET          = <FLINK_API_SECRET from .env>
+  FLINK_API_URL             = <FLINK_API_URL from .env>
+  CONFLUENT_ORG_ID          = <CONFLUENT_ORG_ID from .env>
+  CONFLUENT_ENVIRONMENT_ID  = <CONFLUENT_ENVIRONMENT_ID from .env>
+  CONFLUENT_FLINK_COMPUTE_POOL_ID = <CONFLUENT_FLINK_COMPUTE_POOL_ID from .env>
+  CONFLUENT_CLUSTER_NAME    = <CONFLUENT_CLUSTER_NAME from .env>
+
+---
+
+### Step 4 — Set credentials on the `confluent_sku_creds` connection (LIVE)
+
+Repeat Step 3 exactly, but with environment `live`.
+
+---
+
+### Step 5 — Import Substitute_Finder_Agent
+
+Import the agent from `Substitute_Finder_Agent.yaml` using `import_agent`.
+Wait for a successful response before proceeding.
+
+---
+
+### Step 6 — Import SKU_Availability_Agent
+
+Import the agent from `SKU_Availability_Agent.yaml` using `import_agent`.
+Wait for a successful response before proceeding.
+
+---
+
+### Step 7 — Import Store_Associate_Agent
+
+Import the agent from `Store_Associate_Agent.yaml` using `import_agent`.
+Wait for a successful response before proceeding.
+
+---
+
+### Step 8 — Final verification
+
+Call `list_agents` (kind: native) and `list_toolkits` and confirm:
+- Toolkit `sku-availability-checker` is present with both tools listed
+- `Substitute_Finder_Agent` is present
+- `SKU_Availability_Agent` is present with tools `sku-availability-checker:get_sku_availability` and `sku-availability-checker:get_all_availability`
+- `Store_Associate_Agent` is present with collaborators `SKU_Availability_Agent` and `Substitute_Finder_Agent`
+
+Report the final status of every item above.

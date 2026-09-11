@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <script>
+        // Handler to inject context variables into every outgoing message.
+        // Replace the hardcoded values below with values sourced from your
+        // application's authenticated session (e.g. from a JWT or session cookie).
+        function preSendHandler(event, instance) {
+            event.message.context = {
+                ...event.message.context,
+                project_id: "proj-42",
+                customer_id: "cust-99"
+            };
+            console.log('Context injected:', event.message.context);
+        }
+
+        // Called once the chat widget has finished loading.
+        function onChatLoad(instance) {
+            // Register the pre:send handler so context is injected before
+            // every message is dispatched to the watsonx Orchestrate agent.
+            instance.on('pre:send', preSendHandler);
+        }
+
+        window.wxOConfiguration = {
+            orchestrationID: "",
+            hostURL: "https://us-south.watson-orchestrate.cloud.ibm.com",
+            rootElementID: "root",
+            deploymentPlatform: "ibmcloud",
+            crn: "",
+            chatOptions: {
+                agentId: "55b29921-5297-4f01-87eb-db0f9e24c4f9",
+                onLoad: onChatLoad
+            }
+        };
+
+        const script = document.createElement('script');
+        script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+        script.addEventListener('load', function () {
+            wxoLoader.init();
+        });
+        document.head.appendChild(script);
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+</body>
+
+</html>
