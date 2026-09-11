@@ -8,9 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "14.2.5",
-    "node-rsa": "^1.1.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next": "16.3.4",
+    "node-rsa": "^2.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   }
 }
