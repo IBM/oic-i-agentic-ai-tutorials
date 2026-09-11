@@ -1,4 +1,4 @@
-fastmcp==2.12.4
+fastmcp==4.0.3
 fastapi>=0.104.0
 uvicorn>=0.23.0
 pyjwt>=2.9.0
