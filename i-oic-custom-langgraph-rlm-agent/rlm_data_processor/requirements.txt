@@ -4,7 +4,7 @@ langchain-core>=1.6.2
 
 # watsonx.ai integration for RLM
 langchain-ibm>=0.3.0
-ibm-watsonx-ai>=1.0.0
+ibm-watsonx-ai>=1.7.1
 
 # PDF processing for document analysis
 pypdf>=4.0.0
