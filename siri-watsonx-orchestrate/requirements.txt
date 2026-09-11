@@ -22,7 +22,7 @@ defusedxml==0.7.1
 docstring_parser==0.18.0
 executing==2.2.1
 fastapi==0.136.3
-fastjsonschema==2.21.2
+fastjsonschema==2.22.2
 fqdn==1.5.1
 h11==0.16.0
 httpcore==1.0.9
