@@ -5,7 +5,7 @@ xsdata==25.4
 simple-salesforce==1.12.6
 python-dateutil==2.9.0.post0
 pyjwt==2.13.0
-pydantic-extra-types==2.10.5
+pydantic-extra-types==2.11.1
 requests>=2.32.5
 ibm-cos-sdk==2.14.3
 pyOpenSSL==25.1.0
