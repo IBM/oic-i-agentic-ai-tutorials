@@ -13,4 +13,4 @@ certifi==2025.07.14
 # Stay at bottom of file, these packages will be pulled as a dep from above.
 # Used to resolve pants deps inference warnings
 pycountry==24.6.1 # From pydantic-extra-types
-twilio==9.8.0
+twilio==9.11.0
