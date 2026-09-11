@@ -294,6 +294,33 @@ updates:
     labels:
       - "dependencies"
 
+  - package-ecosystem: "pip"
+    directory: "/secure-agents/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 0
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "pip"
+    directory: "/secure-agents/mcp"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 0
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "pip"
+    directory: "/sterling-oms-smart-supply-chain-agent/sterling-order-management-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 0
+    labels:
+      - "dependencies"
+
   # ── npm (security only) ────────────────────────────────────────────────────
 
   - package-ecosystem: "npm"
