@@ -39,13 +39,21 @@ from crewai.events import *
 from crewai.utilities.events.base_event_listener import BaseEventListener
 
 # --- Step 1: Setup NLTK for text preprocessing ---
-# Downloads tokenizers and stopwords on first run if missing
-try:
-    nltk.data.find("tokenizers/punkt")
-    nltk.data.find("corpora/stopwords")
-except LookupError:
-    nltk.download("punkt")
-    nltk.download("stopwords")
+# CVE-2026-81726: nltk's model-artifact download API can write outside allowed
+# roots (path-traversal). No patched release exists yet (affected <= 3.10.3).
+# Mitigation: NEVER call nltk.download() at runtime. NLTK data MUST be
+# pre-installed at image build time via the Dockerfile RUN step below.
+# If the data is absent the app raises immediately rather than downloading.
+for _resource, _path in [("punkt tokeniser", "tokenizers/punkt_tab"),
+                          ("stopwords corpus", "corpora/stopwords")]:
+    try:
+        nltk.data.find(_path)
+    except LookupError as exc:
+        raise RuntimeError(
+            f"Required NLTK data '{_resource}' is missing. "
+            "Pre-install it during the Docker build step — "
+            "see the RUN instruction in Dockerfile."
+        ) from exc
 
 stop_words = set(stopwords.words("english"))
 

@@ -5,7 +5,7 @@ elasticsearch==9.1.1
 fastapi==0.117.1
 langchain_community==0.3.29
 langchain_huggingface==0.3.1
-nltk==3.9.1
+nltk==3.9.4  # CVE-2026-81726: no patched release exists yet (affected <=3.10.3); pinned to latest available. Remove nltk.download() from runtime code — see app.py.
 pydantic==2.11.9
 python-dotenv==1.1.1
 sentence_transformers==5.1.1
