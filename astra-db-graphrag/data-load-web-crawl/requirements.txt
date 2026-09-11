@@ -3,7 +3,7 @@ beautifulsoup4==4.14.2
 lxml==6.0.2
 requests==2.32.5
 markdownify==1.2.0
-python-dotenv==1.2.1
+python-dotenv==1.2.3
 aiohttp==3.13.2
 transformers==4.57.1
 langchain==1.0.3
