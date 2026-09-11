@@ -1,6 +1,6 @@
 # LangChain and RAG dependencies
 langchain>=1.3.16
-langchain-community>=0.0.20
+langchain-community>=0.4.2
 langchain-ibm>=1.1.0
 
 # Document processing
