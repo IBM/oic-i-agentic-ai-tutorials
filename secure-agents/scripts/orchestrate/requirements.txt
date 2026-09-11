@@ -1,5 +1,5 @@
 # Basic dependencies for orchestrate-scripts
-requests>=2.31.0
+requests>=2.34.2
 python-dotenv>=1.0.0
 pyyaml>=6.0.1
 
