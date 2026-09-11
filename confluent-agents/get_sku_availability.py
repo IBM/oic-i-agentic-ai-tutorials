@@ -59,7 +59,7 @@ FLINK_API_URL = os.environ.get("FLINK_API_URL", "").rstrip("/")
 
 # Credentials resolved lazily — injected as env vars by the WXO key_value connection at runtime.
 # Do not exit at module load; fail at tool-call time if missing.
-FLINK_BASE = f"{FLINK_API_URL}/sql/v1/organizations/{ORG_ID}/environments/{ENV_ID}" if FLINK_API_URL and ORG_ID and ENV_ID else ""
+FLINK_BASE = f"{FLINK_API_URL}/organizations/{ORG_ID}/environments/{ENV_ID}" if FLINK_API_URL and ORG_ID and ENV_ID else ""
 AUTH    = HTTPBasicAuth(FLINK_KEY, FLINK_SECRET)
 HEADERS = {"Content-Type": "application/json"}
 
