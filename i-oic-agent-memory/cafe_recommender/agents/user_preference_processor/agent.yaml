@@ -1,0 +1,18 @@
+spec_version: v1
+kind: agent
+name: user_preference_processor
+display_name: User Preference Processor Agent
+description: Specialized in storing and retrieving user preferences in memory
+framework: langgraph
+
+deployment:
+  runtime: python
+  code_bundle:
+    type: package
+    path: .
+    entrypoint: "user_preference_processor:create_agent"
+
+checkpointer:
+  type: memory
+
+# Made with Bob

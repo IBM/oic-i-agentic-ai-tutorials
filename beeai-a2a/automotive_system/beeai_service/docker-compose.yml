@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  beeai-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beeai_maintenance_service
+    ports:
+      - "${BEEAI_WXO_PORT:-8080}:8080"
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      # IBM watsonx.ai credentials from environment
+      - WATSONX_API_KEY=${WATSONX_API_KEY}
+      - WATSONX_URL=${WATSONX_URL}
+      - WATSONX_PROJECT_ID=${WATSONX_PROJECT_ID}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - beeai-network
+
+networks:
+  beeai-network:
+    driver: bridge

@@ -110,8 +110,8 @@ echo "========================================"
 
 echo ""
 echo "1. Agent Card (A2A Protocol Discovery)"
-echo "   GET $HR_URL/.well-known/agent-card.json"
-curl -sS --max-time 15 "$HR_URL/.well-known/agent-card.json" | jq .
+echo "   GET $HR_URL/.well-known/agent.json"
+curl -sS --max-time 15 "$HR_URL/.well-known/agent.json" | jq .
 
 echo ""
 echo "2. Health Check"
@@ -121,19 +121,19 @@ curl -sS --max-time 15 "$HR_URL/health" | jq .
 echo ""
 echo "3. Sample Task - Onboard Employee (A2A Protocol)"
 echo "   Testing with: 'Onboard Sarah Williams as a Software Engineer'"
-curl -N -sS --max-time 30 "$HR_URL/tasks" \
+curl -N -sS --max-time 30 "$HR_URL/" \
   -H "content-type: application/json" \
   -d '{
         "jsonrpc": "2.0",
         "method": "message/send",
         "params": {
           "message": {
+            "messageId": "test-'$(date +%s)'",
             "role": "user",
             "parts": [
               {
-                "root": {
-                  "text": "Onboard Sarah Williams as a Software Engineer"
-                }
+                "kind": "text",
+                "text": "Onboard Sarah Williams as a Software Engineer"
               }
             ]
           }
@@ -147,7 +147,7 @@ echo "========================================"
 echo "Deployment Complete!"
 echo "========================================"
 echo "HR Agent Pure A2A URL: $HR_URL"
-echo "Agent Card: $HR_URL/.well-known/agent-card.json"
+echo "Agent Card: $HR_URL/.well-known/agent.json"
 echo "Health Check: $HR_URL/health"
 echo ""
 echo "You can now add this agent to Watsonx Orchestrate using the agent card URL."

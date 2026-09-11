@@ -1,0 +1,103 @@
+[GLOBAL]
+pants_version = "2.29.0"
+backend_packages = [
+    # BUILD files
+    "pants.backend.build_files.fmt.buildifier",
+
+    # Docker,
+    "pants.backend.docker",
+
+    # Python
+    "pants.backend.python",
+    "pants.backend.python.lint.autoflake",
+    "pants.backend.python.lint.black",
+    "pants.backend.python.lint.pylint",
+    "pants.backend.python.lint.flake8",
+    "pants.backend.python.lint.isort",
+    "pants.backend.python.typecheck.mypy",
+    "pants.backend.python.lint.docformatter",
+
+    # Shell
+    "pants.backend.shell",
+    "pants.backend.shell.lint.shfmt",
+
+    # Other stuff...
+    "pants.backend.tools.preamble",
+]
+
+pants_ignore.add = [
+    "lite-requirements.txt",
+    "!**/credentials.json",
+]
+
+build_ignore = [
+  "UI_Testing/selenium/e2e_tests/BUILD",  # Excludes a single BUILD file
+]
+
+[source]
+root_patterns = ["/", "build-support/flake8-plugins"]
+
+[python]
+enable_resolves = true
+default_resolve = "python-repository"
+interpreter_constraints = ["CPython==3.12.*"]
+
+[python.resolves]
+python-repository = "3rdparty/python/lockfiles/python-repository.lock"
+tools-autoflake = "3rdparty/python/lockfiles/tools-autoflake.lock"
+tools-black = "3rdparty/python/lockfiles/tools-black.lock"
+tools-flake8 = "3rdparty/python/lockfiles/tools-flake8.lock"
+tools-isort = "3rdparty/python/lockfiles/tools-isort.lock"
+tools-pylint = "3rdparty/python/lockfiles/tools-pylint.lock"
+tools-mypy = "3rdparty/python/lockfiles/tools-mypy.lock"
+
+[black]
+install_from_resolve = "tools-black"
+config = "3rdparty/python/configs/black.toml"
+
+[docformatter]
+args = [
+    "--wrap-summaries=100",
+    "--wrap-descriptions=100",
+    "--pre-summary-newline",
+]
+
+[pylint]
+install_from_resolve = "tools-pylint"
+config = "3rdparty/python/configs/pylint.toml"
+
+[flake8]
+install_from_resolve = "tools-flake8"
+config = "3rdparty/python/configs/flake8.ini"
+source_plugins = ["//build-support/flake8-plugins:flake8-plugins"]
+
+[isort]
+config = "3rdparty/python/configs/isort.toml"
+
+[mypy]
+install_from_resolve = "tools-mypy"
+config = "3rdparty/python/configs/mypy.ini"
+args.add = ["--no-error-summary"]
+
+[pytest]
+install_from_resolve = "python-repository"
+requirements = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov"
+]
+config = "3rdparty/python/configs/pytest.toml"
+
+[coverage-py]
+report = []
+
+[shfmt]
+args = ["-i 4"]
+
+[autoflake]
+install_from_resolve = "tools-autoflake"
+args.add = [
+    "--remove-all-unused-imports",
+    "--remove-duplicate-keys",
+    "--remove-unused-variables",
+]

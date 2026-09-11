@@ -12,11 +12,6 @@ Every section includes its own `README.md` file with step-by-step instructions f
 - **Slack Integration**
 
 
-
-
-
-
-
 ## Overview
 This repository hosts **Agentic AI tutorials** developed as part of the Open Innovation Community initiative. These tutorials provide step-by-step guidance for building and integrating AI agents.
 
@@ -44,7 +39,6 @@ Step 2: Set Up Your Meta Business Account
 
 ![business_facebook](img/business_facebook.png)
 
- 
 
 
 Step 3: Enable Twilio Numbers for WhatsApp

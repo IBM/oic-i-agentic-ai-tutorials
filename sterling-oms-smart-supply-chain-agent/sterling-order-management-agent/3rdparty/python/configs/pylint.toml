@@ -1,0 +1,200 @@
+[tool.pylint.MASTER]
+init-hook = """
+try:
+    import gi
+    gi.require_version('Gst','1.0')
+    from gi.repository import Gst
+    Gst.init(None)
+except ModuleNotFoundError:
+    pass
+"""
+#load-plugins="pylint_flask_sqlalchemy"
+extension-pkg-whitelist="numpy,PyQt5,kenlm"
+
+[tool.pylint.REPORTS]
+output-format="parseable"
+
+[tool.pylint.TYPECHECK]
+ignored-modules="numpy,matplotlib.cm"
+ignored-classes="optparse.Values,thread._local,_thread._local,numpy"
+generated-members="torch.*"
+
+[tool.pylint.BASIC]
+good-names="i,j,k,ex,Run,_,logger,T"
+variable-rgx="(([a-z][a-z0-9_]{0,})|(_[a-z0-9_]*))$"
+argument-rgx="(F|([a-z][a-z0-9_]{0,})|(_[a-z0-9_]*))$"
+attr-rgx="(([a-z][a-z0-9_]{0,})|(_[a-z0-9_]*))$"
+module-rgx="(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
+bad-names="toto,tutu,tata"
+
+[tool.pylint.VARIABLES]
+dummy-variables-rgx="(_+[a-zA-Z0-9_]*?$)|dummy"
+
+[tool.pylint.EXCEPTIONS]
+overgeneral-exceptions="builtins.Exception"
+
+[tool.pylint.SCORE]
+score="n"
+
+[tool.pylint.CLASSES]
+valid-classmethod-first-arg="cls"
+valid-metaclass-classmethod-first-arg="mcs"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable="all"
+enable= """
+  abstract-method,
+  anomalous-backslash-in-string,
+  anomalous-unicode-escape-in-string,
+  astroid-error,
+  attribute-defined-outside-init,
+  bad-classmethod-argument,
+  bad-except-order,
+  bad-exception-context,
+  bad-format-character,
+  bad-format-string,
+  bad-format-string-key,
+  bad-mcs-classmethod-argument,
+  bad-mcs-method-argument,
+  bad-open-mode,
+  bad-option-value,
+  bad-reversed-sequence,
+  bad-staticmethod-argument,
+  bad-str-strip-call,
+  bad-string-format-type,
+  bad-super-call,
+  bare-except,
+  blacklisted-name,
+  broad-except,
+  c-extension-no-member,
+  cell-var-from-loop,
+  chained-comparison,
+  class-variable-slots-conflict,
+  comparison-with-itself,
+  consider-iterating-dictionary,
+  consider-merging-isinstance,
+  consider-swap-variables,
+  consider-using-dict-comprehension,
+  consider-using-enumerate,
+  consider-using-get,
+  consider-using-in,
+  consider-using-join,
+  consider-using-set-comprehension,
+  consider-using-sys-exit,
+  consider-using-ternary,
+  continue-in-finally,
+  dangerous-default-value,
+  deprecated-method,
+  deprecated-module,
+  dict-iter-missing-items,
+  duplicate-except,
+  duplicate-key,
+  duplicate-string-formatting-argument,
+  empty-docstring,
+  eval-used,
+  exec-used,
+  expression-not-assigned,
+  fatal,
+  format-combined-specification,
+  format-needs-mapping,
+  global-at-module-level,
+  global-statement,
+  global-variable-not-assigned,
+  import-outside-toplevel,
+  import-self,
+  inconsistent-return-statements,
+  init-is-generator,
+  invalid-all-object,
+  invalid-characters-in-docstring,
+  invalid-envvar-default,
+  invalid-format-index,
+  invalid-length-returned,
+  invalid-name,
+  invalid-slots-object,
+  literal-comparison,
+  logging-format-interpolation,
+  logging-format-truncated,
+  logging-not-lazy,
+  logging-too-few-args,
+  logging-too-many-args,
+  logging-unsupported-format,
+  lost-exception,
+  method-check-failed,
+  misplaced-bare-raise,
+  misplaced-future,
+  missing-format-argument-key,
+  missing-format-attribute,
+  missing-format-string-key,
+  missing-kwoa,
+  missing-parentheses-for-call-in-test,
+  mixed-format-string,
+  multiple-imports,
+  no-classmethod-decorator,
+  no-else-continue,
+  no-self-argument,
+  non-iterator-returned,
+  non-parent-init-called,
+  nonlocal-and-global,
+  nonlocal-without-binding,
+  notimplemented-raised,
+  parse-error,
+  pointless-statement,
+  pointless-string-statement,
+  possibly-unused-variable,
+  preferred-module,
+  protected-access,
+  raising-format-tuple,
+  redeclared-assigned-name,
+  redefined-argument-from-local,
+  redefined-builtin,
+  redefined-outer-name,
+  redundant-unittest-assert,
+  reimported,
+  relative-beyond-top-level,
+  return-arg-in-generator,
+  return-in-init,
+  self-assigning-variable,
+  self-cls-assignment,
+  shallow-copy-environ,
+  simplifiable-if-expression,
+  simplifiable-if-statement,
+  simplify-boolean-expression,
+  single-string-used-for-slots,
+  singleton-comparison,
+  subprocess-popen-preexec-fn,
+  subprocess-run-check,
+  super-init-not-called,
+  too-few-format-args,
+  too-many-format-args,
+  too-many-nested-blocks,
+  too-many-star-expressions,
+  trailing-comma-tuple,
+  truncated-format-string,
+  try-except-raise,
+  undefined-all-variable,
+  undefined-loop-variable,
+  undefined-variable,
+  unexpected-line-ending-format,
+  ungrouped-imports,
+  unidiomatic-typecheck,
+  unnecessary-comprehension,
+  unnecessary-pass,
+  unneeded-not,
+  unreachable,
+  unrecognized-inline-option,
+  unused-format-string-argument,
+  unused-format-string-key,
+  unused-import,
+  unused-variable,
+  unused-wildcard-import,
+  used-before-assignment,
+  used-prior-global-declaration,
+  useless-else-on-loop,
+  useless-object-inheritance,
+  using-constant-test,
+  wildcard-import,
+  wrong-exception-operation,
+  wrong-import-position,
+  wrong-spelling-in-comment,
+  wrong-spelling-in-docstring,
+"""

@@ -1,0 +1,23 @@
+# Core LangGraph dependencies for Data Processor Agent
+langgraph>=0.2.0
+langchain-core>=0.3.0
+
+# watsonx.ai integration for RLM
+langchain-ibm>=0.3.0
+ibm-watsonx-ai>=1.0.0
+
+# PDF processing for document analysis
+pypdf>=4.0.0
+PyPDF2>=3.0.0
+
+# Document chunking and text processing
+langchain-text-splitters>=0.3.0
+
+# Data processing libraries
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+ibm-watsonx-orchestrate==2.10.0

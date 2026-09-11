@@ -1,0 +1,12 @@
+python_sources(
+    overrides = {
+        "import_connections.py": {
+            "dependencies": [
+                "connections:configs",
+                "agent_ready_tools/utils:credentials",
+            ],
+        },
+    },
+)
+
+python_tests(name = "tests")

@@ -1,0 +1,10 @@
+spec_version: v1
+kind: native
+name: test_2_collaborator_agent
+description: Collaborator agent 2 for use in unit tests.
+instructions: Lorem ipsum dolor sit amet...
+llm: watsonx/meta-llama/llama-3-2-90b-vision-instruct
+style: default
+collaborators: []
+tools:
+  - test_tool_1

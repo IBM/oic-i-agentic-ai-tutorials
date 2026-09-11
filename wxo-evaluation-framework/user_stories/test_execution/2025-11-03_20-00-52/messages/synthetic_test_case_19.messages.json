@@ -1,0 +1,72 @@
+[
+    {
+        "role": "user",
+        "content": "I'd like to check if I have enough balance to make a transfer.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "What is your account ID or username?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "My username is alice.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-f62f4bad983a46379b9e012164\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-f62f4bad983a46379b9e012164\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_retrieve_account_balance\", \"args\": {\"account_id\": \"ACC10001\"}, \"id\": \"chatcmpl-tool-ed3507c684cf45ba9994ab4822\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"{\\\"currency\\\": \\\"USD\\\", \\\"available\\\": \\\"12500.75\\\", \\\"ledger\\\": \\\"12750.75\\\"}\", \"name\": \"banking_retrieve_account_balance\", \"tool_call_id\": \"chatcmpl-tool-ed3507c684cf45ba9994ab4822\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your current available balance is $12,500.75 and your ledger balance is $12,750.75. Do you want to proceed with the transfer?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "I want to transfer 5000 USD to ACC10003. Do I have enough balance for this transfer?",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "You have enough balance to make this transfer. Would you like to proceed with the transfer from ACC10001 to ACC10003 for 5000 USD?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

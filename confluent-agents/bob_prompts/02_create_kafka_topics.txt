@@ -1,0 +1,1 @@
+Run create_topic.py. Confirm authentication succeeds, inventory.transactions exists, it has 6 partitions, retention.ms is 604800000, and no secret value is printed. If the topic already exists with different settings, report the difference before changing it.

@@ -1,0 +1,28 @@
+[2024-03-23 14:32:15] ERROR api-gateway: Connection refused to auth-service at 10.0.1.45:8080
+[2024-03-23 14:32:16] ERROR api-gateway: Failed to authenticate user request - service unavailable
+[2024-03-23 14:32:17] ERROR api-gateway: Connection refused to auth-service at 10.0.1.45:8080
+[2024-03-23 14:32:18] WARN api-gateway: Retry attempt 1/3 failed for auth-service
+[2024-03-23 14:32:19] ERROR api-gateway: Connection refused to auth-service at 10.0.1.45:8080
+[2024-03-23 14:32:20] WARN api-gateway: Retry attempt 2/3 failed for auth-service
+[2024-03-23 14:32:21] ERROR api-gateway: Circuit breaker opened for auth-service
+[2024-03-23 14:32:22] ERROR api-gateway: 47 authentication requests failed in last 60 seconds
+[2024-03-23 14:32:23] CRITICAL api-gateway: Service degradation detected - falling back to cached tokens
+[2024-03-23 14:32:24] ERROR user-service: Unable to validate tokens - auth-service unreachable
+
+Deploy history:
+[2024-03-23 14:25:00] auth-service v3.2.1 deployed
+[2024-03-23 14:15:00] api-gateway v2.8.0 deployed
+[2024-03-23 13:45:00] database-migration v1.5.2 completed
+
+System metrics:
+CPU: 45% (auth-service pod crashed)
+Memory: 78% (api-gateway)
+Active connections: 1250/2000
+Response time: 4500ms (avg, up from 150ms)
+Error rate: 38% (last 5 min)
+Auth-service pods: 0/3 healthy
+
+Recent changes:
+- Auth-service updated JWT validation library
+- New rate limiting rules deployed
+- Database connection pool size increased

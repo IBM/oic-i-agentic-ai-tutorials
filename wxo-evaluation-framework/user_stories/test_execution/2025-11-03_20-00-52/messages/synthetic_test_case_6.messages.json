@@ -1,0 +1,114 @@
+[
+    {
+        "role": "user",
+        "content": "I want to make a transfer.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "What is the amount you want to transfer?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "I'd like to transfer 250 USD.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {}, \"id\": \"chatcmpl-tool-8f9c3773e9204c6caa4507398b\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"I'm sorry, it seems I've encountered an error calling the tool: 1 validation error for DynamicModel\\nidentifier\\n  Field required [type=missing, input_value={}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.10/v/missing\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-8f9c3773e9204c6caa4507398b\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "I need to know which account to transfer from. Can you provide your account's username or customer number?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "My username is alice.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-398fabe5a313455fa4f37290b3\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-398fabe5a313455fa4f37290b3\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {}, \"id\": \"chatcmpl-tool-dd4908870ea14746b9a6a39f68\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"I'm sorry, it seems I've encountered an error calling the tool: 1 validation error for DynamicModel\\nidentifier\\n  Field required [type=missing, input_value={}, input_type=dict]\\n    For further information visit https://errors.pydantic.dev/2.10/v/missing\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-dd4908870ea14746b9a6a39f68\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "I need to know which account to transfer to. Can you provide the recipient's username or customer number?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "I want to transfer to account ACC10002.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_initiate_funds_transfer\", \"args\": {\"amount\": \"250\", \"currency\": \"USD\", \"from_account\": \"ACC10001\", \"to_account\": \"ACC10002\"}, \"id\": \"chatcmpl-tool-e0383c3b2bc3433a92f4e0a8b5\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"{\\\"transaction_id\\\": \\\"FT20251103160326\\\", \\\"from\\\": \\\"ACC10001\\\", \\\"to\\\": \\\"ACC10002\\\", \\\"amount\\\": \\\"250\\\", \\\"currency\\\": \\\"USD\\\", \\\"status\\\": \\\"initiated\\\", \\\"reference\\\": \\\"\\\"}\", \"name\": \"banking_initiate_funds_transfer\", \"tool_call_id\": \"chatcmpl-tool-e0383c3b2bc3433a92f4e0a8b5\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Your transfer of 250 USD from ACC1****01 to ACC1****02 has been initiated. The transaction ID is FT20251103160326.",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

@@ -1,0 +1,8 @@
+
+test_paths: 
+- agent_validation/adk_test_cases/hr/sap/employee_support/test_get_address_types.json
+output_dir: "agent_validation/data_processing/synthetic_generation/adk/"
+paraphrase_count: 2
+model: mistralai/mistral-medium-2505
+prompt_file: "agent_validation/data_processing/synthetic_generation/prompts/mistral_medium/paraphrase_verbose.txt"
+

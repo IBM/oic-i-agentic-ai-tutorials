@@ -1,0 +1,22 @@
+python_sources(
+    name = "clients",
+    sources = [
+        "**/*.py",
+        "!**/*_test.py",
+        "!**/test_*.py",
+    ],
+)
+
+python_requirement(
+    name = "twilio",
+    requirements = ["twilio==9.8.0"],
+    resolve = "tools-flake8",
+)
+
+python_tests(
+    name = "tests",
+    sources = [
+        "**/*_test.py",
+        "**/test_*.py",
+    ],
+)

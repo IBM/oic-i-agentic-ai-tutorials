@@ -1,0 +1,81 @@
+services:
+  mongodb:
+    image: mongo:8
+    restart: "no"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - mongo-data:/data/db
+      - ./mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    restart: "no"
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/utils/health-check/" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    build:
+      context: ./backend
+      args:
+        - DOCKER_BUILDKIT=0
+    ports:
+      - "8000:8000"
+    command:
+      - fastapi
+      - run
+      - --reload
+      - "app/main.py"
+    develop:
+      watch:
+        - path: ./backend
+          action: sync
+          target: /app
+          ignore:
+            - ./backend/.venv
+            - .venv
+        - path: ./backend/pyproject.toml
+          action: rebuild
+
+  frontend:
+    restart: "no"
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://localhost:8000
+        - NODE_ENV=development
+      target: base
+    ports:
+      - "5173:5173"
+    command: >
+      npm run dev -- --host 0.0.0.0
+    env_file:
+      - .env
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_WXO_HOST_URL=${VITE_WXO_HOST_URL}
+      - VITE_WXO_AGENT_ID=${VITE_WXO_AGENT_ID}
+      - VITE_WXO_ORCHESTRATION_ID=${VITE_WXO_ORCHESTRATION_ID}
+      - VITE_WXO_AGENT_ENVIRONMENT_ID=${VITE_WXO_AGENT_ENVIRONMENT_ID}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    develop:
+      watch:
+        - path: ./frontend/package.json
+          action: rebuild
+
+volumes:
+  app-db-data:
+  mongo-data:

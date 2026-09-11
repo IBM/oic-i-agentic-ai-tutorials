@@ -1,0 +1,7 @@
+python_sources(
+    name = "eval_tools",
+    dependencies = [
+        "agent_validation/adk_test_cases:test_case_fixtures",
+        "agent_ready_tools:agent_ready_tools",
+    ],
+)

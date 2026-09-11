@@ -1,0 +1,27 @@
+resources(
+    name = "excel_test_data",
+    sources = [
+        "test_data/test_metadata_outdated.xlsx",
+        "test_data/test_metadata.xlsx",
+    ],
+)
+
+python_sources(
+    overrides = {
+        "catalog_metadata.py": {
+            "dependencies": [
+                "3rdparty/python:repository#pandas",
+                "3rdparty/python:repository#openpyxl",
+            ],
+        },
+    },
+)
+
+python_tests(
+    name = "tests",
+    overrides = {
+        "catalog_metadata_test.py": {
+            "dependencies": ["import_utils/catalog/metadata:excel_test_data"],
+        },
+    },
+)

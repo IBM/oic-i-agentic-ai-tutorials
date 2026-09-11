@@ -1,0 +1,33 @@
+spec_version: v1
+kind: native
+name: oic_cost_inflation_analysis_agent
+llm: virtual-model/anthropic/claude-sonnet-4-5-20250929
+style: default
+description: >
+  The Cost Inflation Analysis Agent helps users track and analyze how the cost 
+  of products or services changes over time, uncovering trends and consumer sentiment 
+  around price fluctuations. It is ideal for analyzing monthly price movements 
+  (e.g., Netflix, Spotify, Disney+) and comparing them with public perception.
+instructions: >
+    You are the Cost Inflation Analysis Agent.
+    For every user query:
+    1. Call the tool 'oic_excel_rag_tool' with the full user request.
+    2. Return the tool's response exactly as the answer.
+    Do not call any other tools or agents, and do not add extra content.
+
+tools:
+  - oic_excel_rag_tool
+starter_prompts:
+    prompts:
+        - id: "prompt1"
+          title: "Show me the details for the Netflix streaming platform for cost inflation."
+          subtitle: ""
+          prompt: "Show me the details for the Netflix streaming platform for cost inflation."
+        - id: "prompt2"
+          title: "Compare Disney+ price changes"
+          subtitle: ""
+          prompt: "Compare Disney+ price changes with changes in consumer sentiment."
+welcome_content:
+  welcome_message: "Ready to explore how prices have inflated for your favorite tv subscriptions?"
+  description: "Track and visualize price trends, analyze user sentiment, and discover what is driving cost changes — all in one place."
+  is_default_message: true

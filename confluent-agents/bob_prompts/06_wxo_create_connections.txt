@@ -1,0 +1,93 @@
+I need you to create and fully configure the `confluent_sku_creds` connection in watsonx Orchestrate
+for both draft and live environments. Perform every step in order. Do NOT skip any step.
+Read all credential values from the `.env` file in the current working directory using execute_command.
+Confirm each step before moving to the next.
+
+---
+
+### Step 1 — Read credentials from .env
+
+Run `cat .env` via execute_command and extract the following values exactly as they appear:
+
+  FLINK_API_KEY
+  FLINK_API_SECRET
+  FLINK_API_URL
+  CONFLUENT_ORG_ID
+  CONFLUENT_ENVIRONMENT_ID
+  CONFLUENT_FLINK_COMPUTE_POOL_ID
+  CONFLUENT_CLUSTER_NAME
+
+Store these values in memory for use in the steps below.
+Do NOT hardcode, guess, or fabricate any credential value.
+
+---
+
+### Step 2 — Check if the connection already exists
+
+Call `list_connections` and check whether `confluent_sku_creds` already exists.
+
+- If it EXISTS in both draft and live with `credentials_set: true` → skip Steps 3 and 4,
+  go directly to Step 5 (re-set credentials to ensure values are current).
+- If it EXISTS but `credentials_set: false` → skip Step 3, go to Step 4 (configure) then Step 5.
+- If it does NOT exist → proceed to Step 3.
+
+---
+
+### Step 3 — Create the connection (only if it does not exist)
+
+Call `create_connection` with app_id `confluent_sku_creds`.
+
+Confirm the connection was created before proceeding.
+
+---
+
+### Step 4 — Configure the connection for DRAFT and LIVE
+
+Call `configure_connection` twice — once for each environment — with these parameters:
+
+  app_id:      confluent_sku_creds
+  type:        team
+  kind:        key_value
+  environment: draft   (first call)
+  environment: live    (second call)
+
+Confirm both calls succeed before proceeding.
+
+---
+
+### Step 5 — Set credentials on the connection — DRAFT environment
+
+Call `set_credentials_connection` with:
+
+  app_id:      confluent_sku_creds
+  environment: draft
+  entries:
+    FLINK_API_KEY             = <value from Step 1>
+    FLINK_API_SECRET          = <value from Step 1>
+    FLINK_API_URL             = <value from Step 1>
+    CONFLUENT_ORG_ID          = <value from Step 1>
+    CONFLUENT_ENVIRONMENT_ID  = <value from Step 1>
+    CONFLUENT_FLINK_COMPUTE_POOL_ID = <value from Step 1>
+    CONFLUENT_CLUSTER_NAME    = <value from Step 1>
+
+Confirm the call returns success before proceeding.
+
+---
+
+### Step 6 — Set credentials on the connection — LIVE environment
+
+Repeat Step 5 exactly, but with environment `live`.
+
+Confirm the call returns success before proceeding.
+
+---
+
+### Step 7 — Final verification
+
+Call `list_connections` and confirm that `confluent_sku_creds` appears with:
+  - `credentials_set: true` in the draft list
+  - `credentials_set: true` in the live list
+  - `auth_type: key_value_creds` in both
+
+Report the final status of both environments.
+If either shows `credentials_set: false`, repeat the relevant set-credentials step and verify again.

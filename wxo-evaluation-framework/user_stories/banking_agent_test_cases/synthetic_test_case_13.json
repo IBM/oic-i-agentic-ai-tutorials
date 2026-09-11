@@ -1,0 +1,40 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is cust-555. I want to update my phone number to +1-555-909-2323.",
+  "starting_sentence": "I am cust-555 and I want to update my phone number to +1-555-909-2323.",
+  "goals": {
+    "fetch_account_id-1": [
+      "update_contact_details-1"
+    ],
+    "update_contact_details-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "cust-555"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "update_contact_details-1",
+      "tool_name": "banking_update_contact_details",
+      "args": {
+        "account_id": "ACC10003",
+        "phone": "+1-555-909-2323"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "Your phone number has been updated to +1-555-909-2323.",
+      "keywords": [
+        "+1-555-909-2323"
+      ]
+    }
+  ]
+}

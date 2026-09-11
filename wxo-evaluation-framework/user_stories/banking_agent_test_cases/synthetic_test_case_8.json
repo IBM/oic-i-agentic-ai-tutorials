@@ -1,0 +1,28 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is cust-555. I want to get my account ID.",
+  "starting_sentence": "I'd like to get my account ID.",
+  "goals": {
+    "fetch_account_id-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "cust-555"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "Your account ID is ACC10003.",
+      "keywords": [
+        "ACC10003"
+      ]
+    }
+  ]
+}

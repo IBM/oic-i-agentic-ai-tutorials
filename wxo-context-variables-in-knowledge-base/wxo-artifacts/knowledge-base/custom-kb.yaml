@@ -1,0 +1,39 @@
+spec_version: v1
+kind: knowledge_base
+name: project_knowledge_base
+description: >-
+  Enterprise knowledge base backed by Custom Search.
+  Searches documents with per-user filtering applied via the caller's project ID and customer ID.
+  Returns only content the authenticated user is permitted to access.
+prioritize_built_in_index: false
+conversational_search_tool:
+  query_source: Agent
+  input_schema:
+    type: object
+    properties:
+      project_id:
+        type: string
+        description: 'Project identifier of the authenticated caller.'
+        default: ""
+      customer_id:
+        type: string
+        description: 'Customer identifier of the authenticated caller.'
+        default: ""
+  generation:
+    enabled: false
+  query_rewrite:
+    enabled: true
+  citations:
+    citations_shown: -1
+  index_config:
+    - custom_search:
+        filter: 'project_id={project_id},customer_id={customer_id}'
+        metadata:
+          top_n: "10"
+        field_mapping:
+          title: title
+          body:  body
+          url:   url
+          custom_fields:
+            source: metadata.source
+            score:  metadata.score

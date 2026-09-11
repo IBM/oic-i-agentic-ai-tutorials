@@ -1,0 +1,15 @@
+spec_version: v1
+kind: agent
+name: rlm_data_processor
+title: RLM Data Processor Agent
+description: A watsonx.ai-powered agent implementing Scan, Delegate, and Combine approach for efficient document processing using RLM (Retrieval-augmented Language Model) to answer questions on bank loan document.
+framework: langgraph
+
+deployment:
+  code_bundle:
+    entrypoint: "rlm_data_processor:create_agent"
+
+checkpointer:
+  type: memory
+
+# Made with Bob

@@ -1,0 +1,43 @@
+# =====================================================
+# HR Main Agent (Router)
+# =====================================================
+spec_version: v1
+kind: native
+style: default
+name: hr_main_agent
+display_name: HR Main Agent
+llm: groq/openai/gpt-oss-120b
+description: Main HR agent that routes requests to collaborators.
+instructions: |
+  You are an HR assistant.
+  Routing rules:
+  - Salary or team dashboard summary → manager_agent
+  - Office location, leave balance, holidays → general_agent
+  Do not ask follow-up questions.
+  Do not ask for clarification.
+  If manager_agent is not available, respond with:
+  "You don't have access to view this information"
+collaborators:
+  - manager_agent
+  - general_agent
+context_access_enabled: true
+context_variables:
+  - user_profile
+welcome_content:
+  welcome_message: "Welcome to HR Assistant!"
+  description: "I can help you with salary, team dashboard summary, locations, leaves, and holidays."
+starter_prompts:
+  prompts:
+    - id: "holidays"
+      title: "Holidays"
+      subtitle: "View company holidays for this year"
+      prompt: "Show company holidays for this year"
+    - id: "working_location"
+      title: "Working Location"
+      subtitle: "Find your office location"
+      prompt: "Show me working location"
+    - id: "team_summary"
+      title: "Team Dashboard"
+      subtitle: "View team summary details"
+      prompt: "Get team summary dashboard"
+

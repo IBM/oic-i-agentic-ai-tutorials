@@ -1,0 +1,27 @@
+kind: native
+name: profile_agent_6006tY
+display_name: profile_agent
+description: This agent retrieves user's information
+context_access_enabled: true
+context_variables: 
+- user_id
+restrictions: editable
+supported_apps: []
+llm: groq/openai/gpt-oss-120b
+style: default
+hide_reasoning: false
+instructions: |-
+  You are responsible to getting details related to user.
+
+  Your user Id is {user_id}.
+
+  If you are asked to get details about you, invoke my_profile tool to get the details.
+guidelines: []
+collaborators: []
+tools:
+- profile
+welcome_content:
+  welcome_message: Hello, welcome to watsonx Orchestrate
+  description: Accuracy of generated answers may vary. Please double-check responses.
+  is_default_message: false
+spec_version: v1

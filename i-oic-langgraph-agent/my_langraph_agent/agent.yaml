@@ -1,0 +1,11 @@
+spec_version: v1
+kind: agent
+name: my_langraph_agent
+title: My LangGraph Agent
+framework: langgraph
+description: This agent can return annualized rate of return when provided with initial investment ammount, current value and number of months the ammount has been invested.
+deployment:
+  code_bundle:
+    entrypoint: agent:create_react_agent
+checkpointer:
+  type: memory

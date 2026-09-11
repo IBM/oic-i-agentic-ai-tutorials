@@ -1,0 +1,5 @@
+TM1py
+keyring
+tm1py[pandas]
+pandas
+python-dateutil

@@ -1,0 +1,72 @@
+[
+    {
+        "role": "user",
+        "content": "I'd like to check my transactions from September 1st to September 30th, 2025.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"your username or customer number\"}, \"id\": \"chatcmpl-tool-60da070484ee4ca7b0fe085052\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"not found\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-60da070484ee4ca7b0fe085052\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "We couldn't find your account ID. Could you tell me your username or customer number?",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "user",
+        "content": "My username is alice.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-dd1fcc29aad5436297d55b209b\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-dd1fcc29aad5436297d55b209b\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_list_recent_transactions\", \"args\": {\"account_id\": \"ACC10001\", \"start_date\": \"2025-09-01\", \"end_date\": \"2025-09-30\"}, \"id\": \"chatcmpl-tool-66d0e1f0121f4c48acfc4b6eb2\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"[{\\\"id\\\": \\\"T1002\\\", \\\"date\\\": \\\"2025-09-28\\\", \\\"type\\\": \\\"credit\\\", \\\"amount\\\": \\\"1500.00\\\", \\\"desc\\\": \\\"Payroll\\\"}, {\\\"id\\\": \\\"T1003\\\", \\\"date\\\": \\\"2025-09-15\\\", \\\"type\\\": \\\"debit\\\", \\\"amount\\\": \\\"-200.00\\\", \\\"desc\\\": \\\"Electric Bill\\\"}]\", \"name\": \"banking_list_recent_transactions\", \"tool_call_id\": \"chatcmpl-tool-66d0e1f0121f4c48acfc4b6eb2\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "Here are your transactions from September 1st to September 30th, 2025:\n\n* T1002: Credit of $1500.00 on September 28, 2025, for Payroll\n* T1003: Debit of $200.00 on September 15, 2025, for Electric Bill",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

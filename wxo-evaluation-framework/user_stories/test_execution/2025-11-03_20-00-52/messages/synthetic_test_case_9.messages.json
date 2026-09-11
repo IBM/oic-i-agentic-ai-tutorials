@@ -1,0 +1,30 @@
+[
+    {
+        "role": "user",
+        "content": "I am alice and I want to know the branch code for New York.",
+        "type": "text",
+        "event": null,
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_call\", \"name\": \"banking_get_branch_code\", \"args\": {\"branch_query\": \"New York\"}, \"id\": \"chatcmpl-tool-c1ce87da96374a0392f9a88bf9\"}",
+        "type": "tool_call",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "{\"type\": \"tool_response\", \"content\": \"BR001\", \"name\": \"banking_get_branch_code\", \"tool_call_id\": \"chatcmpl-tool-c1ce87da96374a0392f9a88bf9\"}",
+        "type": "tool_response",
+        "event": "run.step.delta",
+        "conversational_search_metadata": null
+    },
+    {
+        "role": "assistant",
+        "content": "The branch code for New York is BR001.",
+        "type": "text",
+        "event": "message.created",
+        "conversational_search_metadata": null
+    }
+]

@@ -1,0 +1,42 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is bob. I want to list my last 5 transactions for account: ACC10002.",
+  "starting_sentence": "I'd like to list my recent transactions.",
+  "goals": {
+    "fetch_account_id-1": [
+      "list_recent_transactions-1"
+    ],
+    "list_recent_transactions-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "bob"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "list_recent_transactions-1",
+      "tool_name": "banking_list_recent_transactions",
+      "args": {
+        "account_id": "ACC10002",
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "limit": "5"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "Your last 5 transactions for account ACC10002 are: []",
+      "keywords": [
+        "ACC10002"
+      ]
+    }
+  ]
+}

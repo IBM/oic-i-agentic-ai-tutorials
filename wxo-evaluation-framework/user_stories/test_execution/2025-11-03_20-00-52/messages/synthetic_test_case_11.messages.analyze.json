@@ -1,0 +1,75 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I am bob and I want to update my email to bob.new@abc.com.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"bob\"}, \"id\": \"chatcmpl-tool-d93686f838bf4d929f252164a8\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10002\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-d93686f838bf4d929f252164a8\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_update_contact_details\", \"args\": {\"account_id\": \"ACC10002\", \"email\": \"bob.new@abc.com\"}, \"id\": \"chatcmpl-tool-8a33a60729cd48a1be32d72542\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"Contact details for ACC10002 updated: {\\\"email\\\": \\\"bob.new@abc.com\\\"}\", \"name\": \"banking_update_contact_details\", \"tool_call_id\": \"chatcmpl-tool-8a33a60729cd48a1be32d72542\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "Your contact details for account ACC1****02 have been updated with the new email: bob.new@abc.com.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_update_contact_details"
+            ],
+            "actual_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_update_contact_details"
+            ],
+            "missed_tool_calls": []
+        }
+    }
+]

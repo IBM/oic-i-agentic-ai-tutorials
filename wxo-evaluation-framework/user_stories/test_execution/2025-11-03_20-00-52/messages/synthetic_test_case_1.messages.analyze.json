@@ -1,0 +1,115 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I am alice and I want to check my current account balance.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "What is your account ID?",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "I do not have access to that information, can you try something else? My username is alice.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-7ff5a03ed64848beba9a36e372\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-7ff5a03ed64848beba9a36e372\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "Your account ID is ACC10001. Now, let me check your current account balance.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "user",
+            "content": "Please go ahead and check my balance. I'm waiting for the information.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_retrieve_account_balance\", \"args\": {\"account_id\": \"ACC10001\"}, \"id\": \"chatcmpl-tool-9dfec7d1c7c24047a7ad64f3e2\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"{\\\"currency\\\": \\\"USD\\\", \\\"available\\\": \\\"12500.75\\\", \\\"ledger\\\": \\\"12750.75\\\"}\", \"name\": \"banking_retrieve_account_balance\", \"tool_call_id\": \"chatcmpl-tool-9dfec7d1c7c24047a7ad64f3e2\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "Your current account balance is $12,500.75 (available) and $12,750.75 (ledger).",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_retrieve_account_balance"
+            ],
+            "actual_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_retrieve_account_balance"
+            ],
+            "missed_tool_calls": []
+        }
+    }
+]

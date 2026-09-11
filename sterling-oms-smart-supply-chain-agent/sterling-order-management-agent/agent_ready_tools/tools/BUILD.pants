@@ -1,0 +1,21 @@
+python_sources(
+    name = "tools",
+    dependencies = [
+        "3rdparty/python:repository#pydantic",
+        "3rdparty/python:repository#pydantic-extra-types",
+        "3rdparty/python:repository#pycountry",
+    ],
+    sources = [
+        "**/*.py",
+        "!**/*_test.py",
+        "!**/test_*.py",
+    ],
+)
+
+python_tests(
+    name = "tests",
+    sources = [
+        "**/*_test.py",
+        "**/test_*.py",
+    ],
+)

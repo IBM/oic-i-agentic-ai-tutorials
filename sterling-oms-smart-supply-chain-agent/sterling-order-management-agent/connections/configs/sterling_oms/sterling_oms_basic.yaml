@@ -1,0 +1,20 @@
+spec_version: v1
+kind: connection
+app_id: sterling_oms_basic
+environments:
+    draft:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{STERLING_OMS[base_url]}"
+        credentials:
+            username: "{STERLING_OMS[username]}"
+            password: "{STERLING_OMS[password]}"
+    live:
+        kind: basic
+        type: team
+        sso: false
+        server_url: "{STERLING_OMS[base_url]}"
+        credentials:
+            username: "{STERLING_OMS[username]}"
+            password: "{STERLING_OMS[password]}"

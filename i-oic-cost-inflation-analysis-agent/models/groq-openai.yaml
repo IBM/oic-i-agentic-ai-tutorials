@@ -1,0 +1,12 @@
+spec_version: v1
+kind: model
+name: virtual-model/groq/openai/gpt-oss-120b
+display_name: Groq OpenAI GPT OSS 120B # Optional
+description: Groq OpenAI GPT OSS 120B is a high-speed, open-weight large language model optimized for ultra-low-latency inference on Groq hardware, enabling fast, accurate reasoning and summarization at scale.
+tags:
+  - openai
+  - groq
+model_type: chat # Optional. Default is "chat". Options: ["chat"|"chat_vision"|"completion"|"embedding"]
+app_id: groq_credentials
+provider_config:
+    custom_host: https://api.groq.com/openai/v1

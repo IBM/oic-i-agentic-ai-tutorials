@@ -1,0 +1,11 @@
+story,agent
+My username is alice. I want to find out my current account balance.,banking_agent
+My username is bob. I want to list my last 5 transactions for account: ACC10002.,banking_agent
+My username is alice. I want to transfer 250 USD from my account ACC10001 to ACC10002.,banking_agent
+My username is cust-555. I want to get my account ID.,banking_agent
+My username is alice. I want to know the branch code for New York.,banking_agent
+My username is bob. I want to update my registered email to bob.new@abc.com.,banking_agent
+My username is cust-555. I want to update my phone number to +1-555-909-2323.,banking_agent
+My username is alice. I want to see all my transactions between 2025-09-01 and 2025-09-30.,banking_agent
+My username is bob. I want to get details of all my recent transactions.,banking_agent
+My username is alice. I want to know if I have sufficient balance to transfer 5000 USD to ACC10003.,banking_agent

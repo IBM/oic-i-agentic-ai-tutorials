@@ -1,0 +1,172 @@
+{
+  "agent": {
+    "name": "banking_agent"
+  },
+  "tools": [
+    {
+      "Function Name": "_is_valid_date",
+      "Arguments": [
+        "date_str"
+      ],
+      "Docstring": "Check if the provided date string is in YYYY-MM-DD format."
+    },
+    {
+      "Function Name": "banking_fetch_account_id",
+      "Arguments": [
+        "identifier"
+      ],
+      "Docstring": "Return the account ID for a given customer identifier (username or customer number).\n:param identifier: customer's username or customer number\n:return: account ID as a string or 'not found'"
+    },
+    {
+      "Function Name": "banking_retrieve_account_balance",
+      "Arguments": [
+        "account_id"
+      ],
+      "Docstring": "Retrieve the current balance for an account.\n:param account_id: Account identifier (string)\n:return: Balance as stringified JSON or error message"
+    },
+    {
+      "Function Name": "banking_list_recent_transactions",
+      "Arguments": [
+        "account_id",
+        "start_date",
+        "end_date",
+        "limit"
+      ],
+      "Docstring": "Return a list of recent transactions for the account.\nHandles missing or invalid 'limit' parameter gracefully."
+    },
+    {
+      "Function Name": "banking_get_branch_code",
+      "Arguments": [
+        "branch_query"
+      ],
+      "Docstring": "Return the branch code for a branch name / city search.\n:param branch_query: branch name or city (case-insensitive)\n:return: branch code or '-1' if not found"
+    },
+    {
+      "Function Name": "banking_update_contact_details",
+      "Arguments": [
+        "account_id",
+        "email",
+        "phone"
+      ],
+      "Docstring": "Update contact details for an account (simulated).\n:param account_id: Account identifier\n:param email: New email address (optional)\n:param phone: New phone number (optional)\n:return: Success or error message"
+    },
+    {
+      "Function Name": "banking_initiate_funds_transfer",
+      "Arguments": [
+        "from_account",
+        "to_account",
+        "amount",
+        "currency",
+        "reference"
+      ],
+      "Docstring": "Simulate initiating a funds transfer. Validates amount and accounts.\n:param from_account: Source account ID\n:param to_account: Destination account ID\n:param amount: Amount as string (e.g., '100.50')\n:param currency: Currency code\n:param reference: Optional transaction reference/note\n:return: JSON string with transfer status or error"
+    }
+  ],
+  "input_output_examples": {
+    "banking_fetch_account_id": [
+      {
+        "inputs": {
+          "identifier": "alice"
+        },
+        "output": "ACC10001"
+      },
+      {
+        "inputs": {
+          "identifier": "bob"
+        },
+        "output": "ACC10002"
+      },
+      {
+        "inputs": {
+          "identifier": "ACC10002"
+        },
+        "output": "not found"
+      },
+      {
+        "inputs": {
+          "identifier": "cust-555"
+        },
+        "output": "ACC10003"
+      }
+    ],
+    "banking_retrieve_account_balance": [
+      {
+        "inputs": {
+          "account_id": "ACC10001"
+        },
+        "output": "{\"currency\": \"USD\", \"available\": \"12500.75\", \"ledger\": \"12750.75\"}"
+      }
+    ],
+    "banking_list_recent_transactions": [
+      {
+        "inputs": {
+          "account_id": "ACC10002",
+          "start_date": "ACC10002",
+          "end_date": "5"
+        },
+        "output": "{\"error\": \"Invalid start_date: ACC10002. Expected YYYY-MM-DD.\"}"
+      },
+      {
+        "inputs": {
+          "account_id": "ACC10001",
+          "start_date": "2025-09-01",
+          "end_date": "2025-09-30"
+        },
+        "output": "[{\"id\": \"T1002\", \"date\": \"2025-09-28\", \"type\": \"credit\", \"amount\": \"1500.00\", \"desc\": \"Payroll\"}, {\"id\": \"T1003\", \"date\": \"2025-09-15\", \"type\": \"debit\", \"amount\": \"-200.00\", \"desc\": \"Electric Bill\"}]"
+      },
+      {
+        "inputs": {
+          "account_id": "ACC10002",
+          "start_date": "2022-01-01",
+          "end_date": "2022-12-31",
+          "limit": "10"
+        },
+        "output": "[]"
+      }
+    ],
+    "banking_initiate_funds_transfer": [
+      {
+        "inputs": {
+          "from_account": "not found",
+          "to_account": "not found",
+          "amount": "250",
+          "currency": "USD"
+        },
+        "output": "{\"error\": \"from_account and to_account must be different\"}"
+      },
+      {
+        "inputs": {
+          "from_account": "ACC10001",
+          "to_account": "ACC10003",
+          "amount": "5000",
+          "currency": "USD"
+        },
+        "output": "{\"transaction_id\": \"FT20251103155631\", \"from\": \"ACC10001\", \"to\": \"ACC10003\", \"amount\": \"5000\", \"currency\": \"USD\", \"status\": \"initiated\", \"reference\": \"\"}"
+      }
+    ],
+    "banking_get_branch_code": [
+      {
+        "inputs": {
+          "branch_query": "New York"
+        },
+        "output": "BR001"
+      }
+    ],
+    "banking_update_contact_details": [
+      {
+        "inputs": {
+          "account_id": "ACC10002",
+          "email": "bob.new@abc.com"
+        },
+        "output": "Contact details for ACC10002 updated: {\"email\": \"bob.new@abc.com\"}"
+      },
+      {
+        "inputs": {
+          "account_id": "ACC10003",
+          "phone": "+1-555-909-2323"
+        },
+        "output": "Contact details for ACC10003 updated: {\"phone\": \"+1-555-909-2323\"}"
+      }
+    ]
+  }
+}

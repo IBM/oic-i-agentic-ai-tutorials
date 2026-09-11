@@ -1,0 +1,44 @@
+{
+  "$schema": "https://a2a-protocol.org/latest/agent-card.schema.json",
+  "protocolVersion": "0.3.0",
+  "name": "annualized-return-agent",
+  "description": "A LangGraph-based AI agent that calculates the annualized rate of return for investments. Provide an initial investment amount, current value, and duration in months to get the annualized and total return percentages.",
+  "url": "https://annualized-return-agent.2dx22psmaucq.us-south.codeengine.appdomain.cloud",
+  "provider": {
+    "organization": "IBM watsonx Orchestrate Demo",
+    "url": "https://www.ibm.com/products/watsonx-orchestrate"
+  },
+  "version": "1.0.0",
+  "documentationUrl": "https://annualized-return-agent.2dx22psmaucq.us-south.codeengine.appdomain.cloud/docs",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false,
+    "stateTransitionHistory": true
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "bearer",
+      "description": "Bearer token authentication. Provide the AGENT_API_KEY value as a Bearer token."
+    }
+  },
+  "security": [
+    { "bearerAuth": [] }
+  ],
+  "defaultInputModes": ["text"],
+  "defaultOutputModes": ["text"],
+  "skills": [
+    {
+      "id": "calculate-annualized-return",
+      "name": "Calculate Annualized Rate of Return",
+      "description": "Calculates the annualized rate of return given an initial investment, current value, and the number of months invested.",
+      "inputModes": ["text"],
+      "outputModes": ["text"],
+      "tags": ["finance", "investment", "returns"],
+      "examples": [
+        "I invested $10,000 and it's now worth $12,500 after 18 months. What's my annualized return?",
+        "Calculate the annualized return for $5,000 initial, $7,200 current, over 24 months.",
+        "What is the annualized rate of return if I invested $50,000 and now have $60,000 after 12 months?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+resources(
+    name = "test_data",
+    sources = ["test_data/test_agent.yaml"],
+)
+
+python_sources(
+    overrides = {
+        "validate_tools.py": {
+            "dependencies": ["agent_ready_tools/tools:tools"],
+        },
+        "dependency_mapper.py": {
+            "dependencies": [
+                "collaborator_agents",
+                "import_utils/validation:validation",
+            ],
+        },
+    },
+)
+
+python_tests(
+    name = "tests",
+    overrides = {
+        "dependency_mapper_test.py": {
+            "dependencies": ["import_utils/validation:test_data"],
+        },
+    },
+)

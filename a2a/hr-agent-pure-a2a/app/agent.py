@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 
 class ResponseFormat(BaseModel):
-    """Respond to the user in this format."""
+    """Response format for structured output."""
 
     status: Literal['input_required', 'completed', 'error'] = 'input_required'
     message: str
@@ -17,7 +17,12 @@ class ResponseFormat(BaseModel):
 
 
 class HRAgent:
-    """HRAgent - a specialized assistant for employee onboarding."""
+    """
+    Simple agent that creates employee records from text like:
+    "Onboard Sarah Williams as a Software Engineer"
+
+    No LLM needed - just regex parsing and some basic logic.
+    """
 
     SYSTEM_INSTRUCTION = (
         'You are a specialized HR assistant for employee onboarding. '
@@ -33,33 +38,22 @@ class HRAgent:
         pass
 
     async def stream(self, query: str, context_id: str) -> AsyncIterable[dict[str, Any]]:
-        """Process an employee onboarding request from natural language.
-
-        The agent expects input in the format:
-            "Onboard <Full Name> as <Job Title>"
-
-        Examples:
-            - "Onboard Sarah Williams as a Software Engineer"
-            - "Onboard John Smith as Senior Data Analyst"
-            - "Onboard Maria Garcia as Product Manager"
-
-        Yields status updates during processing.
-
-        Args:
-            query: Natural language onboarding request
-            context_id: Context ID for tracking conversation
-
-        Yields:
-            Dictionary with task status and content
         """
-        # First yield: Processing status
+        Parse the onboarding request and create an employee record.
+
+        Expects: "Onboard <Full Name> as <Job Title>"
+        Example: "Onboard Sarah Williams as a Software Engineer"
+
+        Streams progress updates back to the caller.
+        """
+        # Send initial status
         yield {
             'is_task_complete': False,
             'require_user_input': False,
             'content': 'Processing employee onboarding request...\n',
         }
 
-        # Parse the request using a flexible pattern
+        # Try to parse the request - handles variations like "Onboard X as a Y" or "Onboard X as Y"
         name_role = re.search(
             r"Onboard\s+(.+?)\s+as\s+(?:a[n]?\s+)?(.+)$",
             query,
@@ -67,7 +61,7 @@ class HRAgent:
         )
 
         if not name_role:
-            # If the pattern doesn't match, ask for more information
+            # Couldn't parse it - ask for the right format
             yield {
                 'is_task_complete': False,
                 'require_user_input': True,
@@ -79,25 +73,25 @@ class HRAgent:
             }
             return
 
-        # Extract and clean up the name and role
+        # Extract name and job title, clean up any trailing periods
         full_name = name_role.group(1).strip().rstrip(".")
         role = name_role.group(2).strip().rstrip(".")
 
-        # Second yield: Creating employee record
+        # Send progress update
         yield {
             'is_task_complete': False,
             'require_user_input': False,
             'content': f'Creating employee record for {full_name}...\n',
         }
 
-        # Generate an email address
+        # Generate email from name (replace spaces/special chars with dots)
         email_local = re.sub(r"[^a-z0-9]+", ".", full_name.lower())
         email = f"{email_local}@example.com"
 
-        # Create a unique employee ID
+        # Simple ID generation using timestamp
         employee_id = f"E-{int(time.time()) % 100000:05d}"
 
-        # Build the structured employee record
+        # Build the employee record
         employee = {
             "employeeId": employee_id,
             "fullName": full_name,
@@ -105,7 +99,7 @@ class HRAgent:
             "jobTitle": role
         }
 
-        # Format the response - clean output without visible JSON
+        # Format a nice response
         response_text = (
             "Employee onboarded successfully!\n\n"
             f"Employee ID: {employee_id}\n"
@@ -114,7 +108,7 @@ class HRAgent:
             f"Job Title: {role}"
         )
 
-        # Final yield: Completed task
+        # Send final result
         yield {
             'is_task_complete': True,
             'require_user_input': False,
@@ -123,14 +117,7 @@ class HRAgent:
         }
 
     def get_agent_response(self, response_data: dict) -> dict:
-        """Get the agent response in the expected format.
-
-        Args:
-            response_data: Response data from streaming
-
-        Returns:
-            Dictionary with task completion status
-        """
+        """Extract the response in a consistent format."""
         return {
             'is_task_complete': response_data.get('is_task_complete', False),
             'require_user_input': response_data.get('require_user_input', False),

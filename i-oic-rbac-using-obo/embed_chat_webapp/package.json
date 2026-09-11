@@ -1,0 +1,19 @@
+{
+  "name": "embedchat-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "15.5.24",
+    "node-rsa": "^1.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "overrides": {
+    "postcss": ">=8.5.28"
+  }
+}

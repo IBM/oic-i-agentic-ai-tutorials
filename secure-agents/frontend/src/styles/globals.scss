@@ -1,0 +1,6 @@
+@use "@carbon/react";
+
+// Remove margin from grid when it follows the header
+.cds--header ~ .grid {
+  margin: 0 !important;
+}

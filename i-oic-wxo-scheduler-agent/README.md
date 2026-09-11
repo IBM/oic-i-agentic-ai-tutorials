@@ -1,10 +1,10 @@
 
-# 🌅 Daily Quote Scheduler — Watsonx Orchestrate (WXO) ADK
+# 🌅 Daily Quote Scheduler — watsonx Orchestrate (WXO) ADK
 
-**Automate your daily inspiration with AI agents, custom tools, and MailerSend**
+**Automate your daily inspiration with AI agents, custom tools**
 
-This repository demonstrates how to build a *Daily Quote Scheduler* using the Watsonx Orchestrate ADK. It contains:
-- a MailerSend **email tool** (`send_email_tool.py`)  
+This repository demonstrates how to build a *Daily Quote Scheduler* using the watsonx Orchestrate ADK. It contains:
+- a SMTP server **email tool** (`send_email_tool.py`)  
 - a **quote generator** tool (`get_quote_min.py`)  
 - a **schedulable flow** that fetches a quote and delegates delivery to an agent (`daily_quote_flow_min.py`)  
 - two agent manifests (`email_test_agent.yaml`, `schedule_daily_quote_agent.yaml`)  
@@ -25,11 +25,11 @@ A succinct explanation of the core flow:
 ---
 
 ## Prerequisites
-- Watsonx Orchestrate ADK & CLI installed and configured for your workspace.  
-- Access to a Watsonx Orchestrate instance (SaaS or on-prem).  
+- watsonx Orchestrate ADK & CLI installed and configured for your workspace.  
+- Access to a watsonx Orchestrate instance (SaaS or on-prem).  
 - Python 3.10+ (3.11 recommended).  
 - `requests`, `pydantic` Python packages.  
-- MailerSend account (domain verified) and an API token.
+- SMTP server.
 
 ---
 
@@ -61,7 +61,7 @@ After import, verify via UI: **Agents** should list `email_test_agent` and `sche
 
 ---
 
-## Schedule the flow (WXO UI)
+## Schedule the flow (watsonx Orchestrate UI)
 
 ![wxo-scheduler-agent](./images/image1.png.png)
 ![wxo-scheduler-agent](./images/image2.png)

@@ -1,0 +1,50 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is alice. I want to see all my transactions between 2025-09-01 and 2025-09-30.",
+  "starting_sentence": "I'd like to check my transactions from September 1st to September 30th, 2025.",
+  "goals": {
+    "fetch_account_id-1": [
+      "list_recent_transactions-1"
+    ],
+    "list_recent_transactions-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "alice"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "list_recent_transactions-1",
+      "tool_name": "banking_list_recent_transactions",
+      "args": {
+        "account_id": "ACC10001",
+        "start_date": "2025-09-01",
+        "end_date": "2025-09-30"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "Your transactions between 2025-09-01 and 2025-09-30 are: T1002 - 2025-09-28, credit, 1500.00, Payroll; T1003 - 2025-09-15, debit, -200.00, Electric Bill",
+      "keywords": [
+        "T1002",
+        "2025-09-28",
+        "credit",
+        "1500.00",
+        "Payroll",
+        "T1003",
+        "2025-09-15",
+        "debit",
+        "-200.00",
+        "Electric Bill"
+      ]
+    }
+  ]
+}

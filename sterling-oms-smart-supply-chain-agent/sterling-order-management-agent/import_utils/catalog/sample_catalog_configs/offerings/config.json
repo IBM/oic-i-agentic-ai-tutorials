@@ -1,0 +1,13 @@
+{
+  "name": "<offering_name>",
+  "domain": "<domain_name>",
+  "publisher": "IBM",
+  "version": "<version_number>",
+  "description": "<description>",
+  "assets": {
+    "IBM": {
+      "agents": ["<agent_name_1>", "<agent_name_2>", "<agent_name_3>"],
+      "tools": ["<tool_name_1>", "<tool_name_2>", "<tool_name_3>"]
+    }
+  }
+}

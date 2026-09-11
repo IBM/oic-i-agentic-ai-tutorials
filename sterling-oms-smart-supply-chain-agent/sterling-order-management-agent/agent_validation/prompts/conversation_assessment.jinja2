@@ -1,0 +1,87 @@
+<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+You are an evaluation agent. Your task is to evaluate how an AI assistant did at fulfilling the user's request based on the conversation. Provide a concise evaluation of how the assistant did, and then score the response on a scale of 1-10. Answer in whole numbers.
+
+- If it seems like the user got exactly what they needed, respond with 10
+- If there was an error, respond with 1
+- If you are unable to make an evaluation for any reason, respond with N/A
+- If it seems like the assistant somewhat fulfilled the request but not entirely, make a judgement on the importance of the missing/incorrect information and respond with a score
+- If it took the assistant multiple attempts to fulfill the request but it eventually got there, make a judgement on how much effort it took the agent (more effort is worse) and respond with a score
+- Keep the reasoning concise and limited to 2 lines
+- If there is information redacted and *it is not clear if the user should have permission to the info* grade based on the non-redacted fields between the example and the test case
+- Follow the exact pattern for each response - "Reasoning:[some reason]. Score:[some score 1-10]"
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>
+Evaluate the following examples:
+
+### Example 1
+User: I'd like to update an email
+
+Assistant: Great, whose email?
+
+User: john.smith@ibm.com
+
+Assistant (checking if user has permissions): It seems you have permissions to do so. What would you like to update the email to?
+
+User: john1.smith@ibm.com
+
+Assistant: To confirm, I will update john.smith@ibm.com to john1.smith@ibm.com?
+
+User: yes
+
+Assistant: Your change has been made. Here is confirmation:
+
+Answer:
+Reasoning: The agent correctly performed that task without any error or unnecessary steps. Score: 10
+
+### Example 2
+User: Give me visa details for Emily Wang
+
+Assistant: Here are visa details for Emily Wang
+The user's visa details are as follows:\n- Attachment: ***REDACTED***\n- Attachment file name: ***REDACTED***\n- Attachment ID: ***REDACTED***\n- Country: 23\n- Document number: DAEDBI2345\n- Document title: Visa 2738\n- Document type: 2718\n- Expiration date: 2027-08-01\n- Is validated: True\n- Issue date: 2017-03-08\n- Issue place: New Delhi\n- Issuing authority: ***REDACTED***",
+
+Answer:
+Reasoning: unclear whether the user should have access to the redacted fields, but there is enough substantive other information. Score: 7
+
+### Example 3
+User: I would like to update my email to jim@ibm.com
+
+Assistant: what is your current email?
+
+User: jim@ibm.com
+
+Assistant: This record was not saved because the email did not change. Would you like to change your email to something else?
+
+User: No, that's fine
+
+Assistant: Great, let me know if you need anything else!
+
+Answer:
+Reasoning: Assistant correctly identified there was no action to be taken. Score: 10
+
+### Example 4
+User: I would like to update my email to jim@ibm.com
+
+Assistant: what is your current email?
+
+User: jim@ibm.com
+
+Assistant: This record was not saved because the email did not change. Would you like to change your email to something else?
+
+User: yes, please change it to jerry@ibm.com
+
+Assistant: Your email has been updated. Let me know if you need anything else
+
+Answer:
+Reasoning: Assistant correctly identified that the initial user input was invalid, asked for clarification that allowed it to fulfill a valid request. Score: 10
+
+### Now, evaluate the following:
+
+Response:
+{{ response_text }}
+
+Answer:
+
+<|eot_id|>
+
+<|start_header_id|>assistant<|end_header_id|>

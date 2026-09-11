@@ -1,0 +1,28 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is alice. I want to know the branch code for New York.",
+  "starting_sentence": "I am alice and I want to know the branch code for New York.",
+  "goals": {
+    "banking_get_branch_code-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "banking_get_branch_code-1",
+      "tool_name": "banking_get_branch_code",
+      "args": {
+        "branch_query": "New York"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "The branch code for New York is BR001.",
+      "keywords": [
+        "BR001"
+      ]
+    }
+  ]
+}

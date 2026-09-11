@@ -1,0 +1,4 @@
+python-dotenv
+confluent-kafka
+mcp<2
+requests

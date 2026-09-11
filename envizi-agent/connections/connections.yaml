@@ -1,0 +1,10 @@
+spec_version: v1
+kind: connection
+app_id: envizi_api_connection
+environments:
+    draft:  # in draft each person needs to provide their own basic credentials
+        kind: bearer
+        type: team
+    live:
+        kind: bearer # note it's possible to auth different in the deployed live agent vs the draft agent
+        type: member

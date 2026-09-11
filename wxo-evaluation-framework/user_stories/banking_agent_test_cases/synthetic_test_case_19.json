@@ -1,0 +1,56 @@
+{
+  "agent": "banking_agent",
+  "story": "My username is alice. I want to know if I have sufficient balance to transfer 5000 USD to ACC10003.",
+  "starting_sentence": "I'd like to check if I have enough balance to make a transfer.",
+  "goals": {
+    "fetch_account_id-1": [
+      "retrieve_account_balance-1"
+    ],
+    "retrieve_account_balance-1": [
+      "initiate_funds_transfer-1"
+    ],
+    "initiate_funds_transfer-1": [
+      "summarize"
+    ]
+  },
+  "goal_details": [
+    {
+      "type": "tool_call",
+      "name": "fetch_account_id-1",
+      "tool_name": "banking_fetch_account_id",
+      "args": {
+        "identifier": "alice"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "retrieve_account_balance-1",
+      "tool_name": "banking_retrieve_account_balance",
+      "args": {
+        "account_id": "ACC10001"
+      }
+    },
+    {
+      "type": "tool_call",
+      "name": "initiate_funds_transfer-1",
+      "tool_name": "banking_initiate_funds_transfer",
+      "args": {
+        "from_account": "ACC10001",
+        "to_account": "ACC10003",
+        "amount": "5000",
+        "currency": "USD"
+      }
+    },
+    {
+      "type": "text",
+      "name": "summarize",
+      "response": "You have a balance of 12500.75 USD, which is sufficient to transfer 5000 USD to ACC10003.",
+      "keywords": [
+        "12500.75",
+        "5000",
+        "USD",
+        "ACC10003"
+      ]
+    }
+  ]
+}

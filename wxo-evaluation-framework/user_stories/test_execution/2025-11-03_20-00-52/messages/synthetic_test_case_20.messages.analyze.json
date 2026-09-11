@@ -1,0 +1,78 @@
+[
+    {
+        "message": {
+            "role": "user",
+            "content": "I am alice and I want to check if I have enough balance to transfer 5000 USD to ACC10003.",
+            "type": "text",
+            "event": null,
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_fetch_account_id\", \"args\": {\"identifier\": \"alice\"}, \"id\": \"chatcmpl-tool-020db4c8fa1d4d7295a0a2abae\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"ACC10001\", \"name\": \"banking_fetch_account_id\", \"tool_call_id\": \"chatcmpl-tool-020db4c8fa1d4d7295a0a2abae\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_call\", \"name\": \"banking_retrieve_account_balance\", \"args\": {\"account_id\": \"ACC10001\"}, \"id\": \"chatcmpl-tool-01dc14469d5a4859aa530066b9\"}",
+            "type": "tool_call",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "{\"type\": \"tool_response\", \"content\": \"{\\\"currency\\\": \\\"USD\\\", \\\"available\\\": \\\"12500.75\\\", \\\"ledger\\\": \\\"12750.75\\\"}\", \"name\": \"banking_retrieve_account_balance\", \"tool_call_id\": \"chatcmpl-tool-01dc14469d5a4859aa530066b9\"}",
+            "type": "tool_response",
+            "event": "run.step.delta",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "message": {
+            "role": "assistant",
+            "content": "You have $12,500.75 available and $12,750.75 ledger balance in your account ACC1****01. You have enough balance to transfer $5,000 USD to ACC10003.",
+            "type": "text",
+            "event": "message.created",
+            "conversational_search_metadata": null
+        },
+        "reason": null
+    },
+    {
+        "meta": {
+            "expected_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_retrieve_account_balance",
+                "banking_initiate_funds_transfer"
+            ],
+            "actual_tool_calls": [
+                "banking_fetch_account_id",
+                "banking_retrieve_account_balance"
+            ],
+            "missed_tool_calls": [
+                "banking_initiate_funds_transfer"
+            ]
+        }
+    }
+]

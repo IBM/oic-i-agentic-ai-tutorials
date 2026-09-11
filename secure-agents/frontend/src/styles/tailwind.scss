@@ -1,0 +1,14 @@
+@use "preflight.scss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-cds-border-subtle;
+  }
+  body {
+    @apply bg-cds-background text-cds-text-primary;
+  }
+}

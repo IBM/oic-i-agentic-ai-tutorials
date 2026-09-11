@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "watsonx-orchestrate-adk": {
+      "command": "uvx",
+      "args": [
+        "ibm-watsonx-orchestrate-mcp-server"
+      ],
+      "env": {
+        "WXO_MCP_WORKING_DIRECTORY": "/Users/eladixit/Library/CloudStorage/Box-Box/MyWork/Code/Code-OIC/confluent_lab/oic-i-agentic-ai-tutorials/confluent-agents",
+        "WXO_MCP_DEBUG": "",
+        "WXO_INSTANCE_URL": "https://api.ca-tor.watson-orchestrate.cloud.ibm.com/instances/e9d44a02-a4a8-48da-bb80-e3eec67198e1",
+        "WXO_API_KEY": ""
+      },
+      "timeout": 120000
+    },
+    "watsonx-orchestrate-adk-docs": {
+      "type": "streamable-http",
+      "url": "https://developer.watson-orchestrate.ibm.com/mcp",
+      "alwaysAllow": [
+        "get_page_ibm_watsonx_orchestrate_adk",
+        "query_docs_filesystem_ibm_watsonx_orchestrate_adk",
+        "search_ibm_watsonx_orchestrate_adk"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+python_sources(
+    dependencies = [
+        "3rdparty/python:repository#pandas",
+        "3rdparty/python:repository#openpyxl",
+    ],
+)
+
+python_tests(
+    name = "tests",
+    overrides = {
+        "raw_metadata_test.py": {
+            "dependencies": ["import_utils/catalog/metadata:excel_test_data"],
+        },
+    },
+)

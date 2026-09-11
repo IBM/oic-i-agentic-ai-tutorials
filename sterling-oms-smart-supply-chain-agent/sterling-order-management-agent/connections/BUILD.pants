@@ -1,0 +1,17 @@
+resources(
+    name = "configs",
+    sources = ["configs/**/*.yaml"],
+)
+
+python_sources()
+
+python_tests(
+    name = "tests",
+    overrides = {
+        "configs_test.py": {
+            "dependencies": [
+                ":configs",
+            ],
+        },
+    },
+)

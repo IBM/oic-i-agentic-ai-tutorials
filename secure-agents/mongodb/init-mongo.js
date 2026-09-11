@@ -1,0 +1,25 @@
+// MongoDB initialization script
+// This script runs when the MongoDB container starts for the first time
+// It runs as the MONGO_INITDB_ROOT_USERNAME user
+
+// Get the root username from environment (set by MONGO_INITDB_ROOT_USERNAME)
+const rootUser = process.env.MONGO_INITDB_ROOT_USERNAME || 'admin';
+
+// Switch to admin database and grant userAdmin role to the root user
+db = db.getSiblingDB('admin');
+db.grantRolesToUser(rootUser, [{ role: "userAdmin", db: "test" }]);
+
+// Switch to test database and insert sample products
+db = db.getSiblingDB('test');
+db.products.insertMany([
+  { name: "Laptop", price: 1299.99 },
+  { name: "Wireless Mouse", price: 29.99 },
+  { name: "Mechanical Keyboard", price: 149.99 }
+]);
+
+print('MongoDB initialization completed successfully!');
+print('Root user: ' + rootUser);
+print('Created test database with products collection');
+print('Sample products inserted: Laptop, Wireless Mouse, Mechanical Keyboard');
+
+// Made with Bob
