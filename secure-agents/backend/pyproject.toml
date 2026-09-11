@@ -16,7 +16,7 @@ dependencies = [
     "pydantic-settings<3.0.0,>=2.10.1",
     "pyjwt<3.0.0,>=2.8.0",
     "pydantic>=2.10.5",
-    "cryptography>=46.0.5",
+    "cryptography>=50.0.0",
     "requests>=2.32.5",
 ]
 
