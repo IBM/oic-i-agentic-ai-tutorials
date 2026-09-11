@@ -7,7 +7,7 @@ langchain-ibm>=0.3.0
 ibm-watsonx-ai>=1.7.1
 
 # PDF processing for document analysis
-pypdf>=4.0.0
+pypdf>=6.18.0
 PyPDF2>=3.0.0
 
 # Document chunking and text processing
