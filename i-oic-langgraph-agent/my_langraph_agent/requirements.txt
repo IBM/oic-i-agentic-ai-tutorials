@@ -1,5 +1,5 @@
 langgraph>=1.2.11
-langchain>=0.3.0
+langchain>=1.4.0
 langchain-openai>=1.6.0
 python-dotenv>=1.0.0
 ibm-watsonx-orchestrate-sdk
