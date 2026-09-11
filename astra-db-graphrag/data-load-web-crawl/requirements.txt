@@ -9,7 +9,7 @@ transformers==5.10.1
 langchain==1.0.3
 langchain-community==0.4.1
 langchain-core
-langchain_ibm==1.0.0
+langchain_ibm==1.1.0
 langchain-astradb==1.0.0
 selenium==4.38.0
 jupyter==1.1.1
