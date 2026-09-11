@@ -1,4 +1,4 @@
-FROM amd64/python:3.13
+FROM amd64/python:3.14
 
 WORKDIR /app
 
