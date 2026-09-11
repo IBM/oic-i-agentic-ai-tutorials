@@ -5,11 +5,15 @@ name: Dependabot auto-merge
 # pip/npm entries — Dependabot only opens a PR when a CVE/GHSA advisory
 # exists. No security alert = no PR.
 #
-# Uses --squash (direct merge) rather than --auto because --auto requires
-# at least one branch protection rule to queue against; without one GitHub
+# Uses pull_request_target (not pull_request) so the workflow is always
+# read from the default branch, not the PR branch. This ensures our
+# --squash --admin command is used even for PRs opened before this fix.
+#
+# Uses --squash --admin (direct merge) rather than --auto because --auto
+# requires branch protection rules to queue against; without them GitHub
 # rejects it with "pull request is in clean status".
 
-on: pull_request
+on: pull_request_target
 
 permissions:
   contents: write
