@@ -42,7 +42,7 @@
     ]
   },
   "overrides": {
-    "form-data": "^3.0.4",
+    "form-data": "^3.0.5",
     "prismjs": "^1.29.0",
     "nth-check": "^2.0.1",
     "qs": ">=6.16.0",
