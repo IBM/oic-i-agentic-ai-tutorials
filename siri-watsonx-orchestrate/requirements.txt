@@ -53,7 +53,7 @@ jupyter_client==8.8.0
 jupyter_core==5.9.1
 jupyter_server==2.18.2
 jupyter_server_terminals==0.5.4
-jupyterlab==4.5.7
+jupyterlab==4.5.10
 jupyterlab_pygments==0.3.0
 jupyterlab_server==2.28.0
 jupyterlab_widgets==3.0.16
@@ -115,7 +115,7 @@ starlette==0.52.1
 tenacity==9.1.4
 terminado==0.18.1
 tinycss2==1.5.1
-tornado==6.5.5
+tornado==6.5.8
 traitlets==5.15.0
 typer==0.25.1
 types-python-dateutil==2.9.0.20260807

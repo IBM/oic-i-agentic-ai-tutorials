@@ -14,9 +14,9 @@ dependencies = [
     "sqlmodel<1.0.0,>=0.0.21",
     "bcrypt>=3.2.0,<4.0.0",
     "pydantic-settings<3.0.0,>=2.10.1",
-    "pyjwt<3.0.0,>=2.8.0",
+    "pyjwt<3.0.0,>=2.13.0",
     "pydantic>=2.10.5",
-    "cryptography>=46.0.5",
+    "cryptography>=49.0.0",
     "requests>=2.32.5",
 ]
 
