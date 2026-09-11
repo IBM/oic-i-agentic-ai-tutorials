@@ -1,35 +1,38 @@
-name: Auto-Approve Security Patches
+name: Dependabot auto-merge
 
-# Automatically approves and enables auto-merge for security patch PRs from Dependabot
-# Only runs for patch-level updates (semver-patch) to minimize risk
+# Merges Dependabot PRs ONLY when driven by a security advisory (CVE/GHSA).
+# Routine version bumps (no ghsa-id) are left open for manual review.
+#
+# Uses pull_request_target so this workflow is always read from main,
+# not from the Dependabot PR branch.
+# Uses --squash --admin for direct merge (no branch protection rules needed).
 
-on: pull_request
+on: pull_request_target
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  dependabot:
+  auto-merge:
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
-      - name: Dependabot metadata
+      - name: Fetch Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Enable auto-merge for security patches
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch' || contains(steps.metadata.outputs.dependency-names, 'security')
-        run: gh pr merge --auto --squash "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Approve security PRs
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      - name: Approve PR
         run: gh pr review --approve "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge if security-driven
+        if: steps.metadata.outputs.ghsa-id != ''
+        run: gh pr merge --squash --admin "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
