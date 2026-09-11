@@ -3,9 +3,9 @@ crewai==0.193.2
 eland==9.0.1
 elasticsearch==9.5.0
 fastapi==0.141.1
-langchain_community==0.4.1
-langchain_huggingface==1.2.0
+langchain_community==0.4.2
+langchain_huggingface==1.2.2
 nltk==3.10.3
-pydantic==2.13.4
-python-dotenv==1.2.1
-sentence_transformers==6.0.0
+pydantic==2.13.5
+python-dotenv==1.2.3
+sentence_transformers==6.0.1
