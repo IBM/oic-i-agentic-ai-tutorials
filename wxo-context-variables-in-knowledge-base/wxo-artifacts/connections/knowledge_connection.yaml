@@ -9,13 +9,6 @@ environments:
     app_config:
       header:
         content-type: application/x-www-form-urlencoded
-  live:
-    server_url: https://host/api/knowledge-base
-    kind: basic
-    type: team
-    app_config:
-      header:
-        content-type: application/x-www-form-urlencoded
 resource:
   component: knowledge
   category: custom_service
