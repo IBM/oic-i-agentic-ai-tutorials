@@ -2,4 +2,4 @@ langgraph
 langchain
 langchain-openai
 python-dotenv
-ibm-watsonx-orchestrate>=2.15.0
+ibm-watsonx-orchestrate>=2.16.1
