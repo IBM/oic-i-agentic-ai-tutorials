@@ -2,7 +2,7 @@ rapidfuzz==3.14.1
 msal==1.32.3
 types-requests==2.32.0.20250602
 xsdata==25.4
-simple-salesforce==1.12.6
+simple-salesforce==1.12.10
 python-dateutil==2.9.0.post0
 pyjwt==2.13.0
 pydantic-extra-types==2.10.5
