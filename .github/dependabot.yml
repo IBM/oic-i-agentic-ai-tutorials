@@ -28,6 +28,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -37,6 +40,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -46,6 +52,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -55,6 +64,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -64,6 +76,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -73,6 +88,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -82,6 +100,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -91,6 +112,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -100,6 +124,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -109,6 +136,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -118,6 +148,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -127,6 +160,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -136,6 +172,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -145,6 +184,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -154,6 +196,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -163,6 +208,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -172,6 +220,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -181,6 +232,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -190,6 +244,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -199,6 +256,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -208,6 +268,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -217,6 +280,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -226,6 +292,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -235,6 +304,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -244,6 +316,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -253,6 +328,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -262,6 +340,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -271,6 +352,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -280,6 +364,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -289,6 +376,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -298,6 +388,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -307,6 +400,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -316,6 +412,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -325,6 +424,9 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -338,6 +440,9 @@ updates:
     open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -349,6 +454,9 @@ updates:
     open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -360,6 +468,9 @@ updates:
     open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
 
@@ -371,5 +482,8 @@ updates:
     open-pull-requests-limit: 10
     allow:
       - dependency-type: "all"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
     labels:
       - "dependencies"
