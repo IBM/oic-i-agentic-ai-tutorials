@@ -10,7 +10,7 @@ description: >
   Queries the inventory.availability Kafka topic that is continuously updated
   by an Apache Flink aggregation pipeline on Confluent Cloud.
 llm: groq/openai/gpt-oss-120b
-style: react
+style: react_core
 tools:
   - sku-availability-checker:get_sku_availability
   - sku-availability-checker:get_all_availability

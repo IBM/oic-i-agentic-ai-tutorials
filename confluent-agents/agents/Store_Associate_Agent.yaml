@@ -12,7 +12,7 @@ description: >
   inventory queries to the SKU Availability Agent and substitution requests
   to the Substitute Finder Agent.
 llm: groq/openai/gpt-oss-120b
-style: react
+style: react_core
 spec_version: v1
 collaborators:
   - SKU_Availability_Agent
@@ -26,6 +26,11 @@ instructions: |
   - Substitute_Finder_Agent: recommends alternative products from the catalog.
 
   Follow this decision logic for every request:
+
+  0. When the user asks for all available SKUs, all inventory, or all products
+     (without specifying a particular SKU), immediately delegate to
+     SKU_Availability_Agent to call get_all_availability() and present the
+     full inventory grouped by branch.
 
   1. Extract the SKU and branch from the user's question.
   2. Delegate to SKU_Availability_Agent to check availability.
