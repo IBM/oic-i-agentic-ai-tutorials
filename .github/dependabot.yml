@@ -6,11 +6,17 @@ version: 2
 #            Dependabot still opens PRs for CVE-driven security advisories
 #            regardless of this limit — those bypass the cap entirely.
 #
+# npm:       allow: [{dependency-type: all}] is required on every npm entry
+#            so that development-scoped transitive deps (lodash, svgo, etc.)
+#            are included in security updates. Without it Dependabot silently
+#            skips devDependency alerts.
+#
 # docker:    No Docker CVEs are present in the active security alerts.
 #            Docker entries are omitted to avoid noise from base image bumps.
 #
-# To activate security update PRs, also enable "Dependabot security updates"
-# in repo Settings → Advanced Security → Dependabot security updates.
+# uv.lock:   Dependabot reads pyproject.toml for direct deps in uv projects
+#            but cannot update uv.lock transitive deps — those must be fixed
+#            manually with: uv lock --upgrade-package <pkg>
 
 updates:
   # ── pip (security only) ────────────────────────────────────────────────────
@@ -329,6 +335,8 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 0
+    allow:
+      - dependency-type: "all"
     labels:
       - "dependencies"
 
@@ -338,6 +346,8 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 0
+    allow:
+      - dependency-type: "all"
     labels:
       - "dependencies"
 
@@ -347,6 +357,8 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 0
+    allow:
+      - dependency-type: "all"
     labels:
       - "dependencies"
 
@@ -356,5 +368,7 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 0
+    allow:
+      - dependency-type: "all"
     labels:
       - "dependencies"
