@@ -6,8 +6,11 @@ name: Auto-Merge Dependabot Security PRs
 # Key design decisions (see AGENTS.md for full rationale):
 # - pull_request_target: reads workflow from main branch, not the PR branch,
 #   so fixes pushed to main apply to all open Dependabot PRs immediately.
-# - ghsa-id check: only merges PRs that fix a known CVE/GHSA advisory.
-#   Non-security PRs are closed — dependency version bumps are managed manually.
+# - Three-signal security detection (ANY one is sufficient to treat as security):
+#     1. ghsa-id from dependabot/fetch-metadata (most reliable)
+#     2. 'security' label on the PR
+#     3. CVE-YYYY-NNNNN or GHSA-* pattern found anywhere in the PR body
+#   Signal 3 catches PRs that fix CVEs but weren't labelled/tagged correctly.
 # - --squash --admin: merges immediately without requiring branch protection rules.
 
 on:
@@ -29,17 +32,40 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Check for security label
-        id: labels
+      - name: Detect security signals
+        id: security
         run: |
-          HAS_SECURITY=$(gh pr view "$PR_URL" --json labels --jq '[.labels[].name] | contains(["security"])' 2>/dev/null || echo "false")
-          echo "has_security_label=$HAS_SECURITY" >> "$GITHUB_OUTPUT"
+          # Signal 1: GHSA ID from metadata action
+          GHSA_ID="${{ steps.metadata.outputs.ghsa-id }}"
+
+          # Signal 2: 'security' label
+          HAS_LABEL=$(gh pr view "$PR_URL" --json labels \
+            --jq '[.labels[].name] | contains(["security"])' 2>/dev/null || echo "false")
+
+          # Signal 3: CVE or GHSA pattern in PR body
+          BODY=$(gh pr view "$PR_URL" --json body --jq '.body' 2>/dev/null || echo "")
+          if echo "$BODY" | grep -qiE '(CVE-[0-9]{4}-[0-9]+|GHSA-[a-z0-9]+-[a-z0-9]+-[a-z0-9]+)'; then
+            HAS_CVE_IN_BODY="true"
+          else
+            HAS_CVE_IN_BODY="false"
+          fi
+
+          echo "ghsa_id=$GHSA_ID"           >> "$GITHUB_OUTPUT"
+          echo "has_label=$HAS_LABEL"       >> "$GITHUB_OUTPUT"
+          echo "has_cve_in_body=$HAS_CVE_IN_BODY" >> "$GITHUB_OUTPUT"
+
+          # Combined: any signal → is_security=true
+          if [ -n "$GHSA_ID" ] || [ "$HAS_LABEL" = "true" ] || [ "$HAS_CVE_IN_BODY" = "true" ]; then
+            echo "is_security=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_security=false" >> "$GITHUB_OUTPUT"
+          fi
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Approve and merge security PR
-        if: steps.metadata.outputs.ghsa-id != '' || steps.labels.outputs.has_security_label == 'true'
+        if: steps.security.outputs.is_security == 'true'
         run: |
           gh pr review --approve "$PR_URL"
           gh pr merge --squash --admin "$PR_URL"
@@ -48,7 +74,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Close non-security PR with comment
-        if: steps.metadata.outputs.ghsa-id == '' && steps.labels.outputs.has_security_label != 'true'
+        if: steps.security.outputs.is_security == 'false'
         run: |
           gh pr comment "$PR_URL" --body "$(cat <<'EOF'
           Thanks, Dependabot! 🤖
@@ -57,7 +83,7 @@ jobs:
 
           **Why?** Routine upgrades carry compatibility risk and are reviewed manually as part of planned maintenance — not auto-merged.
 
-          **Security PRs** (those fixing a known CVE/GHSA) are merged automatically. To see open security alerts, visit the [Security tab](../../security/dependabot).
+          **Security PRs** (those fixing a known CVE/GHSA, labelled \`security\`, or containing CVE references in the description) are merged automatically. To see open security alerts, visit the [Security tab](../../security/dependabot).
           EOF
           )"
           gh pr close "$PR_URL"
