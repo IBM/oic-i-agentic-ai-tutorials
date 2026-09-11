@@ -5,4 +5,4 @@ pyyaml>=6.0.1
 
 # IBM WatsonX Orchestrate CLI
 # Requires Python >=3.11,<3.14
-ibm-watsonx-orchestrate>=2.7.0
+ibm-watsonx-orchestrate>=2.16.1
