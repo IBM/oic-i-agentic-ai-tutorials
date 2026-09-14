@@ -1,7 +1,7 @@
 config==0.5.1
 crewai==0.193.2
 eland==9.0.1
-elasticsearch==9.5.0
+elasticsearch==9.5.1
 fastapi==0.141.1
 langchain_community==0.4.2
 langchain_huggingface==1.2.2
