@@ -1,9 +1,9 @@
 # Core LangGraph dependencies for Data Processor Agent
-langgraph>=0.2.0
-langchain-core>=0.3.0
+langgraph>=1.2.11
+langchain-core>=1.6.2
 
 # Memory storage SDK
-ibm-watsonx-orchestrate-sdk>=0.7.0
+ibm-watsonx-orchestrate-sdk>=2.16.1
 
 
 # State persistence options (uncomment as needed)
