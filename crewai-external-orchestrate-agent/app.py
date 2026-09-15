@@ -19,7 +19,6 @@ Adapt and extend this for your own domain (e.g., manufacturing, finance, healthc
 from dotenv import load_dotenv
 import os
 import re
-import nltk
 import queue
 import threading
 from typing import Dict, List, Any
@@ -30,32 +29,42 @@ import json
 import time
 import uuid
 import asyncio
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 from elasticsearch import Elasticsearch
 from crewai import Agent, Task, Crew, Process, LLM
 from crewai.tools import BaseTool
 from crewai.events import *
 from crewai.utilities.events.base_event_listener import BaseEventListener
 
-# --- Step 1: Setup NLTK for text preprocessing ---
-# CVE-2026-81726: nltk's model-artifact download API can write outside allowed
-# roots (path-traversal). No patched release exists yet (affected <= 3.10.3).
-# Mitigation: NEVER call nltk.download() at runtime. NLTK data MUST be
-# pre-installed at image build time via the Dockerfile RUN step below.
-# If the data is absent the app raises immediately rather than downloading.
-for _resource, _path in [("punkt tokeniser", "tokenizers/punkt_tab"),
-                          ("stopwords corpus", "corpora/stopwords")]:
-    try:
-        nltk.data.find(_path)
-    except LookupError as exc:
-        raise RuntimeError(
-            f"Required NLTK data '{_resource}' is missing. "
-            "Pre-install it during the Docker build step — "
-            "see the RUN instruction in Dockerfile."
-        ) from exc
+# --- Step 1: Setup text preprocessing ---
+# NLTK removed: CVE-2026-81726 (path-sandbox bypass in model-artifact APIs,
+# affected all releases <= 3.10.3, no patched version available).
+# Stopwords and tokenisation are handled below with stdlib only.
 
-stop_words = set(stopwords.words("english"))
+# Standard English stopwords (NLTK-compatible set, no external data required).
+_STOP_WORDS: set[str] = {
+    "a", "about", "above", "after", "again", "against", "all", "am", "an",
+    "and", "any", "are", "aren't", "as", "at", "be", "because", "been",
+    "before", "being", "below", "between", "both", "but", "by", "can't",
+    "cannot", "could", "couldn't", "did", "didn't", "do", "does", "doesn't",
+    "doing", "don't", "down", "during", "each", "few", "for", "from",
+    "further", "get", "got", "had", "hadn't", "has", "hasn't", "have",
+    "haven't", "having", "he", "he'd", "he'll", "he's", "her", "here",
+    "here's", "hers", "herself", "him", "himself", "his", "how", "how's",
+    "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", "is", "isn't",
+    "it", "it's", "its", "itself", "let's", "me", "more", "most", "mustn't",
+    "my", "myself", "no", "nor", "not", "of", "off", "on", "once", "only",
+    "or", "other", "ought", "our", "ours", "ourselves", "out", "over", "own",
+    "same", "shan't", "she", "she'd", "she'll", "she's", "should",
+    "shouldn't", "so", "some", "such", "than", "that", "that's", "the",
+    "their", "theirs", "them", "themselves", "then", "there", "there's",
+    "these", "they", "they'd", "they'll", "they're", "they've", "this",
+    "those", "through", "to", "too", "under", "until", "up", "very", "was",
+    "wasn't", "we", "we'd", "we'll", "we're", "we've", "were", "weren't",
+    "what", "what's", "when", "when's", "where", "where's", "which", "while",
+    "who", "who's", "whom", "why", "why's", "will", "with", "won't",
+    "would", "wouldn't", "you", "you'd", "you'll", "you're", "you've",
+    "your", "yours", "yourself", "yourselves",
+}
 
 # --- Step 2: Load environment variables ---
 # These allow secure configuration via a .env file.
@@ -114,14 +123,15 @@ class QueryCleanerTool(BaseTool):
     keep_words = ["ac", "dc", "hv", "lv", "ip", "kw", "hp"]
 
     def _run(self, query: str) -> str:
-        # Clean punctuation and lowercase text
-        query = re.sub(r"[^a-zA-Z0-9\s]", "", query.lower())
-        tokens = word_tokenize(query)
+        # Lowercase, strip punctuation, then split on whitespace/word boundaries
+        cleaned = re.sub(r"[^a-zA-Z0-9\s]", "", query.lower())
+        tokens = re.findall(r"[a-z0-9]+", cleaned)
         # Keep important abbreviations or non-stopword terms
         filtered = [
-            w for w in tokens if w in self.keep_words or (w not in stop_words and len(w) > 2)
+            w for w in tokens
+            if w in self.keep_words or (w not in _STOP_WORDS and len(w) > 2)
         ]
-        return " ".join(filtered) if filtered else query
+        return " ".join(filtered) if filtered else cleaned
 
 
 class VectorSearchTool(BaseTool):

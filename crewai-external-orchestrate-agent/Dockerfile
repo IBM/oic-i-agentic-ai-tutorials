@@ -1,22 +1,19 @@
-# Use official Python image
-FROM python:3.11-slim
+FROM registry.redhat.io/ubi9/python-311-minimal:latest
 
-# Set working directory
+# Create non-root user
+RUN useradd -m -u 1001 appuser
+
 WORKDIR /app
 
-# Install Python deps
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# CVE-2026-81726 mitigation: pre-download NLTK data at build time so the app
-# never calls nltk.download() at runtime (the vulnerable code path).
-RUN python -c "import nltk; nltk.download('punkt_tab', quiet=True); nltk.download('stopwords', quiet=True)"
+# Copy application (nltk removed — no RUN nltk.download() step needed)
+COPY --chown=appuser:appuser app.py .
 
-# Copy app code
-COPY main.py .
+USER 1001
 
-# Expose FastAPI port
 EXPOSE 8000
 
-# Run the app with uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app:app", "--host", "127.0.0.1", "--port", "8000"]
