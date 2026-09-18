@@ -1,0 +1,64 @@
+Product: DELL-XPS-15
+•	SKU: LAPTOP-DELL-XPS-15
+•	Category: Laptop
+•	Brand: Dell
+•	Form factor: Laptop
+•	Screen size: 15.6 inch
+•	Processor class: Intel Core i7
+•	Memory: 16 GB RAM
+•	Storage: 1 TB SSD
+•	Weight class: Lightweight
+•	Typical use cases: Developer workstation, productivity, premium portable
+•	Key features: High-resolution display, Thunderbolt, USB-C, premium build
+
+Product: HP-SPECTRE-X360
+•	SKU: LAPTOP-HP-SPECTRE-X360
+•	Category: Laptop
+•	Brand: HP
+•	Form factor: Convertible (2-in-1)
+•	Screen size: 14 inch touchscreen
+•	Processor class: Intel Core i7
+•	Memory: 16 GB RAM
+•	Storage: 1 TB SSD
+•	Weight class: Lightweight
+•	Typical use cases: Productivity, premium portable, flexible form factor
+•	Key features: Touchscreen, USB-C, premium build
+
+Product: LENOVO-THINKPAD-X1
+•	SKU: LAPTOP-LENOVO-THINKPAD-X1
+•	Category: Laptop
+•	Brand: Lenovo
+•	Form factor: Laptop
+•	Screen size: 14 inch
+•	Processor class: Intel Core i7
+•	Memory: 16 GB RAM
+•	Storage: 512 GB SSD
+•	Weight class: Lightweight
+•	Typical use cases: Business productivity, travel
+•	Key features: Durable chassis, long battery life
+
+Product: ASUS-ZENBOOK-14
+•	SKU: LAPTOP-ASUS-ZENBOOK-14
+•	Category: Laptop
+•	Brand: ASUS
+•	Form factor: Laptop
+•	Screen size: 14 inch
+•	Processor class: Intel Core i5
+•	Memory: 16 GB RAM
+•	Storage: 512 GB SSD
+•	Weight class: Lightweight
+•	Typical use cases: Productivity, everyday use
+•	Key features: Compact design, USB-C, lightweight
+
+Product: MACBOOK-AIR-M2
+•	SKU: LAPTOP-MACBOOK-AIR-M2
+•	Category: Laptop
+•	Brand: Apple
+•	Form factor: Laptop
+•	Screen size: 13.6 inch
+•	Processor class: Apple M2
+•	Memory: 8 GB RAM
+•	Storage: 512 GB SSD
+•	Weight class: Lightweight
+•	Typical use cases: Productivity, creative work
+•	Key features: Fanless design, long battery life
