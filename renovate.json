@@ -1,0 +1,28 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"],
+    "automerge": true,
+    "automergeType": "pr"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "automergeType": "pr",
+    "schedule": ["before 5am on monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Disable routine version bumps for all packages",
+      "enabled": false,
+      "matchPackageNames": [
+        "*"
+      ]
+    }
+  ]
+}

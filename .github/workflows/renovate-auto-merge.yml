@@ -1,0 +1,22 @@
+name: Auto-Merge Renovate PRs
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge-renovate:
+    runs-on: ubuntu-latest
+    if: github.actor == 'renovate[bot]' || github.actor == 'renovate'
+    steps:
+      - name: Approve and merge Renovate PR
+        run: |
+          gh pr review --approve "$PR_URL"
+          gh pr merge --squash --admin "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
