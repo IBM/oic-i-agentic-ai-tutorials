@@ -1,5 +1,5 @@
-fastmcp>=4.0.3
+fastmcp>=4.0.5
 fastapi>=0.141.1
-uvicorn>=0.52.4
-pyjwt>=2.13.0
+uvicorn>=0.53.0
+pyjwt>=2.14.0
 cryptography>=50.0.1
