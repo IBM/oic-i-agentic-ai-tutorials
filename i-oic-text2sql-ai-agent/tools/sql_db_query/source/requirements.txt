@@ -1,2 +1,2 @@
-pandas==2.1.4
+pandas==3.0.6
 pandasql==0.7.3
