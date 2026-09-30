@@ -1,4 +1,4 @@
-# AGENTS.md — Poka-yoke tool contract demo
+# AGENTS.md — Tool contract demo
 
 ## What this project is
 A controlled experiment for a published tutorial. Two watsonx Orchestrate agents are
