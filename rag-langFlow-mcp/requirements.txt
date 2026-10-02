@@ -1,5 +1,5 @@
 # LangChain and RAG dependencies
-langchain>=1.4.2
+langchain>=1.4.3
 langchain-community>=0.4.2
 langchain-ibm>=1.1.1
 
@@ -9,14 +9,14 @@ pypdf>=6.19.0
 # Vector database
 pgvector>=0.5.0
 psycopg2-binary>=2.9.13
-sqlalchemy>=2.1.0
+sqlalchemy>=2.1.1
 
 # LLM providers
-openai>=3.19.2
+openai>=3.20.0
 tiktoken>=0.14.0
 
 # MCP Server
-fastmcp>=4.0.9
+fastmcp>=4.0.10
 requests>=2.34.2
 
 # Utilities
