@@ -110,7 +110,7 @@ async def chat_completions(req: Request):
 
     # Flexible regex: supports "as <Role>", "as a <Role>", or "as an <Role>"
     name_role = re.search(
-        r"Onboard\s+(.+?)\s+as\s+(?:a[n]?\s+)?(.+)$",
+        r"Onboard\s+([^\n]{1,100}?)\s+as\s+(?:a[n]?\s+)?([^\n]{1,100})$",
         user_text,
         re.IGNORECASE,
     )

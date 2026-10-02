@@ -103,7 +103,7 @@ def extract_employee_from_messages(messages: List[Dict[str, str]]) -> Optional[D
             content = msg.get("content", "")
             if isinstance(content, str):
                 # Preferred: explicit markers
-                json_match = re.search(r'BEGIN_IT_JSON\s*\n\s*(\{[^}]*\})\s*\n\s*END_IT_JSON', content, re.DOTALL)
+                json_match = re.search(r'BEGIN_IT_JSON[ \t]*\n[ \t]*(\{[^}]{0,2000}\})[ \t]*\n[ \t]*END_IT_JSON', content)
                 if json_match:
                     try:
                         return json.loads(json_match.group(1))
@@ -111,7 +111,7 @@ def extract_employee_from_messages(messages: List[Dict[str, str]]) -> Optional[D
                         pass
 
                 # Fallback: any object with "employeeId"
-                json_match = re.search(r'\{[^}]*"employeeId"[^}]*\}', content)
+                json_match = re.search(r'\{[^}]{0,500}"employeeId"[^}]{0,500}\}', content)
                 if json_match:
                     try:
                         return json.loads(json_match.group(0))
@@ -129,7 +129,7 @@ def parse_natural_language_to_employee(text: str) -> Optional[Dict[str, str]]:
     import random
 
     # Pattern 1: Onboard <Name> as <Role>
-    match = re.search(r'onboard\s+(.+?)\s+as\s+(?:a[n]?\s+)?(.+?)$', text, re.IGNORECASE)
+    match = re.search(r'onboard\s+([^\n]{1,100}?)\s+as\s+(?:a[n]?\s+)?([^\n]{1,100})$', text, re.IGNORECASE)
     if match:
         full_name = match.group(1).strip()
         role = match.group(2).strip()
@@ -145,7 +145,7 @@ def parse_natural_language_to_employee(text: str) -> Optional[Dict[str, str]]:
 
     # Pattern 2: Provision devices/resources/IT for <Name> as <Role>
     provision_match = re.search(
-        r'provision\s+(?:devices|resources|IT)\s+for\s+(.+?)\s+as\s+(?:a[n]?\s+)?(.+?)$',
+        r'provision\s+(?:devices|resources|IT)\s+for\s+([^\n]{1,100}?)\s+as\s+(?:a[n]?\s+)?([^\n]{1,100})$',
         text,
         re.IGNORECASE
     )
@@ -163,7 +163,7 @@ def parse_natural_language_to_employee(text: str) -> Optional[Dict[str, str]]:
         }
 
     # Pattern 3: pronoun form ("Provision devices for her") needs prior context
-    if re.search(r'provision.*(for\s+(her|him|them)(?!\s+as))', text, re.IGNORECASE):
+    if re.search(r'provision[^\n]{0,100}(for\s+(?:her|him|them)(?!\s+as))', text, re.IGNORECASE):
         return None
 
     return None
@@ -200,7 +200,7 @@ async def chat_completions(req: Request):
             payload = json.loads(content_str)
         except:
             # Try to extract inline JSON if present
-            json_match = re.search(r'\{[^}]*"employeeId"[^}]*\}', content_str)
+            json_match = re.search(r'\{[^}]{0,500}"employeeId"[^}]{0,500}\}', content_str)
             if json_match:
                 try:
                     payload = json.loads(json_match.group(0))

@@ -152,7 +152,7 @@ def calculate_employee_appraisal(employee: EmployeeData) -> AppraisalResult:
     Returns:
         AppraisalResult: Complete appraisal calculation with scores, rating, and increment.
     """
-    print(f"[DEBUG] Calculating appraisal for: {employee.employee_name} ({employee.employee_id})")
+    print(f"[DEBUG] Calculating appraisal")
     
     # 1. REVENUE ACHIEVEMENT SCORE (0-100)
     if employee.target_revenue > 0:
@@ -242,7 +242,7 @@ def calculate_employee_appraisal(employee: EmployeeData) -> AppraisalResult:
         salary_increase=round(salary_increase, 2)
     )
     
-    print(f"[DEBUG] Completed appraisal for {employee.employee_name}: Score={result.appraisal_score}%, Rating={result.rating}, Increment={result.increment_percentage}%")
+    print(f"[DEBUG] Completed appraisal: Score={result.appraisal_score}%, Rating={result.rating}, Increment={result.increment_percentage}%")
     
     return result
 

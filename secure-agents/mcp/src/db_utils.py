@@ -143,9 +143,7 @@ class DatabaseManager:
             logger.info("✓ Received credentials from Vault")
             logger.info(f"  Correlation ID: {x_correlation_id}")
             logger.info(f"  Dynamic username: {credentials['username']}")
-            logger.debug(
-                f"  Dynamic password: {credentials['password'][:5]}...{credentials['password'][-5:]}"
-            )
+            logger.debug("  Dynamic password: [REDACTED]")
             logger.info(
                 f"  Database role: {credentials['user_metadata']['database_role']}"
             )

@@ -201,7 +201,7 @@ class WXOServer:
         print("=" * 60)
         print(f"🔌 Endpoint: http://{app_settings.wxo_host}:{app_settings.wxo_port}")
         print(f"📚 Docs: http://localhost:{app_settings.wxo_port}/docs")
-        print(f"🔑 API Key: {app_settings.api_key[:10]}...")
+        print("🔑 API Key: [REDACTED]")
         print("=" * 60 + "\n")
         
         uvicorn.run(

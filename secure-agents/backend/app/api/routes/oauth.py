@@ -1,3 +1,4 @@
+import logging
 import secrets
 from datetime import datetime, timezone
 from typing import Any
@@ -11,6 +12,8 @@ from pydantic import BaseModel
 from app.core.config import settings
 from app.core.security import create_wxo_jwt_token, decode_jwt_token
 from app.models import TokenInfoResponse
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -101,7 +104,8 @@ def oauth_callback(
     except requests.exceptions.Timeout:
         raise HTTPException(status_code=504, detail="Token exchange timed out")
     except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=f"Token exchange failed: {str(e)}")
+        logger.exception("Token exchange request failed")
+        raise HTTPException(status_code=500, detail="Token exchange failed")
 
 
 @router.post("/oauth/refresh")
@@ -122,7 +126,8 @@ def refresh_token(refresh_token: str) -> dict[str, Any]:
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Token refresh failed: {str(e)}")
+        logger.exception("Token refresh failed")
+        raise HTTPException(status_code=500, detail="Token refresh failed")
 
 
 @router.post("/oauth/logout")
@@ -163,7 +168,8 @@ def logout(
     except requests.exceptions.Timeout:
         results["errors"].append("Access token revocation timed out")
     except requests.exceptions.RequestException as e:
-        results["errors"].append(f"Access token revocation error: {str(e)}")
+        logger.exception("Access token revocation error")
+        results["errors"].append("Access token revocation error")
 
     # Revoke refresh token if provided
     if refresh_token:
@@ -188,7 +194,8 @@ def logout(
         except requests.exceptions.Timeout:
             results["errors"].append("Refresh token revocation timed out")
         except requests.exceptions.RequestException as e:
-            results["errors"].append(f"Refresh token revocation error: {str(e)}")
+            logger.exception("Refresh token revocation error")
+            results["errors"].append("Refresh token revocation error")
 
     # Return success if at least access token was revoked
     if results["access_token_revoked"]:
@@ -198,9 +205,7 @@ def logout(
             "details": results,
         }
     else:
-        raise HTTPException(
-            status_code=500, detail=f"Logout failed: {', '.join(results['errors'])}"
-        )
+        raise HTTPException(status_code=500, detail="Logout failed")
 
 
 @router.get("/oauth/token-info", response_model=TokenInfoResponse)
@@ -263,7 +268,8 @@ def generate_wxo_jwt(request_data: WXOJWTRequest) -> dict[str, Any]:
             "has_sso_token": bool(request_data.sso_token),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.exception("WXO JWT generation failed")
+        raise HTTPException(status_code=500, detail="JWT generation failed")
 
 
 @router.get("/wxo/config")
@@ -318,9 +324,8 @@ def introspect_token(access_token: str) -> dict[str, Any]:
     except requests.exceptions.Timeout:
         raise HTTPException(status_code=504, detail="Token introspection timed out")
     except requests.exceptions.RequestException as e:
-        raise HTTPException(
-            status_code=500, detail=f"Token introspection failed: {str(e)}"
-        )
+        logger.exception("Token introspection request failed")
+        raise HTTPException(status_code=500, detail="Token introspection failed")
 
 
 @router.post("/oauth/validate-token")
@@ -393,7 +398,8 @@ def validate_token_simple(access_token: str) -> dict[str, Any]:
         return result
 
     except Exception as e:
-        result["reason"] = f"Validation error: {str(e)}"
+        logger.exception("Token validation error")
+        result["reason"] = "Validation error"
         return result
 
 
@@ -440,11 +446,9 @@ def validate_complete_flow(access_token: str) -> dict[str, Any]:
                 "expires_at": payload.get("exp") if payload else None,
             }
     except Exception as e:
-        result["step1_ibm_verify_decode"] = {
-            "status": "error",
-            "error": str(e),
-        }
-        result["issues"].append(f"IBM Verify token decode error: {str(e)}")
+        logger.exception("IBM Verify token decode error")
+        result["step1_ibm_verify_decode"] = {"status": "error", "error": "Decode error"}
+        result["issues"].append("IBM Verify token decode error")
 
     # Step 2: Introspect with IBM Verify
     try:
@@ -475,11 +479,9 @@ def validate_complete_flow(access_token: str) -> dict[str, Any]:
                 f"IBM Verify introspection failed: {response.status_code}"
             )
     except Exception as e:
-        result["step2_ibm_verify_introspect"] = {
-            "status": "error",
-            "error": str(e),
-        }
-        result["issues"].append(f"IBM Verify introspection error: {str(e)}")
+        logger.exception("IBM Verify introspection error")
+        result["step2_ibm_verify_introspect"] = {"status": "error", "error": "Introspection error"}
+        result["issues"].append("IBM Verify introspection error")
 
     # Step 3: Generate WXO JWT
     try:
@@ -490,11 +492,9 @@ def validate_complete_flow(access_token: str) -> dict[str, Any]:
             "token_preview": f"{wxo_token[:50]}...",
         }
     except Exception as e:
-        result["step3_wxo_jwt_generation"] = {
-            "status": "error",
-            "error": str(e),
-        }
-        result["issues"].append(f"WXO JWT generation failed: {str(e)}")
+        logger.exception("WXO JWT generation error")
+        result["step3_wxo_jwt_generation"] = {"status": "error", "error": "JWT generation error"}
+        result["issues"].append("WXO JWT generation failed")
         wxo_token = None
 
     # Step 4: Decode WXO JWT
@@ -519,11 +519,9 @@ def validate_complete_flow(access_token: str) -> dict[str, Any]:
                     "expires_at": payload.get("exp") if payload else None,
                 }
         except Exception as e:
-            result["step4_wxo_jwt_decode"] = {
-                "status": "error",
-                "error": str(e),
-            }
-            result["issues"].append(f"WXO JWT decode error: {str(e)}")
+            logger.exception("WXO JWT decode error")
+            result["step4_wxo_jwt_decode"] = {"status": "error", "error": "Decode error"}
+            result["issues"].append("WXO JWT decode error")
 
     # Determine overall status
     if not result["issues"]:

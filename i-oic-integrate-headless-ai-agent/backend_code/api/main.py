@@ -74,7 +74,9 @@ async def get_token() -> str:
     if app.state.token and now < app.state.token_exp:
         return app.state.token
     # Choose headers based on endpoint
-    if "iam.cloud.ibm.com" in TOKEN_ENDPOINT:
+    from urllib.parse import urlparse
+    _parsed = urlparse(TOKEN_ENDPOINT)
+    if _parsed.hostname and (_parsed.hostname == "iam.cloud.ibm.com" or _parsed.hostname.endswith(".iam.cloud.ibm.com")):
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Accept": "application/json",
