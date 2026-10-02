@@ -100,6 +100,20 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "pip"
+    directory: "/sterling-oms-smart-supply-chain-agent/sterling-order-management-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "all"
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "pip"
     directory: "/sterling-oms-smart-supply-chain-agent/sterling-order-management-agent/3rdparty/python"
     schedule:
       interval: "weekly"
