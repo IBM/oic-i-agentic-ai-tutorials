@@ -3,19 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@carbon/icons-react": "^11.89.0",
-    "@carbon/react": "^1.117.0",
+    "@carbon/icons-react": "^11.90.0",
+    "@carbon/react": "^1.118.0",
     "cra-template": "1.3.0",
     "eventsource-parser": "^4.1.1",
     "glob": "^13.0.6",
-    "js-yaml": "^5.4.2",
+    "js-yaml": "^5.4.3",
     "node-forge": "^1.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-icons": "^5.7.0",
     "react-markdown": "^10.1.0",
-    "react-syntax-highlighter": "^16.1.1",
-    "web-vitals": "^6.2.2"
+    "react-syntax-highlighter": "^16.1.2",
+    "web-vitals": "^6.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
