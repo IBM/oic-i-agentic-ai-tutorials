@@ -1,5 +1,5 @@
-fastmcp>=4.0.10
-fastapi>=0.142.2
+fastmcp>=4.1.0
+fastapi>=0.143.0
 uvicorn>=0.54.0
 pyjwt>=2.15.1
 cryptography>=50.0.2
