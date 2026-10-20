@@ -3,11 +3,27 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import NodeRSA from 'node-rsa';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static('.')); // Serve static files from current directory
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/chat.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'chat.html'));
+});
 
 /**
  * POST /api/jwt
@@ -87,6 +103,28 @@ app.post('/api/keys/generate', (req, res) => {
     }
 });
 
+const ALLOWED_DOMAIN_SUFFIXES = [
+    '.ibm.com',
+    '.cloud.ibm.com',
+    '.saas.ibm.com'
+];
+const ALLOWED_EXACT_HOSTS = ['localhost', '127.0.0.1'];
+
+function isValidProxyUrl(rawUrl) {
+    if (typeof rawUrl !== 'string') return false;
+    try {
+        const parsed = new URL(rawUrl);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+            return false;
+        }
+        const host = parsed.hostname.toLowerCase();
+        if (ALLOWED_EXACT_HOSTS.includes(host)) return true;
+        return ALLOWED_DOMAIN_SUFFIXES.some(suffix => host === suffix.slice(1) || host.endsWith(suffix));
+    } catch {
+        return false;
+    }
+}
+
 /**
  * POST /api/proxy
  * Generic proxy to bypass CORS for IBM Cloud external APIs from the browser.
@@ -95,11 +133,17 @@ app.post('/api/proxy', async (req, res) => {
     try {
         const { url, method, headers, textBody } = req.body;
         
+        if (!url || !isValidProxyUrl(url)) {
+            return res.status(400).json({ error: "Invalid or unauthorized target URL." });
+        }
+
         if (typeof fetch === 'undefined') {
             return res.status(500).json({ error: "Node fetch unavailable. Requires Node 18+." });
         }
 
-        const fetchRes = await fetch(url, {
+        const targetUrl = new URL(url).toString();
+
+        const fetchRes = await fetch(targetUrl, {
             method: method || 'GET',
             headers: headers || {},
             body: textBody || undefined

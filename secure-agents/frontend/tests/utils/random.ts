@@ -1,11 +1,13 @@
+import crypto from "crypto";
+
 export const randomEmail = () =>
-  `test_${Math.random().toString(36).substring(7)}@example.com`;
+  `test_${crypto.randomBytes(4).toString("hex")}@example.com`;
 
 export const randomTeamName = () =>
-  `Team ${Math.random().toString(36).substring(7)}`;
+  `Team ${crypto.randomBytes(4).toString("hex")}`;
 
 export const randomPassword = () =>
-  `${Math.random().toString(36).substring(2)}`;
+  `${crypto.randomBytes(8).toString("hex")}`;
 
 export const slugify = (text: string) =>
   text

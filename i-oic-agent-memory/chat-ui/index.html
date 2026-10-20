@@ -9,7 +9,7 @@
     <!-- Carbon Design System CSS -->
     <link rel="stylesheet" href="https://unpkg.com/carbon-components@10.58.0/css/carbon-components.min.css">
     <!-- JSZip for downloading Security Configuration files -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <style>
         :root {
@@ -609,21 +609,19 @@
 
         function parseWXOConfig(scriptText) {
             try {
-                let cleaned = scriptText.replace(/<\/?script[^>]*>/gi, '');
-                cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"');
-                cleaned = cleaned.replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
-                const configMatch = cleaned.match(/window\.wxOConfiguration\s*=\s*({[\s\S]*?})\s*;/);
+                const normalized = scriptText
+                    .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036]/g, '"')
+                    .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035]/g, "'");
+                const configMatch = normalized.match(/window\.wxOConfiguration\s*=\s*({[\s\S]*?})(?:\s*;|\s*<\/script>|\s*$)/i)
+                    || normalized.match(/({[\s\S]*})/);
                 if (!configMatch) throw new Error('Could not find wxOConfiguration');
                 let configStr = configMatch[1];
                 configStr = configStr.replace(/\w+\s*:\s*function\s*\([^)]*\)\s*\{[\s\S]*?\n\s*\}/g, '');
                 configStr = configStr.replace(/,\s*([\]}])/g, '$1');
                 configStr = configStr.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
                 configStr = configStr.replace(/'([^']*)'/g, '"$1"');
-                try {
-                    return JSON.parse(configStr);
-                } catch (e) {
-                    return new Function('return (' + configMatch[1] + ')')();
-                }
+                configStr = configStr.replace(/,\s*([\]}])/g, '$1');
+                return JSON.parse(configStr);
             } catch (e) {
                 throw new Error('Failed to parse script: ' + e.message);
             }

@@ -338,12 +338,31 @@
 
         // ── UI Helpers ──────────────────────────────────────────────
         function showError(message) {
-            document.getElementById('wxo-chat-root').innerHTML = `
-                <div class="error">
-                    <div>${message}</div>
-                    <button onclick="window.close()">Close Window</button>
-                </div>
-            `;
+            const root = document.getElementById('wxo-chat-root');
+            if (!root) return;
+            root.textContent = '';
+            const errDiv = document.createElement('div');
+            errDiv.className = 'error';
+            const msgDiv = document.createElement('div');
+            msgDiv.textContent = message;
+            const btn = document.createElement('button');
+            btn.textContent = 'Close Window';
+            btn.onclick = () => window.close();
+            errDiv.appendChild(msgDiv);
+            errDiv.appendChild(btn);
+            root.appendChild(errDiv);
+        }
+
+        function isTrustedHostUrl(urlStr) {
+            try {
+                const u = new URL(urlStr);
+                if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
+                const h = u.hostname.toLowerCase();
+                if (h === 'localhost' || h === '127.0.0.1') return true;
+                return h.endsWith('.ibm.com') || h.endsWith('.cloud.ibm.com') || h.endsWith('.saas.ibm.com');
+            } catch {
+                return false;
+            }
         }
 
         function closeToast(id) {
@@ -488,10 +507,16 @@
                 }
 
                 // Initialize WXO
+                if (!config || !config.hostURL || !isTrustedHostUrl(config.hostURL)) {
+                    showError('Invalid or untrusted host URL');
+                    return;
+                }
+
                 window.wxOConfiguration = config;
 
+                const validatedOrigin = new URL(config.hostURL).origin;
                 const script = document.createElement('script');
-                script.src = `${config.hostURL}/wxochat/wxoLoader.js?embed=true`;
+                script.src = `${validatedOrigin}/wxochat/wxoLoader.js?embed=true`;
                 script.addEventListener('load', () => {
                     if (window.wxoLoader) {
                         wxoLoader.init();
@@ -523,7 +548,8 @@
 
         // Listen for reload messages from parent window
         window.addEventListener('message', (event) => {
-            if (event.data?.type === 'reload') {
+            if (event.origin !== window.location.origin) return;
+            if (event.data?.type === 'reload' && event.data.data) {
                 localStorage.setItem('wxo_chat_data', JSON.stringify(event.data.data));
                 window.location.reload();
             }

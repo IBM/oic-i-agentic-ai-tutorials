@@ -22,12 +22,16 @@ function decodeJWT(token) {
 
 function clearEmbedSession() {
   document.cookie =
-    "embed_user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    "embed_user_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Strict; Secure";
 
   sessionStorage.removeItem("embed_user_id_dev");
   sessionStorage.removeItem("current_session_user_id");
 
-  sessionStorage.embed_user_id_dev = Math.trunc(Math.random() * 1000000);
+  if (typeof window !== "undefined" && window.crypto) {
+    const randomArray = new Uint32Array(1);
+    window.crypto.getRandomValues(randomArray);
+    sessionStorage.embed_user_id_dev = String(randomArray[0] % 1000000);
+  }
 }
 
 export default function Page() {
