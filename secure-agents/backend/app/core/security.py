@@ -107,7 +107,7 @@ def decode_jwt_token(
 
         return header, payload, None
     except Exception as e:
-        return None, None, f"Error decoding token: {str(e)}"
+        return None, None, "Invalid token or corrupt payload"
 
 
 def encrypt_user_payload(user_payload: dict) -> str:
@@ -155,7 +155,7 @@ def encrypt_user_payload(user_payload: dict) -> str:
         # Return base64 encoded encrypted data
         return base64.b64encode(encrypted_data).decode("utf-8")
     except Exception as e:
-        raise Exception(f"Error encrypting user payload: {str(e)}")
+        raise RuntimeError("Failed to encrypt user payload") from e
 
 
 def create_wxo_jwt_token(
@@ -244,4 +244,4 @@ def create_wxo_jwt_token(
 
         return token
     except Exception as e:
-        raise Exception(f"Error creating JWT token: {str(e)}")
+        raise RuntimeError("Failed to create JWT token") from e

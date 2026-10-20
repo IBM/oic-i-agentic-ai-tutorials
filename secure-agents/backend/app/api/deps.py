@@ -75,7 +75,7 @@ def get_current_user(token: TokenDep) -> UserPublic:
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Could not validate credentials: {str(e)}",
+            detail="Could not validate credentials",
         )
 
 

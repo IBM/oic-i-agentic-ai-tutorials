@@ -258,12 +258,11 @@ def generate_wxo_jwt(request_data: WXOJWTRequest) -> dict[str, Any]:
             raise HTTPException(status_code=500, detail="Failed to generate JWT token")
 
         # Decode token to show payload info
-        _, payload, error = decode_jwt_token(token)
+        _, payload, _ = decode_jwt_token(token)
 
         return {
             "token": token,
             "payload": payload,
-            "error": error,
             "note": "user_payload is encrypted with WxO public key",
             "has_sso_token": bool(request_data.sso_token),
         }
@@ -314,12 +313,11 @@ def introspect_token(access_token: str) -> dict[str, Any]:
         introspection_result = response.json()
 
         # Add decoded token info for comparison
-        _, payload, error = decode_jwt_token(access_token)
+        _, payload, _ = decode_jwt_token(access_token)
 
         return {
             "introspection": introspection_result,
             "decoded_payload": payload,
-            "decode_error": error,
             "is_active": introspection_result.get("active", False),
         }
     except requests.exceptions.Timeout:
@@ -350,7 +348,7 @@ def validate_token_simple(access_token: str) -> dict[str, Any]:
         _, payload, error = decode_jwt_token(access_token)
 
         if error or not payload:
-            result["reason"] = f"Token decode failed: {error}"
+            result["reason"] = "Token decode failed"
             return result
 
         # Check expiration (same as get_current_user does)
