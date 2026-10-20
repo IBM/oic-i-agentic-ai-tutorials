@@ -55,7 +55,7 @@ async def main():
         {},
         on_flow_end_handler=on_flow_end,
         on_flow_error_handler=on_flow_error,
-        debug=True
+        debug=False
     )
 
 if __name__ == "__main__":

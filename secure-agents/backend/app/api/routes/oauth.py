@@ -306,8 +306,9 @@ def introspect_token(access_token: str) -> dict[str, Any]:
         response = requests.post(introspect_url, data=introspect_data, timeout=10)
 
         if response.status_code != 200:
+            logger.error(f"Token introspection failed with status {response.status_code}")
             raise HTTPException(
-                status_code=500, detail=f"Token introspection failed: {response.text}"
+                status_code=500, detail="Token introspection failed"
             )
 
         introspection_result = response.json()
