@@ -112,7 +112,24 @@ app.post('/api/keys/generate', (req, res) => {
     }
 });
 
-const ALLOWED_HOST_PATTERN = /^([a-zA-Z0-9-]+\.)*(?:ibm\.com|cloud\.ibm\.com|saas\.ibm\.com)$/i;
+const REGIONS = ['us-south', 'us-east', 'eu-gb', 'eu-de', 'jp-tok', 'jp-osa', 'au-syd', 'ca-tor', 'br-sao', 'in-che', 'mad'];
+const ALLOWED_HOSTS = new Set([
+    'iam.cloud.ibm.com',
+    'iam.platform.saas.ibm.com',
+    'iam.platform.test.saas.ibm.com',
+    'iam.platform.dev.saas.ibm.com',
+    'dl.watson-orchestrate.ibm.com',
+    'localhost',
+    '127.0.0.1'
+]);
+
+for (const region of REGIONS) {
+    ALLOWED_HOSTS.add(`api.${region}.watson-orchestrate.cloud.ibm.com`);
+    ALLOWED_HOSTS.add(`api.${region}.orchestrate.watsonx.ibm.com`);
+    ALLOWED_HOSTS.add(`api.${region}.watson-orchestrate.ibm.com`);
+    ALLOWED_HOSTS.add(`${region}.orchestrate.watsonx.ibm.com`);
+    ALLOWED_HOSTS.add(`${region}.watson-orchestrate.cloud.ibm.com`);
+}
 
 /**
  * POST /api/proxy
@@ -137,9 +154,8 @@ app.post('/api/proxy', async (req, res) => {
             return res.status(400).json({ error: "Only HTTP and HTTPS protocols are permitted." });
         }
 
-        const host = parsedUrl.hostname.toLowerCase();
-        const isAllowed = host === 'localhost' || host === '127.0.0.1' || ALLOWED_HOST_PATTERN.test(host);
-        if (!isAllowed) {
+        const hostname = parsedUrl.hostname.toLowerCase();
+        if (!ALLOWED_HOSTS.has(hostname)) {
             return res.status(403).json({ error: "Target domain is not authorized for proxying." });
         }
 
@@ -147,9 +163,10 @@ app.post('/api/proxy', async (req, res) => {
             return res.status(500).json({ error: "Node fetch unavailable. Requires Node 18+." });
         }
 
-        const cleanUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
+        const origin = `${parsedUrl.protocol}//${hostname}${parsedUrl.port ? ':' + parsedUrl.port : ''}`;
+        const safeUrl = new URL(parsedUrl.pathname + parsedUrl.search, origin).href;
 
-        const fetchRes = await fetch(cleanUrl, {
+        const fetchRes = await fetch(safeUrl, {
             method: method || 'GET',
             headers: headers || {},
             body: textBody || undefined
