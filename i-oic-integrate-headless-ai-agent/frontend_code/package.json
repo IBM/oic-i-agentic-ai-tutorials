@@ -54,7 +54,8 @@
     "webpack-dev-server": ">=6.0.0",
     "uuid": ">=14.0.2",
     "@tootallnate/once": ">=3.0.1",
-    "argparse": "^2.0.1"
+    "argparse": "^2.0.1",
+    "launch-editor": ">=2.14.2"
   },
   "devDependencies": {
     "react-scripts": "^5.0.1"
