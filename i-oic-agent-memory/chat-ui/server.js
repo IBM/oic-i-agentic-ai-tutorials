@@ -113,7 +113,7 @@ app.post('/api/keys/generate', (req, res) => {
 });
 
 const REGIONS = ['us-south', 'us-east', 'eu-gb', 'eu-de', 'jp-tok', 'jp-osa', 'au-syd', 'ca-tor', 'br-sao', 'in-che', 'mad'];
-const ALLOWED_HOSTS = new Set([
+const ALLOWED_HOST_LIST = [
     'iam.cloud.ibm.com',
     'iam.platform.saas.ibm.com',
     'iam.platform.test.saas.ibm.com',
@@ -121,14 +121,14 @@ const ALLOWED_HOSTS = new Set([
     'dl.watson-orchestrate.ibm.com',
     'localhost',
     '127.0.0.1'
-]);
+];
 
 for (const region of REGIONS) {
-    ALLOWED_HOSTS.add(`api.${region}.watson-orchestrate.cloud.ibm.com`);
-    ALLOWED_HOSTS.add(`api.${region}.orchestrate.watsonx.ibm.com`);
-    ALLOWED_HOSTS.add(`api.${region}.watson-orchestrate.ibm.com`);
-    ALLOWED_HOSTS.add(`${region}.orchestrate.watsonx.ibm.com`);
-    ALLOWED_HOSTS.add(`${region}.watson-orchestrate.cloud.ibm.com`);
+    ALLOWED_HOST_LIST.push(`api.${region}.watson-orchestrate.cloud.ibm.com`);
+    ALLOWED_HOST_LIST.push(`api.${region}.orchestrate.watsonx.ibm.com`);
+    ALLOWED_HOST_LIST.push(`api.${region}.watson-orchestrate.ibm.com`);
+    ALLOWED_HOST_LIST.push(`${region}.orchestrate.watsonx.ibm.com`);
+    ALLOWED_HOST_LIST.push(`${region}.watson-orchestrate.cloud.ibm.com`);
 }
 
 /**
@@ -154,8 +154,9 @@ app.post('/api/proxy', async (req, res) => {
             return res.status(400).json({ error: "Only HTTP and HTTPS protocols are permitted." });
         }
 
-        const hostname = parsedUrl.hostname.toLowerCase();
-        if (!ALLOWED_HOSTS.has(hostname)) {
+        const reqHostname = parsedUrl.hostname.toLowerCase();
+        const matchedHost = ALLOWED_HOST_LIST.find(h => h === reqHostname);
+        if (!matchedHost) {
             return res.status(403).json({ error: "Target domain is not authorized for proxying." });
         }
 
@@ -163,8 +164,17 @@ app.post('/api/proxy', async (req, res) => {
             return res.status(500).json({ error: "Node fetch unavailable. Requires Node 18+." });
         }
 
-        const origin = `${parsedUrl.protocol}//${hostname}${parsedUrl.port ? ':' + parsedUrl.port : ''}`;
-        const safeUrl = new URL(parsedUrl.pathname + parsedUrl.search, origin).href;
+        const cleanPath = parsedUrl.pathname.replace(/[^a-zA-Z0-9_\-\/]/g, '');
+        if (cleanPath.includes('..')) {
+            return res.status(400).json({ error: "Path traversal detected." });
+        }
+
+        const safeProtocol = (matchedHost === 'localhost' || matchedHost === '127.0.0.1') && parsedUrl.protocol === 'http:'
+            ? 'http:'
+            : 'https:';
+
+        const portPart = parsedUrl.port ? `:${Number(parsedUrl.port)}` : '';
+        const safeUrl = `${safeProtocol}//${matchedHost}${portPart}${cleanPath}`;
 
         const fetchRes = await fetch(safeUrl, {
             method: method || 'GET',
