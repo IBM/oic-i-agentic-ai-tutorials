@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import NodeRSA from 'node-rsa';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -12,6 +13,14 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 1000,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+app.use(limiter);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -103,27 +112,7 @@ app.post('/api/keys/generate', (req, res) => {
     }
 });
 
-const ALLOWED_DOMAIN_SUFFIXES = [
-    '.ibm.com',
-    '.cloud.ibm.com',
-    '.saas.ibm.com'
-];
-const ALLOWED_EXACT_HOSTS = ['localhost', '127.0.0.1'];
-
-function isValidProxyUrl(rawUrl) {
-    if (typeof rawUrl !== 'string') return false;
-    try {
-        const parsed = new URL(rawUrl);
-        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-            return false;
-        }
-        const host = parsed.hostname.toLowerCase();
-        if (ALLOWED_EXACT_HOSTS.includes(host)) return true;
-        return ALLOWED_DOMAIN_SUFFIXES.some(suffix => host === suffix.slice(1) || host.endsWith(suffix));
-    } catch {
-        return false;
-    }
-}
+const ALLOWED_HOST_PATTERN = /^([a-zA-Z0-9-]+\.)*(?:ibm\.com|cloud\.ibm\.com|saas\.ibm\.com)$/i;
 
 /**
  * POST /api/proxy
@@ -133,17 +122,34 @@ app.post('/api/proxy', async (req, res) => {
     try {
         const { url, method, headers, textBody } = req.body;
         
-        if (!url || !isValidProxyUrl(url)) {
-            return res.status(400).json({ error: "Invalid or unauthorized target URL." });
+        if (!url || typeof url !== 'string') {
+            return res.status(400).json({ error: "Missing or invalid url parameter." });
+        }
+
+        let parsedUrl;
+        try {
+            parsedUrl = new URL(url);
+        } catch {
+            return res.status(400).json({ error: "Invalid target URL." });
+        }
+
+        if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+            return res.status(400).json({ error: "Only HTTP and HTTPS protocols are permitted." });
+        }
+
+        const host = parsedUrl.hostname.toLowerCase();
+        const isAllowed = host === 'localhost' || host === '127.0.0.1' || ALLOWED_HOST_PATTERN.test(host);
+        if (!isAllowed) {
+            return res.status(403).json({ error: "Target domain is not authorized for proxying." });
         }
 
         if (typeof fetch === 'undefined') {
             return res.status(500).json({ error: "Node fetch unavailable. Requires Node 18+." });
         }
 
-        const targetUrl = new URL(url).toString();
+        const cleanUrl = `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}${parsedUrl.search}`;
 
-        const fetchRes = await fetch(targetUrl, {
+        const fetchRes = await fetch(cleanUrl, {
             method: method || 'GET',
             headers: headers || {},
             body: textBody || undefined
