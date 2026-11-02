@@ -9,7 +9,7 @@
     "eventsource-parser": "^4.1.1",
     "glob": "^13.0.6",
     "js-yaml": "^5.4.2",
-    "node-forge": "^1.4.0",
+    "node-forge": "^1.4.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-icons": "^5.7.0",
