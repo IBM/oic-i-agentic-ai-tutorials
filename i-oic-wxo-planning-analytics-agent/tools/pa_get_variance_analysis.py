@@ -8,11 +8,10 @@ from ibm_watsonx_orchestrate.run import connections
 from orchestrate import tool 
 
 
-MY_APP_ID=”planning-analytics-test”
+MY_APP_ID = "planning-analytics-test"
 
 
-@tool({"app_id": MY_APP_ID, "type": ConnectionType. KEY_VALUE
-})
+@tool({"app_id": MY_APP_ID, "type": ConnectionType.KEY_VALUE})
 def pa_get_variance_analysis(
     measure: str = "Revenue",
     version_actual: str = "Actual",
@@ -56,7 +55,7 @@ def pa_get_variance_analysis(
         FROM [{cube_name}]
         """
         
-creds = connections.key_value(MY_APP_ID)
+        creds = connections.key_value(MY_APP_ID)
         credentials = {
             "address": creds.get('address'),
             "user": creds.get('user'),
