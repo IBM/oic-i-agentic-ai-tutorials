@@ -1,2 +1,2 @@
 fastapi[standard]>=0.162.0,<1.0
-pydantic>=2.14.2,<3.0
+pydantic>=2.14.3,<3.0
