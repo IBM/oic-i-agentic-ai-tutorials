@@ -54,13 +54,6 @@ cp config/claude.env.example config/claude.env
 
 Edit each copied file; the comments in it explain every value.
 
-**Option B — one file for everything**
-
-```bash
-cp config.env.example config.env
-```
-
-`config.env` has a section per platform (`[aws]`, `[azure]`, `[vertex]`, `[claude]`). Fill in only the sections you use.
 
 Check what is configured at any time:
 
