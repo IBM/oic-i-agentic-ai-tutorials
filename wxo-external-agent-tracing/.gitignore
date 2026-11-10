@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python environments
+.python_packages/
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Credentials & Active Configs
+config/*.env
+*.json
+!src/azure/host.json
+!src/azure/local.settings.json
+!src/forwarder/host.json
+
+# OS files
+.DS_Store
+
+# User agent source — never commit (brought by each user separately)
+src/azure/agents/

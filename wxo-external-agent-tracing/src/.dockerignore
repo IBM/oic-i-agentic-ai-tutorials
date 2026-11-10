@@ -1,0 +1,17 @@
+# Docker build context is the repo root when building patched agent images.
+# Only shared/sitecustomize.py and the Dockerfile itself are needed.
+# Everything else is excluded to keep context transfer fast.
+
+.git
+.gitignore
+**/__pycache__
+**/*.pyc
+**/*.pyo
+aws/test-agents
+tools
+config
+README.md
+*.env
+*.json
+*.log
+*.zip
