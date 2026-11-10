@@ -1,0 +1,17 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "LOG_ANALYTICS_WORKSPACE_ID": "<your-log-analytics-workspace-id>",
+    "WXO_DEPLOYMENT_MODE": "cloud",
+    "WXO_TENANT_ID": "<your-wxo-tenant-id>",
+    "WXO_API_KEY": "<your-wxo-api-key>",
+    "WXO_TOKEN_URL": "https://account-iam.platform.saas.ibm.com/api/2.0/apikeys/token",
+    "WXO_OTEL_EXPORT_URL": "https://api.watson-orchestrate.ibm.com/instances/<your-wxo-instance-id>/v1/orchestrate/inject/traces",
+    "WXO_ENVIRONMENT_NAME": "draft",
+    "WXO_AGENT_MAP": "{\"my-prompt-agent\": \"<your-wxo-agent-uuid>\"}",
+    "WXO_AGENT_ID": "<your-wxo-agent-id>",
+    "WXO_AGENT_DISPLAY_NAME": "<Your WXO Agent Display Name>"
+  }
+}
