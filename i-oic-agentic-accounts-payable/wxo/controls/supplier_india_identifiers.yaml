@@ -1,0 +1,15 @@
+# India-specific identifiers the generic PII filter does not know: IFSC codes and long account numbers.
+spec_version: v1
+kind: control
+control:
+  artifact_name: Regex Pattern
+  name: supplier_india_identifiers
+  display_name: Supplier Desk · IFSC and account redaction
+  description: Redacts IFSC codes and 11–18 digit account numbers from Supplier Desk replies.
+  hooks: [agent_post_invoke]
+  priority: 30
+  agent_names: [supplier_desk_agent]
+  config:
+    regex_patterns: ['\b[A-Z]{4}0[A-Z0-9]{6}\b', '\b\d{11,18}\b']
+    strategy: redact
+    redaction_text: '[REDACTED]'

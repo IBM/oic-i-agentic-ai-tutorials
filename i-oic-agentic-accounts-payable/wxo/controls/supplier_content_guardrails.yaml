@@ -1,0 +1,14 @@
+# Supplier Desk is the external channel: screen what suppliers type before the agent sees it.
+spec_version: v1
+kind: control
+control:
+  artifact_name: Content Guardrails
+  name: supplier_content_guardrails
+  display_name: Supplier Desk · content guardrails
+  description: Blocks jailbreak, abusive and harmful prompts on the external supplier channel.
+  hooks: [agent_pre_invoke]
+  priority: 10
+  agent_names: [supplier_desk_agent]
+  config:
+    enabled: {jailbreak: true, hap: true, harm: true}
+    block_message: I can only help with invoice and payment status for your company.

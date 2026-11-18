@@ -1,0 +1,17 @@
+# Suppliers must never see bank accounts, emails or phone numbers held in the vendor master.
+spec_version: v1
+kind: control
+control:
+  artifact_name: PII Filter
+  name: supplier_pii_filter
+  display_name: Supplier Desk · PII masking
+  description: Masks bank accounts, email addresses and phone numbers in Supplier Desk replies.
+  hooks: [agent_post_invoke]
+  priority: 20
+  agent_names: [supplier_desk_agent]
+  config:
+    detect_bank_account: true
+    detect_email: true
+    detect_phone: true
+    detect_credit_card: true
+    default_mask_strategy: partial

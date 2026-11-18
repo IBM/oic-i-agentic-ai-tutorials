@@ -1,0 +1,8 @@
+ibm-watsonx-orchestrate==2.18.0
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+requests>=2.32
+pypdfium2>=4.30
+pillow>=10.4
+reportlab>=4.2

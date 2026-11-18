@@ -1,0 +1,12 @@
+# Stops a caller from enumerating GSTINs or invoice numbers through the public status tools.
+spec_version: v1
+kind: control
+control:
+  artifact_name: Rate Limiter
+  name: supplier_tools_rate_limit
+  display_name: Supplier tools · rate limit
+  description: 20 calls per minute across the supplier status tools to prevent GSTIN enumeration.
+  hooks: [tool_pre_invoke]
+  priority: 10
+  tool_names: [supplier_invoice_status, supplier_open_invoices]
+  config: {by_tool: 20, by_tenant: 3000}

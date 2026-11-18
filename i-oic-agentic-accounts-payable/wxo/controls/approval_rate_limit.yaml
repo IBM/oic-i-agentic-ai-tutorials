@@ -1,0 +1,12 @@
+# Caps the blast radius of the only write tool: an agent cannot mass-approve held bills.
+spec_version: v1
+kind: control
+control:
+  artifact_name: Rate Limiter
+  name: approval_rate_limit
+  display_name: AP Copilot · approval rate limit
+  description: At most 5 bill approvals per minute through the AP Copilot.
+  hooks: [tool_pre_invoke]
+  priority: 10
+  tool_names: [approve_ap_exception]
+  config: {by_tool: 5, by_tenant: 3000}

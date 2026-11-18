@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accounts Payable Agent · IBM watsonx Orchestrate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="shell-header">
+    <button class="menu-btn" id="menu-btn" aria-label="Open menu"></button>
+    <a class="brand" href="#/overview"><b>IBM</b> watsonx Orchestrate</a>
+    <span class="divider"></span>
+    <span class="product">Accounts Payable Agent</span>
+    <span class="spacer"></span>
+    <div class="sys-status" id="sys-status"></div>
+    <button class="header-action" id="reset-btn" title="Reset demo data" aria-label="Reset demo data"></button>
+  </header>
+
+  <nav class="side-nav" id="side-nav">
+    <a href="#/overview" data-route="overview"></a>
+    <a href="#/invoices" data-route="invoices"></a>
+    <a href="#/assistant" data-route="assistant"></a>
+    <a href="#/governance" data-route="governance"></a>
+    <div class="nav-foot">
+      <p class="helper">Buyer</p>
+      <p id="buyer-name">Meridian Specialty Chemicals India Pvt. Ltd.</p>
+      <p class="helper" style="margin-top:12px">ERP</p>
+      <p><a id="odoo-link" href="#" target="_blank" rel="noopener">Odoo</a></p>
+    </div>
+  </nav>
+
+  <main><div class="page" id="view"></div></main>
+  <div class="toasts" id="toasts"></div>
+  <div id="modal-root"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
