@@ -408,6 +408,46 @@ FROM s LEFT JOIN ${catalog}.${gold}.dim_driver d ON d.driver_id = s.driver_id;
 
 The fact table is partitioned by season, because almost every question filters on one.
 
+> **Try it yourself:** Before you build the Gold layer, write the second season table, `constructor_season`, yourself. It needs one row for each team and season, with the team's points, wins, podiums and retirements, the share of race starts that finished, and the team's rank in that season.
+>
+> **Hint:** Start from `fact_session_result`, as the driver table does, and group by `season` and `constructor_id`. Each car that starts a race is one row with `session_type = 'RACE'`, so `count_if(session_type = 'RACE')` counts the team's car starts.
+>
+> **Hint:** Count finishes with `count_if(session_type = 'RACE' AND finish_category = 'finished')` and divide by the car starts. Use `nullif` so that a team with no starts doesn't divide by zero. Join `dim_constructor` for the team name, and rank the teams with the same `rank()` window as the driver table.
+>
+> To run your version, save it as a file, change the table name to `my_constructor_season` so that you don't replace the real table, and run it with `.venv/bin/python -m lakehouse sql <your-file>.sql` after the next command.
+
+**Solution.** This is the table as it is in `lakehouse/sql/gold/30_marts.sql`. The next command runs that file, so the rest of the tutorial works whether or not you write your own version. It also splits retirements by cause, and leaves `reliability_pct` empty when too many retirements have no recorded cause (see "Lessons from building it"):
+
+```sql
+CREATE TABLE ${catalog}.${gold}.constructor_season AS
+WITH s AS (
+  SELECT season,
+         constructor_id,
+         count_if(session_type = 'RACE') AS car_starts,
+         sum(points) AS points,
+         count_if(session_type = 'RACE' AND is_win) AS wins,
+         count_if(session_type = 'RACE' AND is_podium) AS podiums,
+         count_if(session_type = 'RACE' AND finish_category = 'retired') AS retirements,
+         count_if(session_type = 'RACE' AND retirement_cause = 'mechanical') AS mechanical_retirements,
+         count_if(session_type = 'RACE' AND retirement_cause = 'incident') AS incident_retirements,
+         count_if(session_type = 'RACE' AND retirement_cause = 'unknown') AS unknown_cause_retirements,
+         count_if(session_type = 'RACE' AND finish_category = 'finished') AS finishes
+  FROM ${catalog}.${gold}.fact_session_result
+  GROUP BY 1, 2
+)
+SELECT s.season, s.constructor_id, c.constructor_name, s.car_starts, s.points, s.wins, s.podiums,
+       s.retirements, s.mechanical_retirements, s.incident_retirements, s.unknown_cause_retirements,
+       round(100.0 * s.finishes / nullif(s.car_starts, 0), 1) AS finish_rate_pct,
+       -- Share of starts without a mechanical retirement. Left NULL when more than a fifth
+       -- of the retirements have no recorded cause (most of 2023 onwards).
+       CASE WHEN s.unknown_cause_retirements * 5 <= s.retirements
+            THEN round(100.0 * (s.car_starts - s.mechanical_retirements) / nullif(s.car_starts, 0), 1)
+       END AS reliability_pct,
+       rank() OVER (PARTITION BY s.season ORDER BY s.points DESC, s.wins DESC) AS points_rank
+FROM s
+LEFT JOIN ${catalog}.${gold}.dim_constructor c ON c.constructor_id = s.constructor_id;
+```
+
 1. Build the Gold layer:
 
     ```bash
@@ -450,6 +490,22 @@ The fact table is partitioned by season, because almost every question filters o
     ```
 
     Ayrton Senna was the 1988 champion. Before 1991 only a driver's best results counted towards the title, so the total points don't tell the whole story. This is why the column is called `points_rank` and not `championship_position`. In Step 13 you give the agent a knowledge base that explains this, so it doesn't make the mistake in conversation.
+
+4. Check the constructors' table against 2025. If you wrote your own version, run the same query against `my_constructor_season` and compare:
+
+    ```bash
+    .venv/bin/python -m lakehouse sql "SELECT points_rank, constructor_name, points, wins, finish_rate_pct FROM \${catalog}.f1_gold.constructor_season WHERE season = 2025 ORDER BY points_rank LIMIT 3"
+    ```
+
+    ```text
+    points_rank  constructor_name  points  wins  finish_rate_pct
+    -----------  ----------------  ------  ----  ---------------
+    1            McLaren           833.0   14    89.6
+    2            Mercedes          469.0   2     91.7
+    3            Red Bull          451.0   8     93.8
+    ```
+
+    McLaren won the 2025 constructors' championship with 833 points.
 
 ![The Gold-layer tables in the watsonx.data metastore browser, with a data sample of driver_season.](images/wxd-gold-sample.jpg)
 
@@ -561,6 +617,34 @@ In this step, you register the Confluent cluster as a Presto catalog, and query 
 ![The Kafka topic f1.race.results browsed as a Presto table in watsonx.data, with partition, offset and the raw JSON message.](images/wxd-kafka-table.jpg)
 
 *The Confluent topic as a Presto table. No pipeline has run yet.*
+
+> **Try it yourself:** Write a query on the topic that totals the points each team scored in Round 1, highest first.
+>
+> **Hint:** Every message carries `round`, `constructor_id` and `points`. Extract them with `json_extract_scalar`, as `kafka_round_results.sql` does, cast `round` to `INTEGER` and `points` to `DOUBLE`, and group by the team.
+
+**Solution.** Save the query as `team_points.sql` and run it with `.venv/bin/python -m lakehouse sql team_points.sql`, or paste it into the watsonx.data SQL worksheet:
+
+```sql
+SELECT json_extract_scalar(_message, '$.constructor_id')              AS team,
+       sum(CAST(json_extract_scalar(_message, '$.points') AS DOUBLE)) AS points
+FROM kafka_live."default"."f1.race.results"
+WHERE CAST(json_extract_scalar(_message, '$.round') AS INTEGER) = 1
+GROUP BY 1
+ORDER BY points DESC
+LIMIT 5
+```
+
+```text
+team      points
+--------  ------
+mercedes  43.0
+ferrari   27.0
+mclaren   10.0
+red_bull  8.0
+haas      6.0
+```
+
+Mercedes finished first and second, so the team leaves Round 1 with 43 points. The answer came from the topic alone, before any pipeline ran.
 
 ### Step 10. Land the stream in the lakehouse
 
@@ -725,6 +809,39 @@ The fantasy league is a separate application with its own PostgreSQL database: 4
 
     *The finished lakehouse in Infrastructure manager.*
 
+> **Try it yourself:** The fantasy league prices every driver in `fantasy_pg.public.driver_prices`, in millions of dollars. Find the five best-value picks: the drivers who have scored the most 2026 points per million of price.
+>
+> **Hint:** The price is in PostgreSQL and the points are in the Gold layer. Join `driver_prices` to `driver_season` on both `driver_id` and `season`, and divide `points` by `price_musd`.
+
+**Solution.** Save the query as `best_value.sql` and run it with `.venv/bin/python -m lakehouse sql best_value.sql`:
+
+```sql
+SELECT s.driver_name,
+       p.price_musd,
+       s.points,
+       round(s.points / CAST(p.price_musd AS DOUBLE), 2) AS points_per_musd
+FROM fantasy_pg.public.driver_prices p
+JOIN ${catalog}.f1_gold.driver_season s
+  ON s.driver_id = p.driver_id AND s.season = p.season
+WHERE p.season = 2026
+ORDER BY points_per_musd DESC
+LIMIT 5
+```
+
+After Round 1, the result is:
+
+```text
+driver_name            price_musd  points  points_per_musd
+---------------------  ----------  ------  ---------------
+George Russell         24.0        25.0    1.04
+Andrea Kimi Antonelli  19.0        18.0    0.95
+Oliver Bearman         9.5         6.0     0.63
+Charles Leclerc        26.0        15.0    0.58
+Arvid Lindblad         7.5         4.0     0.53
+```
+
+The numbers change as more races land in the lakehouse. You use this query again in Step 14.
+
 ## Part 5. Add the AI analyst
 
 In this part, you put a watsonx Orchestrate agent on top of everything you built. The agent turns questions into Presto SQL and runs them through the watsonx.data MCP server, so it can reach every catalog Presto can: the lakehouse, the live topic and the app database.
@@ -842,6 +959,12 @@ In this step, you ask the agent questions that span the lakehouse and the app da
     - *Who has the most wins ever at Monaco?*
     - *Who won the 1988 championship?* The knowledge base tells the agent to explain the dropped-scores rule.
     - *What has arrived on the Kafka topic that isn't in the lakehouse yet?*
+
+> **Try it yourself:** Ask the agent *"Which drivers have scored the most 2026 points per million dollars of fantasy price?"* Then click **Show Reasoning** and compare the SQL that the agent wrote with your query from Step 11.
+>
+> **Hint:** Check which tables the agent joined, and whether it matched the drivers on both `driver_id` and `season`. If its answer differs from yours, the trace shows where the two queries diverge.
+
+**Solution.** The Step 11 solution is the reference answer. The agent should list the same drivers in the same order. After Round 1, George Russell is the best-value pick at 1.04 points per million.
 
 ## Part 6. Run a race weekend
 
