@@ -2,7 +2,7 @@
 
 [![Agentic accounts payable on IBM watsonx Orchestrate and Odoo](docs/tutorial/images/cover.png)](https://claude.ai/artifact/LeZnzxhrq9psD5PNUU1rLC)
 
-[![Read the step-by-step guide](https://img.shields.io/badge/Read_the_step--by--step_guide-0f62fe?style=for-the-badge)](https://claude.ai/artifact/LeZnzxhrq9psD5PNUU1rLC)&nbsp;&nbsp;[Markdown version](docs/tutorial/README.md)
+[![Read the step-by-step guide](https://img.shields.io/badge/Read_the_step--by--step_guide-0f62fe?style=for-the-badge))&nbsp;&nbsp;[Markdown version](docs/tutorial/README.md)
 
 An AI agent that takes any accounts-payable document from receipt to the right action in the ERP. Drop in a
 supplier invoice, an employee's taxi or hotel receipt, a PO copy or a delivery challan; watsonx Orchestrate
@@ -20,7 +20,7 @@ agents serve the AP team and suppliers from the same live ERP data.
 | Delivery challan / GRN | Books the goods receipt when quantities fit, and flags any bill held for a GRN shortage on that PO |
 | Anything else | Marked unsupported and left for a person; nothing changes in the ERP |
 
-**Step-by-step guide:** [Build an agentic accounts-payable system with watsonx Orchestrate and Odoo](https://claude.ai/artifact/LeZnzxhrq9psD5PNUU1rLC) ([Markdown version](docs/tutorial/README.md))
+**Step-by-step guide:** [Build an agentic accounts-payable system with watsonx Orchestrate and Odoo ([Markdown version](docs/tutorial/README.md))
 
 ## See it in action
 
