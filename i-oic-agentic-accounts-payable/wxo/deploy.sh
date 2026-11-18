@@ -3,10 +3,13 @@
 #   orchestrate env add -n <name> -u <WXO_INSTANCE_URL> --type ibm_iam
 #   orchestrate env activate <name> --api-key <WXO_API_KEY>
 #   ./wxo/deploy.sh
+# FLOW_FILE picks the flow to import, relative to wxo/ (default: the finished flow). The tutorial's Step 7 uses
+#   FLOW_FILE=flows/starter/ap_document_processing_flow.py ./wxo/deploy.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 set -a; source ../.env; set +a
 ORCH=${ORCH:-orchestrate}
+FLOW_FILE=${FLOW_FILE:-flows/ap_document_processing_flow.py}
 
 echo "▸ Connection: odoo_erp (key-value, team credentials)"
 $ORCH connections add -a odoo_erp >/dev/null 2>&1 || true
@@ -21,8 +24,8 @@ for f in ap_process_tools.py ap_copilot_tools.py supplier_tools.py; do
   $ORCH tools import -k python -f "tools/$f" -p tools -r tools/requirements.txt -a odoo_erp
 done
 
-echo "▸ Flow: ap_document_processing_flow"
-$ORCH tools import -k flow -f flows/ap_document_processing_flow.py
+echo "▸ Flow: ap_document_processing_flow ($FLOW_FILE)"
+$ORCH tools import -k flow -f "$FLOW_FILE"
 
 echo "▸ Model policy: Claude Sonnet 4.6 primary, gpt-oss-120b fallback"
 $ORCH models policy add -n ap_claude_fallback -m bedrock/us.anthropic.claude-sonnet-4-6 -m groq/openai/gpt-oss-120b \

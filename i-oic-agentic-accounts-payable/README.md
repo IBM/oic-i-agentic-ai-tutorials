@@ -119,6 +119,7 @@ Model-level controls on the tenant bind to custom (virtual) models, so the fallb
 | Path | Purpose |
 |---|---|
 | `wxo/flows/ap_document_processing_flow.py` | The process: read and classify → branch per document type → controls → decision tables → Odoo |
+| `wxo/flows/starter/` | The same flow with three parts left for you to add, used in Step 7 of the tutorial |
 | `wxo/tools/apcore/` | Shared engine: tax rules, Odoo client, invoice controls and booking, expense policy, PO / GRN handling |
 | `wxo/tools/` | Flow process tools and agent tools; Odoo credentials come from the `odoo_erp` key-value connection |
 | `wxo/controls/` | Control-plane policies (guardrails, PII, regex, rate limits, secrets) |

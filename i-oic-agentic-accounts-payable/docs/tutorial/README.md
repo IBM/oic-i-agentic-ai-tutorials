@@ -25,10 +25,6 @@ In this tutorial, you build a system that takes any of those documents from rece
 ERP. It uses [IBM watsonx Orchestrate](https://www.ibm.com/products/watsonx-orchestrate) for document processing,
 the process flow, two conversational agents and governance, and [Odoo](https://www.odoo.com) as the ERP of record.
 
-The sample company uses India's GST and TDS as its worked example of local tax rules. The rules live in one
-module, `wxo/tools/apcore/india.py`, so you can replace them with another country's rules without changing the
-flow, the decision tables or the agents.
-
 ### What you'll learn
 
 - How to read and classify several document types with one document processing node and multiple key-value
@@ -38,7 +34,7 @@ flow, the decision tables or the agents.
 - How to give business users a decision table they can change without code.
 - How to govern agents with the control plane: guardrails, PII masking, rate limits and a model fallback policy.
 
-### What you'll build
+### Usecase overview
 
 Meridian Specialty Chemicals is a fictional chemicals manufacturer. Its AP team wants to drop any
 document into one place and have it handled:
@@ -56,6 +52,10 @@ When you finish, your system does the following for every document:
    duplicate.
 5. Explains the decision. Each Odoo record carries the agent's control log, and the workbench highlights the
    fields that failed.
+
+The Meridian Specialty Chemicals uses India's GST and TDS as its worked example of local tax rules. The rules live
+in one module, `wxo/tools/apcore/india.py`, so you can replace them with another country's rules without changing
+the flow, the decision tables or the agents.
 
 ## Architecture
 
@@ -107,7 +107,25 @@ scenarios and explore the agents.
 
 ## Steps
 
-### Step 1. Get the code and install the tools
+This section lists the implementation steps to complete the tutorial:
+
+1. Lab setup
+2. Create an Odoo database
+3. Get your watsonx Orchestrate credentials
+4. Configure the project
+5. Seed Odoo with the demo company
+6. Connect the ADK to watsonx Orchestrate
+7. Build the document flow
+8. Deploy the solution to watsonx Orchestrate
+9. Start the AP workbench
+10. Process supplier invoices
+11. Process receipts, PO copies and challans
+12. Review the results in Odoo
+13. Talk to the agents
+14. Govern the agents with the control plane
+15. Connect a Gmail AP inbox (optional)
+
+### Step 1. Lab setup
 
 In this step, you clone the repository and create a Python environment with the ADK and the workbench
 dependencies.
@@ -139,7 +157,7 @@ The repository is organised like this:
 
 | Path | What it contains |
 |---|---|
-| `wxo/flows/` | The agentic flow, `ap_document_processing_flow.py` |
+| `wxo/flows/` | The finished agentic flow, `ap_document_processing_flow.py`, and the starter you complete in Step 7, `starter/ap_document_processing_flow.py` |
 | `wxo/tools/` | The Python tools and the shared AP engine, `apcore/` |
 | `wxo/agents/` | The AP Copilot and Supplier Desk agent definitions |
 | `wxo/controls/` | The control-plane policies, as YAML |
@@ -284,72 +302,268 @@ are available in your tenant.
 > and replace it with a model from your list. The agents and the flow refer only to the policy name,
 > `ap_claude_fallback`, so nothing else changes.
 
-### Step 7. Explore the document flow
+### Step 7. Build the document flow
 
-In this step, you read how the flow is built before you deploy it. Open `wxo/flows/ap_document_processing_flow.py`
-alongside this section.
+In this step, you read how the flow works and complete it before you deploy it. Open the starter file,
+[`wxo/flows/starter/ap_document_processing_flow.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/flows/starter/ap_document_processing_flow.py).
+It contains the whole flow except three parts, which you add in Tasks 1 to 3 below. Each missing part is a
+`todo(...)` line. If you get stuck, compare your code with the finished flow in
+[`wxo/flows/ap_document_processing_flow.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/flows/ap_document_processing_flow.py).
 
-1. **Read and classify in one node.** The document processing node gets all four schemas (GST tax invoice,
-   expense receipt, purchase order and delivery challan) and no forced schema. It extracts the fields and records
-   the matching schema in `metadata.pages_metadata[0].document_type`:
+#### How the flow is organised
 
-   ```python
-   read = aflow.docproc(
-       name="read_document",
-       task="text_extraction",
-       output_format=DocProcOutputFormat.object,
-       enable_hw=True,
-       kvp_schemas=[GST_INVOICE_SCHEMA, RECEIPT_SCHEMA, PO_SCHEMA, CHALLAN_SCHEMA],
-       kvp_enable_text_hints=True,
-   )
-   ```
+Every document starts with the same two nodes, which read it and work out its type. A branch then sends it down
+the lane for that type:
 
-   The `document_description` on each schema drives the choice, so say what each type is *not*. A taxi receipt
-   titled "Tax invoice" was first read as a supplier invoice. Describing receipts as coming from "a cab operator,
-   hotel, restaurant or merchant … even when titled 'tax invoice'" fixed it.
+| Document type | Nodes in its lane | Result in Odoo |
+|---|---|---|
+| Supplier invoice | `statutory_checks` → `classify_payment` → `erp_controls` → `route_invoice` | Bill posted, held for review, or blocked |
+| Expense receipt | `classify_expense` → `expense_controls` → `route_expense` | Expense approved, held for the manager, or blocked |
+| Purchase-order copy | `verify_po` | PO checked and the result logged on it |
+| Delivery challan | `receive_goods` | Goods receipt booked |
+| Anything else | None | Nothing; left for a person |
 
-2. **Branch on the type.** A script node, `identify_document`, maps the detected schema to a type and
-   normalises the fields. A branch then routes each type to its own lane:
+The file builds each lane first and connects them at the end, so this section follows the file from top to
+bottom.
 
-   ```python
-   by_type = aflow.branch(name="document_type",
-                          evaluator='flow["identify_document"].output.doc_type')
-   (by_type.case("supplier_invoice", checks).case("expense_receipt", category)
-    .case("purchase_order", verify).case("delivery_challan", receive).case("other", END))
-   ```
+#### Read and classify the document
 
-3. **Keep the checks deterministic.** In the invoice lane, a script node checks the GSTIN check digit, the
-   CGST and SGST versus IGST regime, the tax slab and the arithmetic. A prompt node classifies the nature of
-   payment for TDS. Then the `ap_erp_controls` tool node checks the vendor master, bank account, duplicates, IRN,
-   PO price and received quantity against live Odoo data, and computes TDS.
+The first node, `read_document`, is a document processing node. It runs OCR and extracts key-value pairs and
+tables. It gets all four schemas (GST tax invoice, expense receipt, purchase order and delivery challan) and no
+forced schema, so it also works out which type of document it has, and records the matching schema in
+`metadata.pages_metadata[0].document_type`:
 
-4. **Put the policy in a decision table.** The table reads the tool's counts and sets the route. The first
-   matching rule wins:
+```python
+read = aflow.docproc(
+    name="read_document",
+    task="text_extraction",
+    output_format=DocProcOutputFormat.object,
+    enable_hw=True,
+    kvp_schemas=[GST_INVOICE_SCHEMA, RECEIPT_SCHEMA, PO_SCHEMA, CHALLAN_SCHEMA],
+    kvp_enable_text_hints=True,
+)
+```
 
-   ```python
-   rule("erp_controls", ("duplicates", DecisionsCondition().greater_than(0)), "blocked", "Duplicate invoice")
-   rule("erp_controls", ("exceptions", DecisionsCondition().greater_than(0)), "exception", "")
-   rule("erp_controls", ("invoice_total", DecisionsCondition().greater_than(2_500_000)), "exception",
-        "Above ₹25 lakh touchless limit")
-   ```
+The `document_description` on each schema decides the match, so make each description say what the type is
+*not*. The taxi receipt
+[`07_receipt_cityride_taxi.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/07_receipt_cityride_taxi.pdf) is titled "Tax invoice" and was first
+read as a supplier invoice. Describing receipts as coming from "a cab operator, hotel, restaurant or merchant …
+even when titled 'tax invoice'" fixed it.
 
-   After you deploy, the AP team can change a threshold such as the ₹25 lakh touchless limit in the flow editor,
-   without touching code.
+The second node, `identify_document`, is a script node. It maps the detected schema to a document type, such as
+`supplier_invoice`, using the `DOC_TYPES` table at the top of the file. It also normalises the extracted fields:
+amounts become numbers, dates become ISO dates and GSTINs lose their spaces.
 
-   ![The AP routing policy decision table in the watsonx Orchestrate flow builder.](images/wxo-decision-table.png)
+#### Check the invoice in code
 
-5. **Act through tool nodes.** A second branch sends `touchless` to the `post_bill` tool, `exception` to
-   `hold_bill`, and `blocked` to the end. The expense lane has the same shape, with its own prompt node, tool
-   and decision table.
+The invoice lane starts with `statutory_checks`, a script node that runs every check that needs no ERP data. For a
+sample such as [`01_sahyadri_SDC-26-27-0418.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/01_sahyadri_SDC-26-27-0418.pdf), it checks that
+the mandatory particulars are present, that the GSTINs pass their check-digit validation, that the invoice charges
+CGST and SGST or IGST to match the place of supply, that the GST rate is a notified slab, and that the lines and
+totals add up. Each check gets a code, such as `GST-03`, which the workbench shows when the check fails.
+
+The checks run in a script node because they need only the document. Script nodes can't import project modules,
+so the checks are written in the flow file itself. The shared AP engine has the same rules in Python, in
+[`wxo/tools/apcore/controls.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/tools/apcore/controls.py).
+
+#### Task 1. Add the TDS prompt node
+
+The TDS rate depends on what is being paid for, such as goods, professional fees or contract work. That is a
+judgement, so a prompt node asks the model. Replace the line `classify = todo(...)` with this code:
+
+```python
+classify = aflow.prompt(
+    name="classify_payment",
+    display_name="Classify nature of payment (TDS)",
+    description="Classifies what is being paid for, which drives the TDS section.",
+    system_prompt=TDS_SYSTEM_PROMPT,
+    user_prompt="Supplier: {supplier_name}\nLine items:\n{lines_text}",
+    llm=LLM,
+    llm_parameters=PromptLLMParameters(temperature=0.01),  # 0 is dropped by the ADK; near-greedy for repeatability
+    input_schema=ClassifierInput,
+    output_schema=PaymentNature,
+)
+classify.map_input("supplier_name", 'flow["statutory_checks"].output.supplier_name')
+classify.map_input("lines_text", 'flow["statutory_checks"].output.lines_text')
+```
+
+The node sends the supplier name and line items to the model, with the instructions in `TDS_SYSTEM_PROMPT` at the
+top of the file. It returns a `PaymentNature`: the nature of payment, a confidence score and a one-line reason.
+The two `map_input` lines take the inputs from the `statutory_checks` node. `LLM` is the `ap_claude_fallback`
+model policy that you deploy in Step 8.
+
+#### Check the invoice against Odoo
+
+Next, the `erp_controls` tool node calls the `ap_erp_controls` tool in
+[`wxo/tools/ap_process_tools.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/tools/ap_process_tools.py) with the invoice and the nature of payment:
+
+```python
+erp = aflow.tool("ap_erp_controls", name="erp_controls", display_name="ERP controls (Odoo)",
+                 error_handler_config=NodeErrorHandlerConfig(error_message="ERP controls failed.", max_retries=1,
+                                                             retry_interval=2000))
+erp.map_input("invoice", 'flow["statutory_checks"].output')
+erp.map_input("payment_nature", 'flow["classify_payment"].output')
+```
+
+The tool checks the vendor master, the buyer GSTIN, duplicates, the remittance bank account, the e-invoice IRN,
+the PO price and the received quantity (the 3-way match) against live Odoo data. It then works out the TDS
+section and rate from the nature of payment, using the rules in
+[`wxo/tools/apcore/india.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/tools/apcore/india.py). It returns the number of duplicates and failed
+controls and the invoice total, which the routing policy uses. If the tool fails, the node retries once.
+
+#### Task 2. Add the routing policy
+
+The AP team owns the rules that decide whether an invoice is posted, held or blocked, so they live in a decision
+table that the team can edit later without code. Replace the line `decide = todo(...)` with this code:
+
+```python
+decide = aflow.decisions(
+    name="route_invoice",
+    display_name="AP routing policy",
+    description="First matching rule wins: duplicates are blocked, any failed control goes to review, and "
+                "clean invoices above the touchless limit need a person's sign-off.",
+    rules=[
+        rule("erp_controls", ("duplicates", DecisionsCondition().greater_than(0)), "blocked", "Duplicate invoice"),
+        rule("erp_controls", ("exceptions", DecisionsCondition().greater_than(0)), "exception", ""),
+        rule("erp_controls", ("invoice_total", DecisionsCondition().greater_than(TOUCHLESS_LIMIT_INR)), "exception",
+             "Above ₹25 lakh touchless limit"),
+    ],
+    default_actions={"flow.output.route": "touchless", "flow.output.route_reason": ""},
+)
+```
+
+The rules are checked in order, and the first match wins. Duplicates are blocked, invoices with a failed control
+go to review, and invoices above ₹25 lakh need a person's sign-off. Everything else is posted without a human
+touch. The `rule()` helper, defined earlier in the file, writes the result to `flow.output.route`. After you
+deploy, the table looks like this in the flow editor:
+
+![The AP routing policy decision table in the watsonx Orchestrate flow builder.](images/wxo-decision-table.png)
+
+#### Act on the invoice in Odoo
+
+A second branch, `route`, reads `flow.output.route` and calls the matching tool:
+
+```python
+route = aflow.branch(name="route", display_name="Route invoice", evaluator="flow.output.route")
+route.case("touchless", post).case("exception", hold).case("blocked", END)
+```
+
+`post_bill` creates and posts the vendor bill in Odoo, with the GST and TDS taxes on each line. `hold_bill` creates
+a draft bill with a review task that lists the failed checks. A blocked duplicate, such as
+[`06_sahyadri_SDC-26-27-0418_resubmitted_scan.png`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/06_sahyadri_SDC-26-27-0418_resubmitted_scan.png),
+creates nothing. Both tools add the agent's control log to the bill, so a reviewer can see why it was posted or
+held.
+
+#### The expense lane
+
+Expense receipts, such as [`08_receipt_hotel_sabarmati.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/08_receipt_hotel_sabarmati.pdf), follow
+the same pattern. The `classify_expense` prompt node picks the expense category (local travel, hotel, meals,
+airfare or other) and the likely business purpose. The `expense_controls` tool node then checks the receipt
+against the expense policy and Odoo: the employee and their corporate card, the category limit, how old the
+receipt is, duplicate claims and GST input-credit eligibility. The rules are in
+[`wxo/tools/apcore/expenses.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/tools/apcore/expenses.py).
+
+The `route_expense` decision table blocks duplicates and sends any failed control to the manager. Approving and
+holding call the same tool, `ap_book_expense`, with a different value for `approve`:
+
+```python
+approve = aflow.tool("ap_book_expense", name="approve_expense", display_name="Approve expense in Odoo")
+hold_exp = aflow.tool("ap_book_expense", name="hold_expense", display_name="Hold expense for manager")
+for node, ok in ((approve, "True"), (hold_exp, "False")):
+    node.map_input("receipt", 'flow["identify_document"].output.fields')
+    node.map_input("control_result", 'flow["expense_controls"].output.result')
+    node.map_input("approve", ok)
+```
+
+#### Purchase-order copies and delivery challans
+
+These two lanes have one tool node each, and both take the normalised fields from `identify_document`:
+
+```python
+verify = aflow.tool("ap_verify_po", name="verify_po", display_name="Verify PO against Odoo")
+receive = aflow.tool("ap_receive_goods", name="receive_goods", display_name="Receive goods (GRN) in Odoo")
+for node in (verify, receive):
+    node.map_input("document", 'flow["identify_document"].output.fields')
+```
+
+`verify_po` compares a supplier-signed PO copy, such as
+[`11_po_copy_MSC-PO-26-0161.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/11_po_copy_MSC-PO-26-0161.pdf), with the PO in Odoo and logs the
+result on it. `receive_goods` books the goods on a challan, such as
+[`12_challan_narmada_NPI-DC-1190.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/12_challan_narmada_NPI-DC-1190.pdf), against the open goods
+receipt when the quantities fit, and flags any bill that was held because those goods hadn't arrived. The logic for both is in
+[`wxo/tools/apcore/receiving.py`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/wxo/tools/apcore/receiving.py).
+
+#### Task 3. Send each document type to its lane
+
+All the lanes now exist, so you can connect them. Replace the line `by_type = todo(...)` with this code:
+
+```python
+by_type = aflow.branch(name="document_type", display_name="Document type",
+                       evaluator='flow["identify_document"].output.doc_type')
+(by_type.case("supplier_invoice", checks).case("expense_receipt", category)
+ .case("purchase_order", verify).case("delivery_challan", receive).case("other", END))
+```
+
+The branch reads the document type from `identify_document` and sends the document to the first node of its
+lane. Anything the flow doesn't handle, such as the price-revision letter
+[`13_letter_konkan_price_revision.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/13_letter_konkan_price_revision.pdf), goes to `END` and is
+left for a person.
+
+#### Connect the nodes and map the outputs
+
+The end of the file chains the nodes in order and sends every final tool node to `END`:
+
+```python
+aflow.sequence(START, read, identify, by_type)
+aflow.sequence(checks, classify, erp, decide, route)
+aflow.sequence(category, exp, decide_exp, route_exp)
+```
+
+It then maps each output of the flow, such as the route, the controls and the Odoo result, to the node that
+produces it. A document passes through only one lane, so the other lanes' outputs stay empty. Mapping every
+output explicitly stops the runtime from trying to map them automatically, which can fail, and the route and its
+reason get a default value. The workbench reads these outputs to show the result.
+
+#### Check your work
+
+Check the file for syntax errors. The command prints nothing when the file is valid:
+
+```bash
+.venv/bin/python -m py_compile wxo/flows/starter/ap_document_processing_flow.py
+```
+
+You deploy your flow in Step 8. If a task is still missing, the deploy stops and tells you which one.
+
+#### Try it yourself
+
+When you finish the tutorial, come back and try these changes. Reset the workbench before you process the samples
+again.
+
+- **Change the limit without code.** In the flow editor, lower the touchless limit in the AP routing policy to
+  300000, then process [`01_sahyadri_SDC-26-27-0418.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/01_sahyadri_SDC-26-27-0418.pdf). Its total
+  is ₹3,58,956, so it is now held for review.
+- **Add a rule.** Hold invoices when the model is unsure of the nature of payment. Add this rule after the
+  duplicate rule in Task 2 and redeploy:
+
+  ```python
+  rule("classify_payment", ("confidence", DecisionsCondition().less_than(0.8)), "exception",
+       "TDS classification needs review"),
+  ```
+
+- **Change the prompt.** In `TDS_SYSTEM_PROMPT`, remove "engineering, process-safety or HAZOP studies," and
+  process [`02_kaveri_KPA-26-27-073.pdf`](https://github.com/IBM/oic-i-agentic-ai-tutorials/blob/main/i-oic-agentic-accounts-payable/samples/02_kaveri_KPA-26-27-073.pdf) again. The model might now call
+  the HAZOP study a technical service, which changes the TDS rate from 10% to 2%.
+- **Add a document type.** Add a credit-note schema and a case for it in Task 3, then process a credit note of
+  your own.
 
 ### Step 8. Deploy the solution to watsonx Orchestrate
 
 In this step, you deploy the connection, tools, flow, model policy, agents and controls with one script.
 
-1. Run the deploy script from the project root:
+1. Run the deploy script from the project root. `FLOW_FILE` tells it to import the flow you completed in Step 7:
 
    ```bash
-   ORCH=.venv/bin/orchestrate ./wxo/deploy.sh
+   ORCH=.venv/bin/orchestrate FLOW_FILE=flows/starter/ap_document_processing_flow.py ./wxo/deploy.sh
    ```
 
    The script prints a line for each stage, followed by the ADK's messages for each item it imports:
@@ -357,7 +571,7 @@ In this step, you deploy the connection, tools, flow, model policy, agents and c
    ```output
    ▸ Connection: odoo_erp (key-value, team credentials)
    ▸ Tools (Odoo via connection; the flow's process tools first)
-   ▸ Flow: ap_document_processing_flow
+   ▸ Flow: ap_document_processing_flow (flows/starter/ap_document_processing_flow.py)
    ▸ Model policy: Claude Sonnet 4.6 primary, gpt-oss-120b fallback
    ▸ Agents
    ▸ Controls (control plane)
@@ -365,7 +579,7 @@ In this step, you deploy the connection, tools, flow, model policy, agents and c
    ```
 
    The order matters. The flow's tools are imported before the flow, because the flow reads their schemas when
-   it is imported.
+   it is imported. To deploy the finished flow instead of yours, leave out `FLOW_FILE`.
 
 2. Check the deployment in watsonx Orchestrate. Open the flow builder and find `ap_document_processing_flow` in
    your agentic workflows. You see one lane per document type:
@@ -623,6 +837,13 @@ you work with more than one Orchestrate instance, check that `ap-demo` is the ac
 </details>
 
 <details>
+<summary>The deploy stops with "Step 7, Task … is not done yet"</summary>
+
+The starter flow still has a `todo(...)` line for that task. Complete the task as described in Step 7 and run the
+deploy script again, or leave out `FLOW_FILE` to deploy the finished flow.
+</details>
+
+<details>
 <summary>The flow import fails with a schema error</summary>
 
 Run the whole deploy script, not just the flow import. The flow reads its tools' schemas at import time, so the
@@ -678,3 +899,11 @@ The complete source, sample documents and Odoo provisioning script are in the
 [GitHub repository](https://github.com/IBM/oic-i-agentic-ai-tutorials/tree/main/i-oic-agentic-accounts-payable).
 
 To learn more, see the [watsonx Orchestrate ADK documentation](https://developer.watson-orchestrate.ibm.com/).
+
+## Acknowledgments
+
+This tutorial was produced as part of the IBM Open Innovation Community initiative: Agentic AI (AI for Developers
+and Ecosystem).
+
+The author (Aditya Krishnan) deeply appreciates the support of Ela Dixit and Bindu Umesh for reviewing and
+contributing to this tutorial.
