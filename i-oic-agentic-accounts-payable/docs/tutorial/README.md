@@ -115,8 +115,8 @@ dependencies.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/adiDaBEzt/agentic-accounts-payable.git
-   cd agentic-accounts-payable
+   git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+   cd oic-i-agentic-ai-tutorials/i-oic-agentic-accounts-payable
    ```
 
 2. Create the virtual environment and install the dependencies:
@@ -675,6 +675,6 @@ went from upload to an Odoo decision in about 30 to 40 seconds.
   each bill.
 
 The complete source, sample documents and Odoo provisioning script are in the
-[GitHub repository](https://github.com/adiDaBEzt/agentic-accounts-payable).
+[GitHub repository](https://github.com/IBM/oic-i-agentic-ai-tutorials/tree/main/i-oic-agentic-accounts-payable).
 
 To learn more, see the [watsonx Orchestrate ADK documentation](https://developer.watson-orchestrate.ibm.com/).

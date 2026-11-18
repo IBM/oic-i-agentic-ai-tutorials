@@ -132,6 +132,9 @@ Model-level controls on the tenant bind to custom (virtual) models, so the fallb
 ## Setup
 
 ```bash
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
+cd oic-i-agentic-ai-tutorials/i-oic-agentic-accounts-payable
+
 uv venv -p 3.12 .venv && uv pip install -p .venv -r requirements.txt
 cp .env.example .env            # fill in wxO, Odoo and (optionally) Gmail
 
