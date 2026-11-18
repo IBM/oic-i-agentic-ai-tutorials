@@ -1,0 +1,9 @@
+spec_version: v1
+kind: knowledge_base
+name: f1_lakehouse_guide
+description: >
+  Business definitions, caveats and worked SQL examples for the F1 lakehouse on watsonx.data:
+  what each Gold table means, how wins, points, reliability and fantasy scores are calculated,
+  and how to query the live Kafka topic and the fantasy-league PostgreSQL database.
+documents:
+  - f1_lakehouse_guide.txt

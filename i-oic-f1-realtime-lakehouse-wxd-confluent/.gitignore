@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.orchestrate-home/
+agent/f1_race_analyst.yaml
+.bob/

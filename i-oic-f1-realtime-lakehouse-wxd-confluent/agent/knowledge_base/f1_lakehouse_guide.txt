@@ -1,0 +1,105 @@
+# F1 lakehouse guide
+
+This guide explains what the data in the F1 lakehouse means. Table and column lists are
+not repeated here: the agent reads them live from watsonx.data with describe-table.
+
+## Where the data comes from
+
+| Source | Presto catalog | What it holds |
+|---|---|---|
+| Historical files (1950 to 2025) | Iceberg catalog, schemas f1_bronze, f1_silver, f1_gold | Every Grand Prix and sprint result |
+| Confluent Cloud topic f1.race.results | kafka_live | 2026 results, published as each race finishes |
+| Fantasy-league app (PostgreSQL) | fantasy_pg | Managers, their 2026 driver picks, driver prices |
+
+2026 results reach the lakehouse when the pipeline is refreshed after a race. Until then
+they are visible only in kafka_live.
+
+## Medallion layers
+
+- **f1_bronze**: raw data exactly as it arrived. Never answer questions from Bronze.
+- **f1_silver**: cleaned and typed. One `results` table holds both Grand Prix and sprint rows.
+  Rows that failed data-quality checks are in `f1_silver.quarantine`.
+- **f1_gold**: the tables to answer from.
+  - `driver_season`: one row per driver per season.
+  - `constructor_season`: one row per constructor per season.
+  - `fact_session_result`: one row per driver, car and session. Use it for race-by-race questions.
+  - `dim_driver`, `dim_constructor`, `dim_circuit`, `dim_race`: names and attributes.
+
+## Metric definitions
+
+- **Win, podium, pole**: Grand Prix races only (`session_type = 'RACE'`), unless the question
+  is about sprints. A win is `is_win`, a podium is `is_podium` (positions 1 to 3). `pole_starts`
+  counts races started from grid position 1.
+- **Points**: `points` in the season tables include sprint points.
+- **points_rank**: the position by points (ties broken by wins) in that season. From 1991 it
+  matches the championship. Before 1991 only each driver's best results counted, so the
+  official champion can differ. For example in 1988 Alain Prost scored more points in total,
+  but Ayrton Senna was champion. Say this when you answer a pre-1991 title question.
+- **finish_category**: `finished` (including lapped cars), `retired`, `disqualified` or
+  `did_not_start`.
+- **retirement_cause**: for retirements only. `mechanical` (engine, gearbox, hydraulics and
+  similar), `incident` (accident, collision, spin, puncture), `driver` (illness or injury),
+  `unknown` (the source says only "Retired") or `other`.
+- **finish_rate_pct** in `constructor_season`: the share of race starts that ended classified
+  as finished. Available for every season.
+- **reliability_pct** in `constructor_season`: the share of race starts that did not end in a
+  mechanical retirement. Crashes do not count against reliability. From 2023 the source data
+  records most retirements only as "Retired", so the cause is unknown and reliability_pct is
+  NULL. For those seasons, answer with finish_rate_pct and retirements, and say why.
+- **Shared drives**: in the 1950s a driver could drive more than one car in the same race,
+  so a driver can have two result rows for one race with different `car_number` values.
+
+## Fantasy league (fantasy_pg)
+
+- Each manager picks five drivers for the season within a $100M budget (`driver_prices`).
+- A manager's score is the sum of their drivers' points, and the captain (`is_captain`) scores double.
+- Join `fantasy_pg.public.fantasy_picks.driver_id` to `driver_id` in the lakehouse.
+
+## Example queries
+
+2026 standings so far:
+
+```sql
+SELECT points_rank, driver_name, constructors, points, wins, podiums
+FROM <catalog>.f1_gold.driver_season
+WHERE season = 2026
+ORDER BY points_rank
+LIMIT 10
+```
+
+Most reliable constructors in a season:
+
+```sql
+SELECT constructor_name, car_starts, retirements, mechanical_retirements, finish_rate_pct, reliability_pct
+FROM <catalog>.f1_gold.constructor_season
+WHERE season = 2022
+ORDER BY reliability_pct DESC
+LIMIT 10
+```
+
+Fantasy-league table (federated: PostgreSQL picks joined to Iceberg points):
+
+```sql
+SELECT m.team_name, m.manager_name,
+       sum(CASE WHEN p.is_captain THEN 2 * d.points ELSE d.points END) AS fantasy_points
+FROM fantasy_pg.public.fantasy_picks p
+JOIN fantasy_pg.public.fantasy_managers m ON m.manager_id = p.manager_id
+JOIN <catalog>.f1_gold.driver_season d ON d.driver_id = p.driver_id AND d.season = p.season
+WHERE p.season = 2026
+GROUP BY 1, 2
+ORDER BY fantasy_points DESC
+LIMIT 10
+```
+
+Results arriving on the live Kafka topic:
+
+```sql
+SELECT json_extract_scalar(_message, '$.race_name') AS race,
+       CAST(json_extract_scalar(_message, '$.position') AS INTEGER) AS pos,
+       json_extract_scalar(_message, '$.driver_id') AS driver_id,
+       CAST(json_extract_scalar(_message, '$.points') AS DOUBLE) AS points
+FROM kafka_live."default"."f1.race.results"
+WHERE CAST(json_extract_scalar(_message, '$.round') AS INTEGER) = 1
+ORDER BY pos
+LIMIT 25
+```

@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 620" width="1280" height="620" font-family="IBM Plex Sans, Helvetica Neue, Arial, sans-serif">
+  <title>F1 lakehouse architecture</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#525252"/>
+    </marker>
+    <marker id="arrBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0f62fe"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="620" fill="#ffffff"/>
+
+  <!-- Column labels -->
+  <text x="20" y="30" font-size="12" font-weight="600" letter-spacing="1.2" fill="#525252">SOURCES</text>
+  <text x="1030" y="30" font-size="12" font-weight="600" letter-spacing="1.2" fill="#525252">CONSUMERS</text>
+
+  <!-- Sources -->
+  <rect x="20" y="50" width="230" height="74" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="36" y="78" font-size="16" font-weight="600" fill="#161616">Historical results</text>
+  <text x="36" y="102" font-size="13" fill="#525252">1950–2025 · CSV and JSON files</text>
+
+  <rect x="20" y="166" width="230" height="64" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="36" y="193" font-size="16" font-weight="600" fill="#161616">Landing bucket</text>
+  <text x="36" y="214" font-size="13" fill="#525252">Cloud Object Storage</text>
+
+  <rect x="20" y="318" width="230" height="86" fill="#e8f1ff" stroke="#0f62fe" stroke-width="1.5"/>
+  <text x="36" y="345" font-size="16" font-weight="600" fill="#161616">Confluent Cloud</text>
+  <text x="36" y="368" font-size="13" fill="#525252">topic f1.race.results</text>
+  <text x="36" y="389" font-size="13" fill="#525252">2026 results as each race ends</text>
+
+  <rect x="20" y="440" width="230" height="74" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="36" y="468" font-size="16" font-weight="600" fill="#161616">Neon PostgreSQL</text>
+  <text x="36" y="491" font-size="13" fill="#525252">fantasy-league app database</text>
+
+  <!-- watsonx.data panel -->
+  <rect x="290" y="44" width="690" height="550" fill="#fafafa" stroke="#161616" stroke-width="1.5"/>
+  <text x="310" y="74" font-size="18" font-weight="600" fill="#161616">IBM watsonx.data</text>
+  <text x="310" y="96" font-size="12" fill="#525252">Apache Iceberg tables in Cloud Object Storage · one catalog for Spark and Presto</text>
+
+  <!-- Medallion -->
+  <rect x="320" y="110" width="190" height="110" fill="#f6e7d8" stroke="#a56a2a" stroke-width="1.5"/>
+  <text x="336" y="138" font-size="17" font-weight="600" fill="#5e3a10">Bronze</text>
+  <text x="336" y="160" font-size="13" fill="#5e3a10">raw, as it arrived</text>
+  <rect x="336" y="180" width="62" height="24" fill="#ffffff" stroke="#a56a2a"/>
+  <text x="367" y="197" font-size="12" font-weight="600" text-anchor="middle" fill="#5e3a10">Spark</text>
+
+  <rect x="540" y="110" width="190" height="110" fill="#ececec" stroke="#6f6f6f" stroke-width="1.5"/>
+  <text x="556" y="138" font-size="17" font-weight="600" fill="#393939">Silver</text>
+  <text x="556" y="160" font-size="13" fill="#393939">typed, cleaned, MERGE</text>
+  <rect x="556" y="180" width="62" height="24" fill="#ffffff" stroke="#6f6f6f"/>
+  <text x="587" y="197" font-size="12" font-weight="600" text-anchor="middle" fill="#393939">Spark</text>
+
+  <rect x="760" y="110" width="190" height="110" fill="#fcf4d6" stroke="#9a7a00" stroke-width="1.5"/>
+  <text x="776" y="138" font-size="17" font-weight="600" fill="#5c4900">Gold</text>
+  <text x="776" y="160" font-size="13" fill="#5c4900">star schema and marts</text>
+  <rect x="776" y="180" width="62" height="24" fill="#ffffff" stroke="#9a7a00"/>
+  <text x="807" y="197" font-size="12" font-weight="600" text-anchor="middle" fill="#5c4900">Presto</text>
+
+  <line x1="510" y1="165" x2="536" y2="165" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="730" y1="165" x2="756" y2="165" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Files to landing to Bronze -->
+  <line x1="135" y1="124" x2="135" y2="162" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="250" y1="198" x2="316" y2="198" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Confluent to Bronze (streaming) -->
+  <polyline points="250,336 302,336 302,244 400,244 400,224" fill="none" stroke="#0f62fe" stroke-width="2" marker-end="url(#arrBlue)"/>
+  <text x="412" y="258" font-size="12" fill="#0f62fe">Spark Structured Streaming lands new messages once</text>
+
+  <!-- Presto federation -->
+  <rect x="320" y="290" width="630" height="164" fill="#ffffff" stroke="#161616" stroke-width="1.5"/>
+  <text x="580" y="322" font-size="17" font-weight="600" fill="#161616">Presto</text>
+  <text x="580" y="346" font-size="13" fill="#393939">One SQL statement joins the lakehouse,</text>
+  <text x="580" y="366" font-size="13" fill="#393939">the live topic and the app database.</text>
+  <text x="580" y="386" font-size="13" fill="#393939">Nothing is copied between them.</text>
+
+  <rect x="340" y="306" width="210" height="34" fill="#fcf4d6" stroke="#9a7a00"/>
+  <text x="356" y="328" font-size="13" font-weight="600" fill="#5c4900">Iceberg catalog</text>
+  <rect x="340" y="350" width="210" height="34" fill="#e8f1ff" stroke="#0f62fe"/>
+  <text x="356" y="372" font-size="13" font-weight="600" fill="#0043ce">kafka_live (Kafka)</text>
+  <rect x="340" y="394" width="210" height="34" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="356" y="416" font-size="13" font-weight="600" fill="#393939">fantasy_pg (PostgreSQL)</text>
+
+  <line x1="855" y1="220" x2="855" y2="286" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="865" y="258" font-size="12" fill="#525252">reads</text>
+
+  <!-- Confluent to kafka_live (live query) -->
+  <line x1="250" y1="367" x2="336" y2="367" stroke="#0f62fe" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrBlue)"/>
+  <!-- Neon to fantasy_pg -->
+  <polyline points="250,477 296,477 296,411 336,411" fill="none" stroke="#525252" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arr)"/>
+
+  <!-- MCP server -->
+  <rect x="320" y="494" width="630" height="76" fill="#f6f2ff" stroke="#8a3ffc" stroke-width="1.5"/>
+  <text x="340" y="524" font-size="16" font-weight="600" fill="#491d8b">watsonx.data MCP server</text>
+  <text x="340" y="548" font-size="13" fill="#491d8b">list-schemas · list-tables · describe-table · execute-select (read-only)</text>
+  <line x1="635" y1="490" x2="635" y2="458" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Consumers -->
+  <rect x="1030" y="290" width="230" height="78" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="1046" y="318" font-size="16" font-weight="600" fill="#161616">You, in chat</text>
+  <text x="1046" y="342" font-size="13" fill="#525252">“Who leads our fantasy</text>
+  <text x="1046" y="359" font-size="13" fill="#525252">league in 2026?”</text>
+  <line x1="1145" y1="368" x2="1145" y2="420" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <rect x="1030" y="424" width="230" height="146" fill="#f6f2ff" stroke="#8a3ffc" stroke-width="1.5"/>
+  <text x="1046" y="452" font-size="16" font-weight="600" fill="#491d8b">watsonx Orchestrate</text>
+  <text x="1046" y="476" font-size="13" fill="#491d8b">F1 Race Analyst agent</text>
+  <text x="1046" y="496" font-size="13" fill="#491d8b">Claude Sonnet 4.6</text>
+  <text x="1046" y="516" font-size="13" fill="#491d8b">knowledge base: metric</text>
+  <text x="1046" y="534" font-size="13" fill="#491d8b">definitions and caveats</text>
+  <line x1="1026" y1="532" x2="954" y2="532" stroke="#8a3ffc" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="990" y="524" font-size="11" fill="#491d8b" text-anchor="middle">MCP</text>
+
+  <rect x="1030" y="50" width="230" height="74" fill="#f4f4f4" stroke="#8d8d8d"/>
+  <text x="1046" y="78" font-size="16" font-weight="600" fill="#161616">SQL worksheet / BI</text>
+  <text x="1046" y="102" font-size="13" fill="#525252">same Presto tables, same SQL</text>
+  <polyline points="1030,87 1000,87 1000,372 954,372" fill="none" stroke="#525252" stroke-width="1.5" marker-end="url(#arr)"/>
+</svg>

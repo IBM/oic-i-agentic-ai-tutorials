@@ -1,0 +1,11 @@
+# Lakehouse CLI (watsonx.data, object storage, Presto)
+requests>=2.32
+python-dotenv>=1.0
+presto-python-client>=0.8.4
+certifi
+# Streaming producer (Confluent Cloud)
+confluent-kafka>=2.6
+# Fantasy-league loader (Neon PostgreSQL)
+psycopg[binary]>=3.2
+# watsonx Orchestrate Agent Development Kit
+ibm-watsonx-orchestrate==2.20.0
