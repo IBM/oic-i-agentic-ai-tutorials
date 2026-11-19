@@ -39,7 +39,7 @@ class WxO:
 
     def _req(self, method, path, **kw):
         headers = {"Authorization": f"Bearer {self.token()}", "Accept": "application/json", **kw.pop("headers", {})}
-        r = requests.request(method, f"{self.base}/v1/orchestrate{path}", headers=headers, timeout=kw.pop("timeout", 30), **kw)
+        r = requests.request(method, f"{self.base}/v1/orchestrate{path}", headers=headers, timeout=kw.pop("timeout", 90), **kw)
         if r.status_code >= 400:
             raise WxOError(f"{method} {path} → {r.status_code}: {r.text[:300]}")
         return r.json() if r.content else {}
